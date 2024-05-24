@@ -1,14 +1,17 @@
 package application.BackEnd;
 
 import java.io.BufferedReader;
-
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.*;
+
 import java.util.*;
 
 import application.FrontEnd.MetricController;
@@ -18,11 +21,12 @@ public String ImportName;
 public int ImportStatus;
 public int ConflictStatus=0;
 public static Set<String> ClassNameList = new LinkedHashSet<>();
-public HashMap<String,Set<String>>WildCardUsedClassMap = new HashMap<>();
+public int LineNumber;
 public Set<String>UsedClassList = new LinkedHashSet<>();
-ImportStatus(String ImportName,int ImportStatus){
+ImportStatus(String ImportName,int ImportStatus,int LineNumber){
 	this.ImportName=ImportName;
 	this.ImportStatus=ImportStatus;
+	this.LineNumber = LineNumber;
 }
 
 //method to see if package from src
@@ -290,6 +294,7 @@ public static ArrayList<ImportStatus> update(File file , ArrayList<ImportStatus>
 public static ArrayList<ImportStatus> ImportFetch(File file){
 	ArrayList<ImportStatus> ImportList = new ArrayList<ImportStatus>();
 	String Line;
+	int cmpt =1;
 	 try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
           while ((Line = reader.readLine() )!= null) {
           	Line = Line.trim();
@@ -317,7 +322,7 @@ public static ArrayList<ImportStatus> ImportFetch(File file){
           			if(!ListCode.isEmpty()) {
           				for(String code : ListCode) {
           					if(RegularExpression.IsImport(code)) {
-          	            		ImportList.add(new ImportStatus(FetchImportFromCode(code),0));
+          	            		ImportList.add(new ImportStatus(FetchImportFromCode(code),0,cmpt));
           	            		
           	            	}
           					else {
@@ -328,7 +333,7 @@ public static ArrayList<ImportStatus> ImportFetch(File file){
           		}
           		if(ListCode.isEmpty()) {
           			if(RegularExpression.IsImport(Line)) {
-  	            		ImportList.add(new ImportStatus(FetchImportFromCode(Line),0));
+  	            		ImportList.add(new ImportStatus(FetchImportFromCode(Line),0,cmpt));
   	            		
   	            	}
           			else {
@@ -336,6 +341,7 @@ public static ArrayList<ImportStatus> ImportFetch(File file){
           			}
           		}
           	}
+          	++cmpt;
           }
       } catch (IOException e) {
           e.printStackTrace();
@@ -344,6 +350,26 @@ public static ArrayList<ImportStatus> ImportFetch(File file){
 	return ImportList;
 }
 
+public static void ReplaceWildCardImport(String filePath, int lineIndex, String replacementContent) throws IOException {
+    Path path = Paths.get(filePath);
+
+    // Read all lines into memory
+    var lines = Files.readAllLines(path);
+
+    if (lineIndex >= 0 && lineIndex < lines.size()) {
+        // Replace the line at the specified index
+        lines.set(lineIndex, replacementContent);
+
+        // Write the modified content back to the file
+        try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(filePath)))) {
+            for (String line : lines) {
+                writer.println(line);
+            }
+        }
+    } else {
+        throw new IllegalArgumentException("Invalid line index: " + lineIndex);
+    }
+}
 
 
 }

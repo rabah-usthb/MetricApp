@@ -33,11 +33,12 @@ public class ImportController {
 	    private TreeView<TreeItemData> treeView;
 	    @FXML
 	    private Label ImportLabel;
+	    static ArrayList<ImportStatus>ListImport;
 
 	    public void initialize(String FilePath) {
 	        File file = new File(FilePath);
 	        ImportLabel.setText("Imports of "+file.getName());
-	        ArrayList<ImportStatus>ListImport = new ArrayList<ImportStatus>();
+	        ListImport = new ArrayList<ImportStatus>();
 	       ListImport = ImportStatus.update(file,(ImportStatus.ImportFetch(file)));
 	       ImportStatus.UpdateConflictFlag(ListImport);
 	        String BookSvg="M 2 2.5 A 2.5 2.5 0 0 1 4.5 0 h 8.75 a 0.75 0.75 0 0 1 0.75 0.75 v 12.5 a 0.75 0.75 0 0 1 -0.75 0.75 h -2.5 a 0.75 0.75 0 0 1 0 -1.5 h 1.75 v -2 h -8 a 1 1 0 0 0 -0.714 1.7 a 0.75 0.75 0 1 1 -1.072 1.05 A 2.495 2.495 0 0 1 2 11.5 Z m 10.5 -1 h -8 a 1 1 0 0 0 -1 1 v 6.708 A 2.486 2.486 0 0 1 4.5 9 h 8 Z M 5 12.25 a 0.25 0.25 0 0 1 0.25 -0.25 h 3.5 a 0.25 0.25 0 0 1 0.25 0.25 v 3.25 a 0.25 0.25 0 0 1 -0.4 0.2 l -1.45 -1.087 a 0.249 0.249 0 0 0 -0.3 0 L 5.4 15.7 a 0.25 0.25 0 0 1 -0.4 -0.2 Z";
@@ -57,7 +58,7 @@ public class ImportController {
 	            if(Import.ConflictStatus!=1) {
 	        	if(Import.ImportStatus == 1) {
 	        		if(!Import.ImportName.contains("*")) {
-	            UsedImportParent.getChildren().add(new TreeItem<>(new TreeItemData(Import.ImportName,PackageSvg)));
+	            UsedImportParent.getChildren().add(new TreeItem<>(new TreeItemData(Import.LineNumber+Import.ImportName,PackageSvg)));
 	        		}
 	        		else {
 	        			 TreeItem<TreeItemData> WildCard = new TreeItem<>(new TreeItemData(Import.ImportName,PackageSvg));
@@ -69,7 +70,7 @@ public class ImportController {
 	        		}
 	        		}
 	            else {
-	            	NotUsedImportParent.getChildren().add(new TreeItem<>(new TreeItemData(Import.ImportName,PackageSvg)));
+	            	NotUsedImportParent.getChildren().add(new TreeItem<>(new TreeItemData(Import.LineNumber+Import.ImportName,PackageSvg)));
 	            }
 	            }
 	            else {
@@ -88,6 +89,32 @@ public class ImportController {
 	        rootItem.getChildren().add(UsedImportParent);
 	        rootItem.getChildren().add(NotUsedImportParent);
 	        rootItem.getChildren().add(ConflictImport);
+
+	        treeView.setOnKeyPressed(event -> {
+	        	TreeItem<TreeItemData> selectedItem = treeView.getSelectionModel().getSelectedItem();
+	        	if (selectedItem != null && event.getCode() == KeyCode.ENTER) {
+	        	if(!selectedItem.isLeaf() && selectedItem.getParent()!=null&&selectedItem.getParent().getValue().label.equals("Used Imports")) {
+	        		System.out.println("Selected Wild Card : "+selectedItem.getValue().label);
+	        		ImportStatus WildCardImport = null;
+	        		for(ImportStatus Import : ListImport) {
+	        			if(Import.ImportName.equals(selectedItem.getValue().label)) {
+	        				WildCardImport = Import;
+	        			}
+	        		}
+	        		System.out.println(WildCardImport.ImportName);
+	        		System.out.println(WildCardImport.LineNumber);
+	        		String ReplacedImport="";
+	        		for(String ClassName : WildCardImport.UsedClassList) {
+	        			ReplacedImport = ReplacedImport+"import "+WildCardImport.ImportName.replace("*", ClassName)+";\n";
+	        		}
+	        		 
+	        		showConfirmationDialog(WildCardImport.ImportName, WildCardImport.LineNumber-1, ReplacedImport);
+	        	}
+	        		
+	        	}
+	        	
+	        });
+	        
 	        setTreeViewStyle();
 	        
 	     
@@ -95,7 +122,29 @@ public class ImportController {
 
 
 	    
-	    
+	    private void showConfirmationDialog(String WildImport,int NumberLine,String ReplacedImport) {
+	        // Create a confirmation dialog
+	        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+	        alert.setTitle("Confirmation Dialog");
+	        alert.setHeaderText("Replacing WildCard Import");
+	        alert.setContentText("Are you sure you want to replace "+WildImport);
+
+	        // Show the dialog and wait for the user's response
+	        alert.showAndWait().ifPresent(response -> {
+	            if (response == ButtonType.OK) {
+	                try {
+						ImportStatus.ReplaceWildCardImport(MetricController.FileSelectedPath, NumberLine, ReplacedImport);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	                // Perform deletion or other action here
+	            } else {
+	                System.out.println("User clicked Cancel");
+	                // Cancel action or close the dialog
+	            }
+	        });
+	    }
 	    
 	    private void setTreeViewStyle() {
 	    	treeView.setCellFactory(new Callback<TreeView<TreeItemData>, TreeCell<TreeItemData>>() {
