@@ -8,12 +8,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.nio.file.*;
+import java.util.*;
 
 import application.FrontEnd.MetricController;
 
@@ -21,7 +17,9 @@ public class ImportStatus {
 public String ImportName;
 public int ImportStatus;
 public int ConflictStatus=0;
-public static Set<String> ClassNameList = new LinkedHashSet<>(); 
+public static Set<String> ClassNameList = new LinkedHashSet<>();
+public HashMap<String,Set<String>>WildCardUsedClassMap = new HashMap<>();
+public Set<String>UsedClassList = new LinkedHashSet<>();
 ImportStatus(String ImportName,int ImportStatus){
 	this.ImportName=ImportName;
 	this.ImportStatus=ImportStatus;
@@ -155,8 +153,8 @@ public static void UpdateConflictFlag(ArrayList<ImportStatus> ImportList) {
 		
 		for(int j = i+1;j<ImportList.size();j++) {
 			String ImportPackageName2 = ImportList.get(j).ImportName; 
-			System.out.println(ImportPackageName1);
-			System.out.println(ImportPackageName2);
+		//	System.out.println(ImportPackageName1);
+			//System.out.println(ImportPackageName2);
 			if(IsClassImportConflict(ImportPackageName1, ImportPackageName2)) {
 				ImportList.get(i).ConflictStatus = 1;
 				ImportList.get(j).ConflictStatus = 1;
@@ -203,7 +201,7 @@ static void IsAll(Set<String> ListImportFromFile , String line) {
 
 //Method To Update Flags Of ImportStatus(used , not used)
 public static ArrayList<ImportStatus> update(File file , ArrayList<ImportStatus> ImportList){
-	  	 
+	  	 Set<String>ClassName = new LinkedHashSet<>();
 	try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
           String line;
           while ((line = reader.readLine()) != null) {
@@ -233,22 +231,31 @@ public static ArrayList<ImportStatus> update(File file , ArrayList<ImportStatus>
           		}
           		if(!ListCode.isEmpty()) {
           			for(String code : ListCode) {
-          				IsAll(ClassNameList,code);
+          				IsAll(ClassName,code);
           			}
           		}
           	}
           	
           	if(ListCode.size()==0) {
-          		IsAll(ClassNameList,line);
+          		IsAll(ClassName,line);
           	}
               }
           }
 	}catch (IOException e) {
               e.printStackTrace(); // Handle any IO exceptions
           }
+	
+	ClassNameList = ClassName;
          	
+	//Set<String>UsedClassList = new LinkedHashSet<>();
+	int cmpt = 0;
 	for(ImportStatus Import : ImportList) {
-          		for(String classname :  ClassNameList) {
+		
+		//	UsedClassList.clear();
+		
+		cmpt =0;
+          		for(String classname :  ClassName) {
+          			
           			if(!Import.ImportName.contains("*")) {
           			if((FetchImportClassName(Import.ImportName)).equals(classname)) {
           			
@@ -257,9 +264,19 @@ public static ArrayList<ImportStatus> update(File file , ArrayList<ImportStatus>
           			}
           			else {
         if (ClassLoad(Import.ImportName,classname)) {
+        	Import.UsedClassList.add(classname);
         	Import.ImportStatus = 1;
         }
+          			}/*
+          			++cmpt;
+          			if(cmpt==ClassNameList.size()) {
+          				Import.WildCardUsedClassMap.put(Import.ImportName,UsedClassList);
+          				for(Map.Entry<String,Set<String>> entry : Import.WildCardUsedClassMap.entrySet()) {
+          					System.out.println(entry.getKey());
+          					System.out.println(entry.getValue());
+          				}
           			}
+          			*/
           		}
           	}
                             

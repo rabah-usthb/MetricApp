@@ -40,21 +40,36 @@ public class ImportController {
 	        ArrayList<ImportStatus>ListImport = new ArrayList<ImportStatus>();
 	       ListImport = ImportStatus.update(file,(ImportStatus.ImportFetch(file)));
 	       ImportStatus.UpdateConflictFlag(ListImport);
-	       
-	        TreeItemData rootItemData = new TreeItemData("Imports","M 2 2.5 A 2.5 2.5 0 0 1 4.5 0 h 8.75 a 0.75 0.75 0 0 1 0.75 0.75 v 12.5 a 0.75 0.75 0 0 1 -0.75 0.75 h -2.5 a 0.75 0.75 0 0 1 0 -1.5 h 1.75 v -2 h -8 a 1 1 0 0 0 -0.714 1.7 a 0.75 0.75 0 1 1 -1.072 1.05 A 2.495 2.495 0 0 1 2 11.5 Z m 10.5 -1 h -8 a 1 1 0 0 0 -1 1 v 6.708 A 2.486 2.486 0 0 1 4.5 9 h 8 Z M 5 12.25 a 0.25 0.25 0 0 1 0.25 -0.25 h 3.5 a 0.25 0.25 0 0 1 0.25 0.25 v 3.25 a 0.25 0.25 0 0 1 -0.4 0.2 l -1.45 -1.087 a 0.249 0.249 0 0 0 -0.3 0 L 5.4 15.7 a 0.25 0.25 0 0 1 -0.4 -0.2 Z");
+	        String BookSvg="M 2 2.5 A 2.5 2.5 0 0 1 4.5 0 h 8.75 a 0.75 0.75 0 0 1 0.75 0.75 v 12.5 a 0.75 0.75 0 0 1 -0.75 0.75 h -2.5 a 0.75 0.75 0 0 1 0 -1.5 h 1.75 v -2 h -8 a 1 1 0 0 0 -0.714 1.7 a 0.75 0.75 0 1 1 -1.072 1.05 A 2.495 2.495 0 0 1 2 11.5 Z m 10.5 -1 h -8 a 1 1 0 0 0 -1 1 v 6.708 A 2.486 2.486 0 0 1 4.5 9 h 8 Z M 5 12.25 a 0.25 0.25 0 0 1 0.25 -0.25 h 3.5 a 0.25 0.25 0 0 1 0.25 0.25 v 3.25 a 0.25 0.25 0 0 1 -0.4 0.2 l -1.45 -1.087 a 0.249 0.249 0 0 0 -0.3 0 L 5.4 15.7 a 0.25 0.25 0 0 1 -0.4 -0.2 Z";
+	        String UsedSvg="M 9 16.17 L 4.83 12 l -1.42 1.41 L 9 19 L 21 7 l -1.41 -1.41 Z";
+	        String NotUsedSvg="M 19 6.41 L 17.59 5 L 12 10.59 L 6.41 5 L 5 6.41 L 10.59 12 L 5 17.59 L 6.41 19 L 12 13.41 L 17.59 19 L 19 17.59 L 13.41 12 Z";
+	        String ConflictSvg="M 7.467 0.133 a 1.748 1.748 0 0 1 1.066 0 l 5.25 1.68 A 1.75 1.75 0 0 1 15 3.48 V 7 c 0 1.566 -0.32 3.182 -1.303 4.682 c -0.983 1.498 -2.585 2.813 -5.032 3.855 a 1.697 1.697 0 0 1 -1.33 0 c -2.447 -1.042 -4.049 -2.357 -5.032 -3.855 C 1.32 10.182 1 8.566 1 7 V 3.48 a 1.75 1.75 0 0 1 1.217 -1.667 Z m 0.61 1.429 a 0.25 0.25 0 0 0 -0.153 0 l -5.25 1.68 a 0.25 0.25 0 0 0 -0.174 0.238 V 7 c 0 1.358 0.275 2.666 1.057 3.86 c 0.784 1.194 2.121 2.34 4.366 3.297 a 0.196 0.196 0 0 0 0.154 0 c 2.245 -0.956 3.582 -2.104 4.366 -3.298 C 13.225 9.666 13.5 8.36 13.5 7 V 3.48 a 0.251 0.251 0 0 0 -0.174 -0.237 l -5.25 -1.68 Z M 8.75 4.75 v 3 a 0.75 0.75 0 0 1 -1.5 0 v -3 a 0.75 0.75 0 0 1 1.5 0 Z M 9 10.5 a 1 1 0 1 1 -2 0 a 1 1 0 0 1 2 0 Z";
+	        String PackageSvg="M 3 3 v 8 h 8 V 3 H 3 Z m 6 6 H 5 V 5 h 4 v 4 Z m -6 4 v 8 h 8 v -8 H 3 Z m 6 6 H 5 v -4 h 4 v 4 Z m 4 -16 v 8 h 8 V 3 h -8 Z m 6 6 h -4 V 5 h 4 v 4 Z m -6 4 v 8 h 8 v -8 h -8 Z m 6 6 h -4 v -4 h 4 v 4 Z";
+	        String ClassSvg="M 2 1.75 C 2 0.784 2.784 0 3.75 0 h 6.586 c 0.464 0 0.909 0.184 1.237 0.513 l 2.914 2.914 c 0.329 0.328 0.513 0.773 0.513 1.237 v 9.586 A 1.75 1.75 0 0 1 13.25 16 h -9.5 A 1.75 1.75 0 0 1 2 14.25 Z m 1.75 -0.25 a 0.25 0.25 0 0 0 -0.25 0.25 v 12.5 c 0 0.138 0.112 0.25 0.25 0.25 h 9.5 a 0.25 0.25 0 0 0 0.25 -0.25 V 6 h -2.75 A 1.75 1.75 0 0 1 9 4.25 V 1.5 Z m 6.75 0.062 V 4.25 c 0 0.138 0.112 0.25 0.25 0.25 h 2.688 l -0.011 -0.013 l -2.914 -2.914 l -0.013 -0.011 Z";
+	        TreeItemData rootItemData = new TreeItemData("Imports",BookSvg);
 	        TreeItem<TreeItemData> rootItem = new TreeItem<>(rootItemData);
 	        treeView.setRoot(rootItem);
-	        TreeItem<TreeItemData> UsedImportParent = new TreeItem<>(new TreeItemData("Used Imports","M 9 16.17 L 4.83 12 l -1.42 1.41 L 9 19 L 21 7 l -1.41 -1.41 Z"));
-	        TreeItem<TreeItemData> NotUsedImportParent = new TreeItem<>(new TreeItemData("Unused Imports","M 19 6.41 L 17.59 5 L 12 10.59 L 6.41 5 L 5 6.41 L 10.59 12 L 5 17.59 L 6.41 19 L 12 13.41 L 17.59 19 L 19 17.59 L 13.41 12 Z"));
-	        TreeItem<TreeItemData> ConflictImport = new TreeItem<>(new TreeItemData("Conflict Imports", "M 7.467 0.133 a 1.748 1.748 0 0 1 1.066 0 l 5.25 1.68 A 1.75 1.75 0 0 1 15 3.48 V 7 c 0 1.566 -0.32 3.182 -1.303 4.682 c -0.983 1.498 -2.585 2.813 -5.032 3.855 a 1.697 1.697 0 0 1 -1.33 0 c -2.447 -1.042 -4.049 -2.357 -5.032 -3.855 C 1.32 10.182 1 8.566 1 7 V 3.48 a 1.75 1.75 0 0 1 1.217 -1.667 Z m 0.61 1.429 a 0.25 0.25 0 0 0 -0.153 0 l -5.25 1.68 a 0.25 0.25 0 0 0 -0.174 0.238 V 7 c 0 1.358 0.275 2.666 1.057 3.86 c 0.784 1.194 2.121 2.34 4.366 3.297 a 0.196 0.196 0 0 0 0.154 0 c 2.245 -0.956 3.582 -2.104 4.366 -3.298 C 13.225 9.666 13.5 8.36 13.5 7 V 3.48 a 0.251 0.251 0 0 0 -0.174 -0.237 l -5.25 -1.68 Z M 8.75 4.75 v 3 a 0.75 0.75 0 0 1 -1.5 0 v -3 a 0.75 0.75 0 0 1 1.5 0 Z M 9 10.5 a 1 1 0 1 1 -2 0 a 1 1 0 0 1 2 0 Z"));
+	        TreeItem<TreeItemData> UsedImportParent = new TreeItem<>(new TreeItemData("Used Imports",UsedSvg));
+	        TreeItem<TreeItemData> NotUsedImportParent = new TreeItem<>(new TreeItemData("Unused Imports",NotUsedSvg));
+	        TreeItem<TreeItemData> ConflictImport = new TreeItem<>(new TreeItemData("Conflict Imports", ConflictSvg));
 	        for (ImportStatus Import : ListImport) {
 	            //TreeItem<TreeItemData> ImportItem = createTreeItem(Import);
 	            if(Import.ConflictStatus!=1) {
 	        	if(Import.ImportStatus == 1) {
-	            UsedImportParent.getChildren().add(new TreeItem<>(new TreeItemData(Import.ImportName,"M 3 3 v 8 h 8 V 3 H 3 Z m 6 6 H 5 V 5 h 4 v 4 Z m -6 4 v 8 h 8 v -8 H 3 Z m 6 6 H 5 v -4 h 4 v 4 Z m 4 -16 v 8 h 8 V 3 h -8 Z m 6 6 h -4 V 5 h 4 v 4 Z m -6 4 v 8 h 8 v -8 h -8 Z m 6 6 h -4 v -4 h 4 v 4 Z")));
-	            }
+	        		if(!Import.ImportName.contains("*")) {
+	            UsedImportParent.getChildren().add(new TreeItem<>(new TreeItemData(Import.ImportName,PackageSvg)));
+	        		}
+	        		else {
+	        			 TreeItem<TreeItemData> WildCard = new TreeItem<>(new TreeItemData(Import.ImportName,PackageSvg));
+	        		        			
+	        			for(String classUsed : Import.UsedClassList) {
+	        				WildCard.getChildren().add(new TreeItem<>(new TreeItemData(classUsed,ClassSvg)));
+	        			}
+	        			UsedImportParent.getChildren().add(WildCard);
+	        		}
+	        		}
 	            else {
-	            	NotUsedImportParent.getChildren().add(new TreeItem<>(new TreeItemData(Import.ImportName,"M 3 3 v 8 h 8 V 3 H 3 Z m 6 6 H 5 V 5 h 4 v 4 Z m -6 4 v 8 h 8 v -8 H 3 Z m 6 6 H 5 v -4 h 4 v 4 Z m 4 -16 v 8 h 8 V 3 h -8 Z m 6 6 h -4 V 5 h 4 v 4 Z m -6 4 v 8 h 8 v -8 h -8 Z m 6 6 h -4 v -4 h 4 v 4 Z")));
+	            	NotUsedImportParent.getChildren().add(new TreeItem<>(new TreeItemData(Import.ImportName,PackageSvg)));
 	            }
 	            }
 	            else {
@@ -126,16 +141,29 @@ public class ImportController {
 	                        label.getStyleClass().setAll("root-node-label");
 	                        svgPath.getStyleClass().setAll("root-node-svg");
 	                    } else if (!treeItem.isLeaf()) {
-	                        label.getStyleClass().setAll("parent-node-label");
-	                        if(treeItem.getValue().label.equals("Used Imports")) {
+	                        
+	                        if(treeItem.getValue().label.contains("*")) {
+	                        	svgPath.getStyleClass().setAll("wild-node-svg");
+	                        	label.getStyleClass().setAll("wild-node-label");	
+	                        }
+	                        else if(treeItem.getValue().label.equals("Used Imports")) {
 	                        svgPath.getStyleClass().setAll("parent-node-used-svg");
+	                        label.getStyleClass().setAll("parent-node-label");
 	                        }
 	                        else {
 	                        	svgPath.getStyleClass().setAll("parent-node-notused-svg");
+	                        	label.getStyleClass().setAll("parent-node-label");
 	                        }
 	                    } else {
-	                        label.getStyleClass().setAll("leaf-node-label");
-	                        svgPath.getStyleClass().setAll("leaf-node-svg");
+	                    	label.getStyleClass().setAll("leaf-node-label");
+	                        if(treeItem.getValue().label.contains(".")) {
+	                    	svgPath.getStyleClass().setAll("leaf-node-svg");
+	                        }else if(treeItem.getValue().label.equals("None")){
+	                        	svgPath.getStyleClass().setAll("none-node-svg");
+	                        }
+	                        else {
+	                        	svgPath.getStyleClass().setAll("class-node-svg");
+	                        }
 	                    }
 	                } else {
 	                    // Clear style for empty cells
