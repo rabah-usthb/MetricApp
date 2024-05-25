@@ -12,6 +12,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.*;
 import java.util.*;
+import java.util.ArrayList;
 import application.FrontEnd.MetricController;
 
 public class ImportStatus {
@@ -157,11 +158,14 @@ public static void UpdateConflictFlag(ArrayList<ImportStatus> ImportList) {
 			String ImportPackageName2 = ImportList.get(j).ImportName; 
 		//	System.out.println(ImportPackageName1);
 			//System.out.println(ImportPackageName2);
+			if(!ImportPackageName1.substring(0,ImportPackageName1.lastIndexOf("."))
+					.equals(ImportPackageName2.substring(0,ImportPackageName2.lastIndexOf(".")))){
 			if(IsClassImportConflict(ImportPackageName1, ImportPackageName2)) {
 				ImportList.get(i).ConflictStatus = 1;
 				ImportList.get(j).ConflictStatus = 1;
 			
 		}
+					}
 	}
 }
 }
@@ -348,16 +352,43 @@ public static ArrayList<ImportStatus> ImportFetch(File file){
 	return ImportList;
 }
 
+public static String FetchPackageName(String Import) {
+	//System.out.println(Import);
+	String PKG = Import.replace(" ", "").replace("import", "");
+	PKG =PKG.substring(0,PKG.lastIndexOf("."));
+//	System.out.println(PKG);
+	return PKG ;
+}
+
 public static void ReplaceWildCardImport(String filePath, int lineIndex, String replacementContent) throws IOException {
     Path path = Paths.get(filePath);
-
+    String Pkg = FetchPackageName(replacementContent.substring(replacementContent.lastIndexOf("import ")));
     // Read all lines into memory
     var lines = Files.readAllLines(path);
-
+    
+   // System.out.println("Number of Import "+Replaced.length);
     if (lineIndex >= 0 && lineIndex < lines.size()) {
         // Replace the line at the specified index
         lines.set(lineIndex, replacementContent);
-
+        //System.out.println("Pkg Of Replacement "+Pkg);
+       
+       
+        for(int i = 0 ; i<lines.size() ; i++) {
+     //   	System.out.println(cmpt+" "+line)
+               if(lines.get(i).startsWith("import ")) {
+    //    		System.out.println(i+" "+lines.get(i));
+        		
+      //       	System.out.println((i<lineIndex||i>=lineIndex+Replaced.length) && FetchPackageName(lines.get(i)).equals(Pkg));
+        	
+        		if( (i<lineIndex||i>lineIndex) && FetchPackageName(lines.get(i)).equals(Pkg)) {
+        		lines.remove(i);
+        	}
+        	}
+        	else if(!lines.get(i).contains(".")&&(!lines.get(i).isEmpty()&&!lines.get(i).isBlank())) {
+        		break;
+        	}
+        	
+        }
         // Write the modified content back to the file
         try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(filePath)))) {
             for (String line : lines) {
