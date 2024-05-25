@@ -58,7 +58,7 @@ public class ImportController {
 	            if(Import.ConflictStatus!=1) {
 	        	if(Import.ImportStatus == 1) {
 	        		if(!Import.ImportName.contains("*")) {
-	            UsedImportParent.getChildren().add(new TreeItem<>(new TreeItemData(Import.LineNumber+Import.ImportName,PackageSvg)));
+	            UsedImportParent.getChildren().add(new TreeItem<>(new TreeItemData(Import.ImportName,PackageSvg)));
 	        		}
 	        		else {
 	        			 TreeItem<TreeItemData> WildCard = new TreeItem<>(new TreeItemData(Import.ImportName,PackageSvg));
@@ -70,7 +70,7 @@ public class ImportController {
 	        		}
 	        		}
 	            else {
-	            	NotUsedImportParent.getChildren().add(new TreeItem<>(new TreeItemData(Import.LineNumber+Import.ImportName,PackageSvg)));
+	            	NotUsedImportParent.getChildren().add(new TreeItem<>(new TreeItemData(Import.ImportName,PackageSvg)));
 	            }
 	            }
 	            else {
@@ -104,8 +104,14 @@ public class ImportController {
 	        		System.out.println(WildCardImport.ImportName);
 	        		System.out.println(WildCardImport.LineNumber);
 	        		String ReplacedImport="";
+	        		int cmpt = 0;
 	        		for(String ClassName : WildCardImport.UsedClassList) {
-	        			ReplacedImport = ReplacedImport+"import "+WildCardImport.ImportName.replace("*", ClassName)+";\n";
+	        			
+	        			ReplacedImport = ReplacedImport+"import "+WildCardImport.ImportName.replace("*", ClassName)+";";
+	        			if(cmpt!=WildCardImport.UsedClassList.size()-1) {
+	        				ReplacedImport = ReplacedImport+"\n";
+	        			}
+	        			++cmpt;
 	        		}
 	        		 
 	        		showConfirmationDialog(WildCardImport.ImportName, WildCardImport.LineNumber-1, ReplacedImport);
@@ -128,13 +134,17 @@ public class ImportController {
 	        alert.setTitle("Confirmation Dialog");
 	        alert.setHeaderText("Replacing WildCard Import");
 	        alert.setContentText("Are you sure you want to replace "+WildImport);
-
+            
+	        alert.setGraphic(null);
+	        String CssAlert=this.getClass().getResource("/ressource/Css Folder/AlertWild.css").toExternalForm();
+            alert.getDialogPane().getStylesheets().add(CssAlert);
 	        // Show the dialog and wait for the user's response
 	        alert.showAndWait().ifPresent(response -> {
 	            if (response == ButtonType.OK) {
 	                try {
 						ImportStatus.ReplaceWildCardImport(MetricController.FileSelectedPath, NumberLine, ReplacedImport);
-					} catch (IOException e) {
+					    reloadScene();
+	                } catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
@@ -145,6 +155,27 @@ public class ImportController {
 	            }
 	        });
 	    }
+	    
+	    
+	    
+	    private void reloadScene() {
+	        try {
+	            Stage stage = (Stage) treeView.getScene().getWindow();
+	            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/Import.fxml"));
+	            Parent root = loader.load();
+
+	            Scene scene = new Scene(root);
+	            String css = this.getClass().getResource("/ressource/Css Folder/Import.css").toExternalForm();
+                scene.getStylesheets().add(css);
+	            stage.setScene(scene);
+
+	            ImportController controller = loader.getController();
+	            controller.initialize(MetricController.FileSelectedPath);
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	    
 	    
 	    private void setTreeViewStyle() {
 	    	treeView.setCellFactory(new Callback<TreeView<TreeItemData>, TreeCell<TreeItemData>>() {

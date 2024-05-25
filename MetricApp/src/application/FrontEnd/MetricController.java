@@ -122,6 +122,7 @@ public class MetricController {
                         Stage stage = new Stage();
                         stage.setScene(scene);
                         stage.show();
+                        alert.close();
                     
                     });
 
@@ -144,6 +145,7 @@ public class MetricController {
                        Stage stage = new Stage();
                        stage.setScene(scene);
                        stage.show();
+                       alert.close();
                     
                     });
 
@@ -166,6 +168,7 @@ public class MetricController {
                        Stage stage = new Stage();
                        stage.setScene(scene);
                        stage.show();
+                       alert.close();
 
                     });
 
@@ -186,6 +189,7 @@ public class MetricController {
                        Stage stage = new Stage();
                        stage.setScene(scene);
                        stage.show();
+                       alert.close();
                    });
                     
                     EncapsulationButton.setOnAction(e-> {
@@ -205,6 +209,7 @@ public class MetricController {
                         Stage stage = new Stage();
                         stage.setScene(scene);
                         stage.show();
+                        alert.close();
                     });
                     
                     PolymorphismeButon.setOnAction(e->{
@@ -224,6 +229,7 @@ public class MetricController {
                         Stage stage = new Stage();
                         stage.setScene(scene);
                         stage.show();
+                        alert.close();
                     });
                     /*
                     MVCButton.setOnAction(e->{
