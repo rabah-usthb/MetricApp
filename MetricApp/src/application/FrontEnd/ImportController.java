@@ -24,6 +24,8 @@ package application.FrontEnd;
 	import java.io.File;
 	import java.io.IOException;
 	import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import application.BackEnd.*;
 import javafx.util.Callback;
@@ -47,15 +49,21 @@ public class ImportController {
 	        String ConflictSvg="M 7.467 0.133 a 1.748 1.748 0 0 1 1.066 0 l 5.25 1.68 A 1.75 1.75 0 0 1 15 3.48 V 7 c 0 1.566 -0.32 3.182 -1.303 4.682 c -0.983 1.498 -2.585 2.813 -5.032 3.855 a 1.697 1.697 0 0 1 -1.33 0 c -2.447 -1.042 -4.049 -2.357 -5.032 -3.855 C 1.32 10.182 1 8.566 1 7 V 3.48 a 1.75 1.75 0 0 1 1.217 -1.667 Z m 0.61 1.429 a 0.25 0.25 0 0 0 -0.153 0 l -5.25 1.68 a 0.25 0.25 0 0 0 -0.174 0.238 V 7 c 0 1.358 0.275 2.666 1.057 3.86 c 0.784 1.194 2.121 2.34 4.366 3.297 a 0.196 0.196 0 0 0 0.154 0 c 2.245 -0.956 3.582 -2.104 4.366 -3.298 C 13.225 9.666 13.5 8.36 13.5 7 V 3.48 a 0.251 0.251 0 0 0 -0.174 -0.237 l -5.25 -1.68 Z M 8.75 4.75 v 3 a 0.75 0.75 0 0 1 -1.5 0 v -3 a 0.75 0.75 0 0 1 1.5 0 Z M 9 10.5 a 1 1 0 1 1 -2 0 a 1 1 0 0 1 2 0 Z";
 	        String PackageSvg="M 3 3 v 8 h 8 V 3 H 3 Z m 6 6 H 5 V 5 h 4 v 4 Z m -6 4 v 8 h 8 v -8 H 3 Z m 6 6 H 5 v -4 h 4 v 4 Z m 4 -16 v 8 h 8 V 3 h -8 Z m 6 6 h -4 V 5 h 4 v 4 Z m -6 4 v 8 h 8 v -8 h -8 Z m 6 6 h -4 v -4 h 4 v 4 Z";
 	        String ClassSvg="M 2 1.75 C 2 0.784 2.784 0 3.75 0 h 6.586 c 0.464 0 0.909 0.184 1.237 0.513 l 2.914 2.914 c 0.329 0.328 0.513 0.773 0.513 1.237 v 9.586 A 1.75 1.75 0 0 1 13.25 16 h -9.5 A 1.75 1.75 0 0 1 2 14.25 Z m 1.75 -0.25 a 0.25 0.25 0 0 0 -0.25 0.25 v 12.5 c 0 0.138 0.112 0.25 0.25 0.25 h 9.5 a 0.25 0.25 0 0 0 0.25 -0.25 V 6 h -2.75 A 1.75 1.75 0 0 1 9 4.25 V 1.5 Z m 6.75 0.062 V 4.25 c 0 0.138 0.112 0.25 0.25 0.25 h 2.688 l -0.011 -0.013 l -2.914 -2.914 l -0.013 -0.011 Z";
+	        String DuplicateSvg="M 16 1 H 4 c -1.1 0 -2 0.9 -2 2 v 14 h 2 V 3 h 12 V 1 Z m 3 4 H 8 c -1.1 0 -2 0.9 -2 2 v 14 c 0 1.1 0.9 2 2 2 h 11 c 1.1 0 2 -0.9 2 -2 V 7 c 0 -1.1 -0.9 -2 -2 -2 Z m 0 16 H 8 V 7 h 11 v 14 Z";
 	        TreeItemData rootItemData = new TreeItemData("Imports",BookSvg);
 	        TreeItem<TreeItemData> rootItem = new TreeItem<>(rootItemData);
 	        treeView.setRoot(rootItem);
 	        TreeItem<TreeItemData> UsedImportParent = new TreeItem<>(new TreeItemData("Used Imports",UsedSvg));
 	        TreeItem<TreeItemData> NotUsedImportParent = new TreeItem<>(new TreeItemData("Unused Imports",NotUsedSvg));
 	        TreeItem<TreeItemData> ConflictImport = new TreeItem<>(new TreeItemData("Conflict Imports", ConflictSvg));
+	        TreeItem<TreeItemData> DuplicateImport = new TreeItem<>(new TreeItemData("Duplicate Imports", DuplicateSvg));
 	        for (ImportStatus Import : ListImport) {
 	            //TreeItem<TreeItemData> ImportItem = createTreeItem(Import);
 	            if(Import.ConflictStatus!=1) {
+	            	
+	            if(Import.DuplicatStatus==1) {
+	            	DuplicateImport.getChildren().add(new TreeItem<>(new TreeItemData(Import.ImportName,PackageSvg)));
+	            }
 	        	if(Import.ImportStatus == 1) {
 	        		if(!Import.ImportName.contains("*")) {
 	            UsedImportParent.getChildren().add(new TreeItem<>(new TreeItemData(Import.ImportName,PackageSvg)));
@@ -86,10 +94,14 @@ public class ImportController {
 	         if(ConflictImport.getChildren().isEmpty()) {
 	        	 ConflictImport.getChildren().add(new TreeItem<>(new TreeItemData("None","M 12 2 C 6.5 2 2 6.5 2 12 s 4.5 10 10 10 s 10 -4.5 10 -10 S 17.5 2 12 2 Z M 4 12 c 0 -4.4 3.6 -8 8 -8 c 1.8 0 3.5 0.6 4.9 1.7 L 5.7 16.9 C 4.6 15.5 4 13.8 4 12 Z m 8 8 c -1.8 0 -3.5 -0.6 -4.9 -1.7 L 18.3 7.1 C 19.4 8.5 20 10.2 20 12 c 0 4.4 -3.6 8 -8 8 Z")));
 		        }
+	         if(DuplicateImport.getChildren().isEmpty()) {
+	        	 DuplicateImport.getChildren().add(new TreeItem<>(new TreeItemData("None","M 12 2 C 6.5 2 2 6.5 2 12 s 4.5 10 10 10 s 10 -4.5 10 -10 S 17.5 2 12 2 Z M 4 12 c 0 -4.4 3.6 -8 8 -8 c 1.8 0 3.5 0.6 4.9 1.7 L 5.7 16.9 C 4.6 15.5 4 13.8 4 12 Z m 8 8 c -1.8 0 -3.5 -0.6 -4.9 -1.7 L 18.3 7.1 C 19.4 8.5 20 10.2 20 12 c 0 4.4 -3.6 8 -8 8 Z")));
+	         }
 	        rootItem.getChildren().add(UsedImportParent);
 	        rootItem.getChildren().add(NotUsedImportParent);
 	        rootItem.getChildren().add(ConflictImport);
-
+            rootItem.getChildren().add(DuplicateImport);
+	        
 	        treeView.setOnKeyPressed(event -> {
 	        	TreeItem<TreeItemData> selectedItem = treeView.getSelectionModel().getSelectedItem();
 	        	if (selectedItem != null && event.getCode() == KeyCode.ENTER) {
@@ -230,8 +242,13 @@ public class ImportController {
 	                        svgPath.getStyleClass().setAll("parent-node-used-svg");
 	                        label.getStyleClass().setAll("parent-node-label");
 	                        }
-	                        else {
+	                        else if(treeItem.getValue().label.equals("Unused Imports")||
+	                        		treeItem.getValue().label.equals("Conflict Imports")) {
 	                        	svgPath.getStyleClass().setAll("parent-node-notused-svg");
+	                        	label.getStyleClass().setAll("parent-node-label");
+	                        }
+	                        else {
+	                        	svgPath.getStyleClass().setAll("parent-node-duplicate-svg");
 	                        	label.getStyleClass().setAll("parent-node-label");
 	                        }
 	                    } else {

@@ -11,8 +11,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.*;
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.ArrayList;
+import java.util.Iterator;
 import application.FrontEnd.MetricController;
 
 public class ImportStatus {
@@ -21,6 +23,7 @@ public int ImportStatus;
 public int ConflictStatus=0;
 public static Set<String> ClassNameList = new LinkedHashSet<>();
 public int LineNumber;
+public int DuplicatStatus=0;
 public Set<String>UsedClassList = new LinkedHashSet<>();
 ImportStatus(String ImportName,int ImportStatus,int LineNumber){
 	this.ImportName=ImportName;
@@ -150,7 +153,7 @@ static String  FetchImportClassName(String ImportName) {
 }
 
 public static void UpdateConflictFlag(ArrayList<ImportStatus> ImportList) {
-	
+	 
 	for(int i = 0;i<ImportList.size();i++) {
 		String ImportPackageName1 = ImportList.get(i).ImportName;
 		
@@ -254,12 +257,12 @@ public static ArrayList<ImportStatus> update(File file , ArrayList<ImportStatus>
 	ClassNameList = ClassName;
          	
 	//Set<String>UsedClassList = new LinkedHashSet<>();
-	int cmpt = 0;
+
 	for(ImportStatus Import : ImportList) {
 		
 		//	UsedClassList.clear();
 		
-		cmpt =0;
+		
           		for(String classname :  ClassName) {
           			
           			if(!Import.ImportName.contains("*")) {
@@ -348,6 +351,20 @@ public static ArrayList<ImportStatus> ImportFetch(File file){
       } catch (IOException e) {
           e.printStackTrace();
       }
+	  
+	 for (int i = 0; i < ImportList.size(); i++) {
+         ImportStatus importTypeI = ImportList.get(i);
+         Iterator<ImportStatus> iterator = ImportList.listIterator(i + 1);
+         while (iterator.hasNext()) {
+             ImportStatus importTypeJ = iterator.next();
+             if (importTypeI.ImportName.equals(importTypeJ.ImportName)) {
+                 importTypeI.DuplicatStatus = 1;
+                 iterator.remove();
+             }
+         }
+     }
+	   
+	 
 	
 	return ImportList;
 }
@@ -364,7 +381,7 @@ public static void ReplaceWildCardImport(String filePath, int lineIndex, String 
     Path path = Paths.get(filePath);
     String Pkg = FetchPackageName(replacementContent.substring(replacementContent.lastIndexOf("import ")));
     // Read all lines into memory
-    var lines = Files.readAllLines(path);
+    var lines =  Files.readAllLines(path);
     
    // System.out.println("Number of Import "+Replaced.length);
     if (lineIndex >= 0 && lineIndex < lines.size()) {
@@ -372,23 +389,25 @@ public static void ReplaceWildCardImport(String filePath, int lineIndex, String 
         lines.set(lineIndex, replacementContent);
         //System.out.println("Pkg Of Replacement "+Pkg);
        
+       System.out.println(lineIndex+"\n\n");
        
-        for(int i = 0 ; i<lines.size() ; i++) {
-     //   	System.out.println(cmpt+" "+line)
-               if(lines.get(i).startsWith("import ")) {
-    //    		System.out.println(i+" "+lines.get(i));
-        		
-      //       	System.out.println((i<lineIndex||i>=lineIndex+Replaced.length) && FetchPackageName(lines.get(i)).equals(Pkg));
-        	
-        		if( (i<lineIndex||i>lineIndex) && FetchPackageName(lines.get(i)).equals(Pkg)) {
-        		lines.remove(i);
-        	}
-        	}
-        	else if(!lines.get(i).contains(".")&&(!lines.get(i).isEmpty()&&!lines.get(i).isBlank())) {
-        		break;
-        	}
-        	
-        }
+       
+       Iterator<String> iterator = lines.listIterator();
+       int i =0;
+       while (iterator.hasNext()) {
+           String Line = iterator.next();
+           if(Line.startsWith("import ")) {
+            if( (i<lineIndex||i>lineIndex)&&FetchPackageName(Line).equals(Pkg)) { 	
+            	iterator.remove();
+              	}
+    	     }
+        	        	
+       else if(!Line.contains(".")&&(!Line.isEmpty()&&!Line.isBlank())) {
+        	 break;
+       }
+        	    ++i;    	
+       }
+       
         // Write the modified content back to the file
         try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(filePath)))) {
             for (String line : lines) {

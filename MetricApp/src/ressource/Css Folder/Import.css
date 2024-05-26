@@ -19,7 +19,10 @@
 	-fx-fill:#FF200D;
 }
 
-
+.parent-node-duplicate-svg{
+	-fx-fill:#7170E2;
+    
+}
 
 .wild-node-label{
 	-fx-font-size:28px;
