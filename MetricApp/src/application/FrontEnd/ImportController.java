@@ -131,6 +131,9 @@ public class ImportController {
 	        	else if(!selectedItem.isLeaf() && selectedItem.getParent()!=null&&selectedItem.getValue().label.equals("Duplicate Imports")) {
 	        	showConfirmation();	
 	        	}
+	        	else if(!selectedItem.isLeaf() && selectedItem.getParent()!=null&&selectedItem.getValue().label.equals("Unused Imports")) {
+		        showConfirmationUnused();	
+		        }
 	        		
 	        	}
 	        	
@@ -141,6 +144,33 @@ public class ImportController {
 	     
 	    }
 
+	    
+	    
+	    private void showConfirmationUnused() {
+	    	Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+	        alert.setTitle("Confirmation Dialog");
+	        alert.setHeaderText("Removing Unused Imports");
+	        alert.setContentText("Are you sure you want to delete all Unused Imports ?");
+            
+	        alert.setGraphic(null);
+	        String CssAlert=this.getClass().getResource("/ressource/Css Folder/AlertWild.css").toExternalForm();
+            alert.getDialogPane().getStylesheets().add(CssAlert);
+	        // Show the dialog and wait for the user's response
+	        alert.showAndWait().ifPresent(response -> {
+	            if (response == ButtonType.OK) {
+	                
+						ImportStatus.RemoveUnusedImports( MetricController.FileSelectedPath);  
+					 
+						reloadScene();
+	                
+	                // Perform deletion or other action here
+	            } else {
+	                System.out.println("User clicked Cancel");
+	                // Cancel action or close the dialog
+	            }
+	        });
+	    }
+	    
 
 	    private void showConfirmation() {
 	    	Alert alert = new Alert(Alert.AlertType.CONFIRMATION);

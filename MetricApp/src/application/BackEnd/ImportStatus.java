@@ -1,12 +1,15 @@
 package application.BackEnd;
 
+import java.net.URLClassLoader;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.net.URLClassLoader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URL.*;
 import java.util.Iterator;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -24,6 +27,7 @@ import java.util.Set;
 
 import application.FrontEnd.ImportController;
 import application.FrontEnd.MetricController;
+import java.net.URL;
 
 public class ImportStatus {
 public String ImportName;
@@ -386,6 +390,78 @@ public static String FetchPackageName(String Import) {
 }
 
 
+
+public static void RemoveUnusedImports(String FilePath) {
+	Path path = Paths.get(FilePath);
+	
+	List<String> lines = new ArrayList<>();
+	try {
+	 lines =  Files.readAllLines(path);
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	 Set<String>ImportUnusedSet = new LinkedHashSet<>();
+	 
+	 
+	for(ImportStatus Import : ImportController.ListImport) {
+	if(Import.ImportStatus == 0) {	
+		ImportUnusedSet.add(Import.ImportName);
+	}
+	}
+	
+	
+	Iterator<String>OuterIterator = lines.listIterator();
+   while(OuterIterator.hasNext()) {
+//	System.out.println(lines.get(i));
+	   String ImportI =OuterIterator.next();
+	   if(RegularExpression.IsImport(ImportI)) {
+		   if(ImportUnusedSet.contains(FetchImportFromCode(ImportI))) {
+			   OuterIterator.remove();
+		   }
+		   
+		       	   
+	   
+	   }   else if(!ImportI.contains(".")&&(!ImportI.isEmpty()&&!ImportI.isBlank())) {
+      	 break;
+     }
+		
+	
+   }
+   for(int i = 0 ; i<lines.size();i++) {
+	String ImportI = lines.get(i);
+	   if(RegularExpression.IsImport(ImportI)) {   
+		   if(ImportUnusedSet.contains(FetchImportFromCode(ImportI))) {
+			   Iterator<String>iterator = lines.listIterator(i+1);
+			   while(iterator.hasNext()) {
+				   String ImportJ = iterator.next();
+				   if(RegularExpression.IsImport(ImportJ)) {
+					   if(FetchImportClassName(ImportJ).equals(ImportI)) {
+						   iterator.remove();
+					   }
+				   }
+		else if(!ImportJ.contains(".")&&(!ImportJ.isEmpty()&&!ImportJ.isBlank())) {
+			      	 break;  
+				     }
+			   }
+		   }
+	   }
+	   else if(!ImportI.contains(".")&&(!ImportI.isEmpty()&&!ImportI.isBlank())) {
+	      	 break;  
+	      	 }
+   }
+   try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(FilePath)))) {
+       for (String line : lines) {
+           writer.println(line);
+       }
+   } catch (IOException e) {
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+}
+}
+
+
 public static void RemoveDuplicate(String FilePath) {
 	Path path = Paths.get(FilePath);
 	
@@ -441,6 +517,9 @@ public static void RemoveDuplicate(String FilePath) {
 	e.printStackTrace();
 }
 } 
+
+
+
 
 
 public static void ReplaceWildCardImport(String filePath, int lineIndex, String replacementContent) throws IOException {
