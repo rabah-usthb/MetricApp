@@ -34,8 +34,8 @@ public class ImportController {
 	    @FXML
 	    private TreeView<TreeItemData> treeView;
 	    @FXML
-	    private Label ImportLabel;
-	    static ArrayList<ImportStatus>ListImport;
+  	    private Label ImportLabel;
+	    public static ArrayList<ImportStatus>ListImport;
 
 	    public void initialize(String FilePath) {
 	        File file = new File(FilePath);
@@ -128,6 +128,9 @@ public class ImportController {
 	        		 
 	        		showConfirmationDialog(WildCardImport.ImportName, WildCardImport.LineNumber-1, ReplacedImport);
 	        	}
+	        	else if(!selectedItem.isLeaf() && selectedItem.getParent()!=null&&selectedItem.getValue().label.equals("Duplicate Imports")) {
+	        	showConfirmation();	
+	        	}
 	        		
 	        	}
 	        	
@@ -139,6 +142,31 @@ public class ImportController {
 	    }
 
 
+	    private void showConfirmation() {
+	    	Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+	        alert.setTitle("Confirmation Dialog");
+	        alert.setHeaderText("Removing Duplicate Imports");
+	        alert.setContentText("Are you sure you want to delete all duplicate ?");
+            
+	        alert.setGraphic(null);
+	        String CssAlert=this.getClass().getResource("/ressource/Css Folder/AlertWild.css").toExternalForm();
+            alert.getDialogPane().getStylesheets().add(CssAlert);
+	        // Show the dialog and wait for the user's response
+	        alert.showAndWait().ifPresent(response -> {
+	            if (response == ButtonType.OK) {
+	                
+						ImportStatus.RemoveDuplicate(MetricController.FileSelectedPath); 
+						reloadScene();
+	                
+	                // Perform deletion or other action here
+	            } else {
+	                System.out.println("User clicked Cancel");
+	                // Cancel action or close the dialog
+	            }
+	        });
+	    }
+	    
+	    
 	    
 	    private void showConfirmationDialog(String WildImport,int NumberLine,String ReplacedImport) {
 	        // Create a confirmation dialog

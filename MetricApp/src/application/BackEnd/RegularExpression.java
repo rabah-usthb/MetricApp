@@ -21,6 +21,7 @@ public class RegularExpression {
 	
 	//Method To Know If Line Is Import
 	static boolean IsImport(String Line) {
+		Line = Line.trim();
 		return Line.startsWith("import ");
 	}
 	

@@ -7,14 +7,22 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Iterator;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+
+
+import java.util.Iterator;
+
 import java.nio.file.*;
 import java.util.LinkedHashSet;
+           import java  .util. *;
+import java.util.*;
 import java.util.Set;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Set;
+
+import application.FrontEnd.ImportController;
 import application.FrontEnd.MetricController;
 
 public class ImportStatus {
@@ -376,6 +384,64 @@ public static String FetchPackageName(String Import) {
 //	System.out.println(PKG);
 	return PKG ;
 }
+
+
+public static void RemoveDuplicate(String FilePath) {
+	Path path = Paths.get(FilePath);
+	
+	List<String> lines = new ArrayList<>();
+	try {
+	 lines =  Files.readAllLines(path);
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+   for(int i = 0 ; i<lines.size(); i++) {
+//	System.out.println(lines.get(i));
+	   String ImportI ="";
+	   if(RegularExpression.IsImport(lines.get(i))) {
+		   ImportI = lines.get(i);
+		   Iterator<String>iterator = lines.listIterator(i+1);
+	       while(iterator.hasNext()) {
+	    	   String ImportJ = iterator.next();
+	    	   if(RegularExpression.IsImport(ImportJ)) {
+	    	   
+	    	  if(FetchImportFromCode(ImportJ).equals(FetchImportFromCode(ImportI))) {
+	    		  iterator.remove();
+	    	  }
+	       }
+	    	  else if(!ImportJ.contains(".")&&(!ImportJ.isEmpty()&&!ImportJ.isBlank())) {
+	    	      	 break;
+	    	     }
+	       }
+	   }
+            	   
+	   
+	   else if(!lines.get(i).contains(".")&&(!lines.get(i).isEmpty()&&!lines.get(i).isBlank())) {
+      	 break;
+     }
+		
+	}
+   int j=25;
+   for(String line : lines) {
+	   if(j==0) {
+		   break;
+	   }
+	   else {
+	   System.out.println(line);
+	   --j;}
+   }
+   
+   try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(FilePath)))) {
+       for (String line : lines) {
+           writer.println(line);
+       }
+   } catch (IOException e) {
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+}
+} 
+
 
 public static void ReplaceWildCardImport(String filePath, int lineIndex, String replacementContent) throws IOException {
     Path path = Paths.get(filePath);
