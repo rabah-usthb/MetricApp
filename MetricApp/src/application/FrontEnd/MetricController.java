@@ -54,14 +54,26 @@ public class MetricController {
         File projectFile = new File(pathProject);
         File[] srcFile = projectFile.listFiles();
         Java.FetchSrcJavaFile(srcFile, listPackage);
-        TreeItemData rootItemData = new TreeItemData("Src Folder","M 10 4 H 4 c -1.1 0 -1.99 0.9 -1.99 2 L 2 18 c 0 1.1 0.9 2 2 2 h 16 c 1.1 0 2 -0.9 2 -2 V 8 c 0 -1.1 -0.9 -2 -2 -2 h -8 l -2 -2 Z");
+        String ClosedFolderSvg="M 1.75 1 A 1.75 1.75 0 0 0 0 2.75 v 10.5 C 0 14.216 0.784 15 1.75 15 h 12.5 A 1.75 1.75 0 0 0 16 13.25 v -8.5 A 1.75 1.75 0 0 0 14.25 3 H 7.5 a 0.25 0.25 0 0 1 -0.2 -0.1 l -0.9 -1.2 C 6.07 1.26 5.55 1 5 1 H 1.75 Z";
+        String OpenedFolderSvg="M 0.513 1.513 A 1.75 1.75 0 0 1 1.75 1 h 3.5 c 0.55 0 1.07 0.26 1.4 0.7 l 0.9 1.2 a 0.25 0.25 0 0 0 0.2 0.1 H 13 a 1 1 0 0 1 1 1 v 0.5 H 2.75 a 0.75 0.75 0 0 0 0 1.5 h 11.978 a 1 1 0 0 1 0.994 1.117 L 15 13.25 A 1.75 1.75 0 0 1 13.25 15 H 1.75 A 1.75 1.75 0 0 1 0 13.25 V 2.75 c 0 -0.464 0.184 -0.91 0.513 -1.237 Z";
+        TreeItemData rootItemData = new TreeItemData("Src Folder",ClosedFolderSvg);
         TreeItem<TreeItemData> rootItem = new TreeItem<>(rootItemData);
         treeView.setRoot(rootItem);
         for (Package pkg : listPackage) {
             TreeItem<TreeItemData> packageItem = createTreeItem(pkg);
             rootItem.getChildren().add(packageItem);
         }
-       
+          
+        rootItem.expandedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                rootItem.getValue().svgPath.setContent(OpenedFolderSvg);
+            } else {
+                rootItem.getValue().svgPath.setContent(ClosedFolderSvg);
+            }
+            // Refresh the tree to apply changes
+            treeView.refresh();
+        });
+        
         setTreeViewStyle();
         
         treeView.setOnKeyPressed(event -> {
