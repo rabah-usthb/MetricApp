@@ -14,8 +14,8 @@ public class Main extends Application {
         try {
         	
             // Load the FXML file
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/PathView.fxml"));
-            String css = this.getClass().getResource("/ressource/Css Folder/path.css").toExternalForm();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/Login.fxml"));
+            String css = this.getClass().getResource("/ressource/Css Folder/Login.css").toExternalForm();
             Parent root = loader.load();
             // Set the FXML content to the scene
             Scene scene = new Scene(root);

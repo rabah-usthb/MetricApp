@@ -11,8 +11,8 @@
  
 
  .button:focused{
- -fx-background-color :#008080;
- -fx-text-fill : #FFFFFF;
+-fx-background-color :#008080;
+-fx-text-fill : #FFFFFF;
 -fx-cursor :hand;
 }
 
