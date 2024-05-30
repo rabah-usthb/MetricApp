@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="700.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+  <tabs>
+    <Tab text="New Metrics">
+      <content>
+        <Pane prefHeight="400.0" prefWidth="800.0">
+          <children>
+            <Button layoutX="20.0" layoutY="229.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="ICM">
+              <font>
+                <Font size="14.0" />
+              </font>
+            </Button>
+            <ImageView fitHeight="150.0" fitWidth="170.0" layoutX="461.0" layoutY="35.0" pickOnBounds="true" preserveRatio="true">
+              <image>
+                <Image url="@../PNG%20Folder/metrics%20(2).png" />
+              </image>
+            </ImageView>
+            <Label layoutX="28.0" layoutY="79.0" prefHeight="58.0" prefWidth="353.0" text="Choose A Metric :">
+              <font>
+                <Font name="System Bold" size="40.0" />
+              </font>
+            </Label>
+            <Button layoutX="580.0" layoutY="229.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="RMRS">
+              <font>
+                <Font size="14.0" />
+              </font>
+            </Button>
+            <Button layoutX="460.0" layoutY="229.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="SM">
+              <font>
+                <Font size="14.0" />
+              </font>
+            </Button>
+            <Button layoutX="350.0" layoutY="229.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="TE">
+              <font>
+                <Font size="14.0" />
+              </font>
+            </Button>
+            <Button layoutX="240.0" layoutY="229.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="JEA">
+              <font>
+                <Font size="14.0" />
+              </font>
+            </Button>
+            <Button layoutX="130.0" layoutY="229.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="JAX">
+              <font>
+                <Font size="14.0" />
+              </font>
+            </Button>
+            <Button layoutX="380.0" layoutY="309.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="258.0" text="Cancel" />
+          </children>
+        </Pane>
+      </content>
+    </Tab>
+    <Tab text="Existing Metrics">
+      <content>
+        <Pane prefHeight="400.0" prefWidth="800.0">
+          <children>
+            <Button layoutX="20.0" layoutY="229.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="CBO">
+              <font>
+                <Font size="14.0" />
+              </font>
+            </Button>
+            <ImageView fitHeight="150.0" fitWidth="170.0" layoutX="461.0" layoutY="35.0" pickOnBounds="true" preserveRatio="true">
+              <image>
+                <Image url="@../PNG%20Folder/metrics%20(2).png" />
+              </image>
+            </ImageView>
+            <Label layoutX="28.0" layoutY="79.0" prefHeight="58.0" prefWidth="334.0" text="Choose A Metric :">
+              <font>
+                <Font name="System Bold" size="40.0" />
+              </font>
+            </Label>
+            <Button layoutX="580.0" layoutY="229.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="LCOM" />
+            <Button layoutX="460.0" layoutY="229.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="RFC" />
+            <Button layoutX="350.0" layoutY="229.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="WMC" />
+            <Button layoutX="240.0" layoutY="229.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="DIT" />
+            <Button layoutX="130.0" layoutY="229.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="NOC" />
+            <Button layoutX="380.0" layoutY="309.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="258.0" text="Cancel" />
+          </children>
+        </Pane>
+      </content>
+    </Tab>
+  </tabs>
+</TabPane>

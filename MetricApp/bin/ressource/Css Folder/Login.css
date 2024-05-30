@@ -29,18 +29,11 @@
 -fx-cursor :hand;
 }
 
-#passwordField{
--fx-background-radius: 15px;
+
+.text-field , .password-field{
+	-fx-background-radius: 15px;
 }
 
-#UserField{
-	
-	 -fx-background-radius: 15px;
-}
-
-#UnMaskedField{
-	 -fx-background-radius: 15px;
-}
 
 
 
