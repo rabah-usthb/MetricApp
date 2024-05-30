@@ -10,8 +10,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="485.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="485.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.FrontEnd.SignUpController">
    <children>
       <Label layoutX="181.0" layoutY="26.0" text="SingUp">
          <font>
@@ -82,6 +81,6 @@
          </image>
       </ImageView>
       <Label layoutX="170.0" layoutY="417.0" text="Already A Member ?" />
-      <Hyperlink layoutX="286.0" layoutY="414.0" text="Login" />
+      <Hyperlink fx:id="LoginHyperLink" focusTraversable="false" layoutX="286.0" layoutY="414.0" onMouseClicked="#SwitchToLogin" text="Login" />
    </children>
 </Pane>

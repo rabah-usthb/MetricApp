@@ -60,7 +60,7 @@
       <ImageView fx:id="LockIcon" fitHeight="20.0" fitWidth="20.0" layoutX="114.0" layoutY="227.0" pickOnBounds="true" preserveRatio="true" />
       <ImageView fx:id="VisibilityOnIcon" fitHeight="20.0" fitWidth="20.0" layoutX="340.0" layoutY="227.0" onMouseClicked="#ChangeVisibility" pickOnBounds="true" preserveRatio="true" />
       <Label layoutX="134.0" layoutY="350.0" text="Don't Have An Account ?" />
-      <Hyperlink focusTraversable="false" layoutX="270.0" layoutY="347.0" snapToPixel="false" text="Register" />
-      <Hyperlink focusTraversable="false" layoutX="166.0" layoutY="259.0" snapToPixel="false" text="Forgot Your Password ?" />
+      <Hyperlink fx:id="RegisterHyperlink" focusTraversable="false" layoutX="270.0" layoutY="347.0" onMouseClicked="#SwitchToSignUp" snapToPixel="false" text="Register" />
+      <Hyperlink fx:id="PasswordHyperlink" focusTraversable="false" layoutX="166.0" layoutY="259.0" onMouseClicked="#SwitchToForgotPassword" snapToPixel="false" text="Forgot Your Password ?" />
    </children>
 </Pane>
