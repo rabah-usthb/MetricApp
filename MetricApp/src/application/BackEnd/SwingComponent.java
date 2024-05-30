@@ -173,10 +173,15 @@ public class SwingComponent {
  
 	     public static void UpdateSwingComponentFlag(SwingComponent swingComponent ,String line) {
 	    	 if(RegularExpression.IsMethodPrototype(line)) {
-	    		String ReturnType = RegularExpression.FetchMethodReturnType(line);
-	    	    ArrayList<String>ClassNameArgument = RegularExpression.FetchMethodArgumentType(line);
-	    	    ArrayList<String>ClassName = ClassNameArgument;
+	    		 ArrayList<String>ClassNameArgument = new ArrayList<>();
+	    	    ClassNameArgument.addAll(RegularExpression.FetchMethodArgumentType(line));
+	    	    ArrayList<String>ClassName = new ArrayList<>();
+	    	    ClassName.addAll(ClassNameArgument);
+	    	    if(!RegularExpression.IsConstructor(line)) {
+	    	    String ReturnType = RegularExpression.FetchMethodReturnType(line);
 	    	    ClassName.add(ReturnType);
+	    	    }
+	    	    
 	    	    for(String Class : ClassName) {
 	    	    	SwitchCase(swingComponent, Class);
 	    	    }
@@ -236,7 +241,8 @@ public class SwingComponent {
 		          			if(!ListCode.isEmpty()) {
 		          				for(String code : ListCode) {
 		          					if(RegularExpression.IsNew(code)||RegularExpression.IsVariable(code) || RegularExpression.IsMethodPrototype(code)) {
-		          	            		UpdateSwingComponentFlag(swingComponent, code);
+		          	            		System.out.println(code);
+		          						UpdateSwingComponentFlag(swingComponent, code);
 		          	            	}
 		          					
 		          				}
@@ -244,7 +250,8 @@ public class SwingComponent {
 		          		}
 		          		if(ListCode.isEmpty()) {
 		          			if(RegularExpression.IsNew(Line)||RegularExpression.IsVariable(Line) || RegularExpression.IsMethodPrototype(Line)) {
-		  	            		UpdateSwingComponentFlag(swingComponent, Line);
+		  	            		System.out.println(Line);
+		          				UpdateSwingComponentFlag(swingComponent, Line);
 		  	            	}
 		          			
 		          		}

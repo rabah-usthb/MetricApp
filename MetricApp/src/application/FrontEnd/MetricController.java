@@ -17,6 +17,8 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -44,6 +46,7 @@ import javafx.util.Callback;
 public class MetricController {
 	public static String PathProject;
 	public static String FileSelectedPath;
+	static String SelectedItem;
     @FXML
     private TreeView<TreeItemData> treeView;
 
@@ -83,213 +86,16 @@ public class MetricController {
                     // Handle leaf node selection here
                   System.out.println("Leaf node selected: " + selectedItem.getValue().GetLabel());
                     // Show a dialog with options
-                    String FilePath = RealPathConcat(getFileHierarchy(selectedItem),pathProject);
+                  SelectedItem = selectedItem.getValue().label; 
+                  String FilePath = RealPathConcat(getFileHierarchy(selectedItem),pathProject);
                     FileSelectedPath = FilePath;
-                    System.out.println(FilePath);
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                    alert.setHeaderText("Java Metrics");
-                    alert.setContentText("Choose an action to perform:");
-                   // DialogPane dialogPane = alert.getDialogPane();
-                    //dialogPane.lookup(".header-panel").getStyleClass().add("alert-header");
-                   // Label header = (Label) alert.getDialogPane().lookup(".header-panel");
-                   // header.setStyle("-fx-font-size: 30px;");
-                    //dialogPane.lookup(".content.label").getStyleClass().add("alert-content");
-                   
-                   // HBox buttonBox = new HBox(10,buttonType1);
-                    alert.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/ressource/PNG Folder/metrics (2).png"))));
-                    ImageView imageView = (ImageView) alert.getGraphic();
-                    imageView.setFitWidth(60); // Set the preferred width
-                    imageView.setFitHeight(60); // Set the preferred height
-                 //   alert.getGraphic().getStyleClass().add("imageView");
-                    alert.getButtonTypes().remove(ButtonType.OK); 
-                    Button importsButton = new Button("ICM");
-                    Button AnalysisButton = new Button("JAX");
-                    Button exceptionButton = new Button("JEA");
-                    Button EncapsulationButton = new Button("TE");
-                    Button SwingButton = new Button("SM");
-                    Button PolymorphismeButon  = new Button("RMSR");
-                    Button MVCButton = new Button("MVC");
-                    Button cancelButton = (Button) alert.getDialogPane().lookupButton(ButtonType.CANCEL);
-                    cancelButton.setDefaultButton(true);
-                    
-                    
-                    
-                    importsButton.setOnAction(e -> {
-                        // Handle "Imports" button action
-                        System.out.println("Imports button clicked");
-
-                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/Import.fxml"));
-                        Parent root = null;
-						try {
-							root = fxmlLoader.load();
-						} catch (IOException exception) {
-					
-							exception.printStackTrace();
-						}
-                        ImportController importController = fxmlLoader.getController();
-                        importController.initialize(FilePath);
-                        Scene scene = new Scene(root);
-                        String css = this.getClass().getResource("/ressource/Css Folder/Import.css").toExternalForm();
-                        scene.getStylesheets().add(css);
-                        Stage stage = new Stage();
-                        stage.setScene(scene);
-                        stage.show();
-                        alert.close();
-                    
-                    });
-
-                    AnalysisButton.setOnAction(e -> {
-                        // Handle "Line Code" button action
-                        System.out.println("Line Code button clicked");
-                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/Analysis.fxml"));
-                        Parent root = null;
-						try {
-							root = fxmlLoader.load();
-						} catch (IOException exception) {
-							// TODO Auto-generated catch block
-							exception.printStackTrace();
-						}
-                   	AnalysisController analysisController = fxmlLoader.getController();
-                       analysisController.initialize(FilePath);
-                       Scene scene = new Scene(root);
-                       String css = this.getClass().getResource("/ressource/Css Folder/Analysis.css").toExternalForm();
-                       scene.getStylesheets().add(css);
-                       Stage stage = new Stage();
-                       stage.setScene(scene);
-                       stage.show();
-                       alert.close();
-                    
-                    });
-
-                    exceptionButton.setOnAction(e -> {
-                        // Handle "Exception" button action
-                        System.out.println("Exception button clicked");
-                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/Exception.fxml"));
-                        Parent root = null;
-						try {
-							root = fxmlLoader.load();
-						} catch (IOException exception) {
-							// TODO Auto-generated catch block
-							exception.printStackTrace();
-						}
-                   	ExceptionController exceptionController = fxmlLoader.getController();
-                       exceptionController.initialize(FilePath);
-                       Scene scene = new Scene(root);
-                       String css = this.getClass().getResource("/ressource/Css Folder/Exception.css").toExternalForm();
-                       scene.getStylesheets().add(css);
-                       Stage stage = new Stage();
-                       stage.setScene(scene);
-                       stage.show();
-                       alert.close();
-
-                    });
-
-                    SwingButton.setOnAction(e->{
-                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/SwingComponent.fxml"));
-                        Parent root = null;
-						try {
-							root = fxmlLoader.load();
-						} catch (IOException exception) {
-							// TODO Auto-generated catch block
-							exception.printStackTrace();
-						}
-                   	SwingComponentController swingController = fxmlLoader.getController();
-                       swingController.initialize(FilePath);
-                       Scene scene = new Scene(root);
-                       String css = this.getClass().getResource("/ressource/Css Folder/Swing.css").toExternalForm();
-                       scene.getStylesheets().add(css);
-                       Stage stage = new Stage();
-                       stage.setScene(scene);
-                       stage.show();
-                       alert.close();
-                   });
-                    
-                    EncapsulationButton.setOnAction(e-> {
-                         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/Encapsulation.fxml"));
-                         Parent root = null;
- 						try {
- 							root = fxmlLoader.load();
- 						} catch (IOException exception) {
- 							// TODO Auto-generated catch block
- 							exception.printStackTrace();
- 						}
-                    	EncapsulationController encapsulationController = fxmlLoader.getController();
-                        encapsulationController.initialize(FilePath);
-                        Scene scene = new Scene(root);
-                        String css = this.getClass().getResource("/ressource/Css Folder/Exception.css").toExternalForm();
-                        scene.getStylesheets().add(css);
-                        Stage stage = new Stage();
-                        stage.setScene(scene);
-                        stage.show();
-                        alert.close();
-                    });
-                    
-                    PolymorphismeButon.setOnAction(e->{
-                    	 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/RMRS.fxml"));
-                         Parent root = null;
- 						try {
- 							root = fxmlLoader.load();
- 						} catch (IOException exception) {
- 							// TODO Auto-generated catch block
- 							exception.printStackTrace();
- 						}
- 				       RMRScontroller rmrsController = fxmlLoader.getController();
-                        rmrsController.initialize(FilePath,selectedItem.getValue().GetLabel());
-                        Scene scene = new Scene(root);
-                        String css = this.getClass().getResource("/ressource/Css Folder/RMRS.css").toExternalForm();
-                      scene.getStylesheets().add(css);
-                        Stage stage = new Stage();
-                        stage.setScene(scene);
-                        stage.show();
-                        alert.close();
-                    });
-                    /*
-                    MVCButton.setOnAction(e->{
-                   	 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/MVC.fxml"));
-                        Parent root = null;
-						try {
-							root = fxmlLoader.load();
-						} catch (IOException exception) {
-							// TODO Auto-generated catch block
-							exception.printStackTrace();
-						}
-				       MVCinfoscontroller MvcController = fxmlLoader.getController();
-                       MvcController.initialize(PathProject,"C:\\Users\\DELL\\PROJET-PLURIDISCIPLINAIRE\\MetricApp\\src\\application\\FrontEnd\\RMRScontroller.java","C:\\Users\\DELL\\PROJET-PLURIDISCIPLINAIRE\\MetricApp\\src\\application\\BackEnd\\RegularExpression.java","C:\\Users\\DELL\\PROJET-PLURIDISCIPLINAIRE\\MetricApp\\src\\application\\FrontEnd\\Main.java");
-                       Scene scene = new Scene(root);
-                       String css = this.getClass().getResource("/ressource/Css Folder/RMRS.css").toExternalForm();
-                     scene.getStylesheets().add(css);
-                       Stage stage = new Stage();
-                       stage.setScene(scene);
-                       stage.show();
-                   });
-                    */
-                    // Create an HBox container for the buttons
-                    HBox buttonBox = new HBox(10, importsButton, AnalysisButton, exceptionButton,cancelButton,EncapsulationButton,SwingButton,PolymorphismeButon);
-                    buttonBox.setAlignment(Pos.CENTER); // Center the buttons horizontally within the HBox
-
-                    // Add buttons to the dialog pane
-                   
-                    Label instructionLabel = new Label("Choose an action to perform:");
-                    instructionLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: bold;");
-                    VBox content = new VBox(30,instructionLabel,buttonBox);
-                    content.setAlignment(Pos.CENTER); // Center the content vertically within the VBox
-
-                    // Set the content of the alert dialog
-                    alert.getDialogPane().setContent(content);
-              
-                   
-
-                    String CssAlert=this.getClass().getResource("/ressource/Css Folder/alert.css").toExternalForm();
-                    alert.getDialogPane().getStylesheets().add(CssAlert);
-                    Platform.runLater(() -> {
-                        // Show the alert and wait for user action
-                        alert.showAndWait();
-                    });
+                   LoadTabPane();
                 }
             }
-        });
+            });
+        
 
-
+        
 
 
                     
@@ -308,6 +114,24 @@ public class MetricController {
                         
     }
     
+    
+    private void LoadTabPane() {
+    	  try {
+          	  Stage stage = new Stage();
+              // Load the FXML file
+              FXMLLoader loader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/TabedMetric.fxml"));
+              String css = this.getClass().getResource("/ressource/Css Folder/TabedPane.css").toExternalForm();
+              Parent root = loader.load();
+              // Set the FXML content to the scene
+              Scene scene = new Scene(root);
+              scene.getStylesheets().add(css);
+              stage.setResizable(false);
+              stage.setScene(scene);
+              stage.show();
+          } catch (Exception e) {
+              e.printStackTrace();
+          }
+    }
     
     public TreeView<TreeItemData> getTreeView() {
         return this.treeView;
