@@ -9,84 +9,282 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="700.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="850.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
   <tabs>
     <Tab text="New Metrics">
       <content>
         <Pane prefHeight="400.0" prefWidth="800.0">
           <children>
-            <Button layoutX="20.0" layoutY="229.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="ICM">
+            <Button layoutX="28.0" layoutY="320.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="ICM">
               <font>
                 <Font size="14.0" />
               </font>
             </Button>
-            <ImageView fitHeight="150.0" fitWidth="170.0" layoutX="461.0" layoutY="35.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="MetricIcon" fitHeight="150.0" fitWidth="170.0" layoutX="630.0" layoutY="51.0" pickOnBounds="true" preserveRatio="true">
               <image>
                 <Image url="@../PNG%20Folder/metrics%20(2).png" />
               </image>
             </ImageView>
-            <Label layoutX="28.0" layoutY="79.0" prefHeight="58.0" prefWidth="353.0" text="Choose A Metric :">
+            <Label layoutX="28.0" layoutY="79.0" prefHeight="98.0" prefWidth="432.0" text="Choose A Metric :">
               <font>
                 <Font name="System Bold" size="40.0" />
               </font>
             </Label>
-            <Button layoutX="580.0" layoutY="229.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="RMRS">
+            <Button layoutX="710.0" layoutY="319.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="RMRS">
               <font>
                 <Font size="14.0" />
               </font>
             </Button>
-            <Button layoutX="460.0" layoutY="229.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="SM">
+            <Button layoutX="571.0" layoutY="319.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="SM">
               <font>
                 <Font size="14.0" />
               </font>
             </Button>
-            <Button layoutX="350.0" layoutY="229.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="TE">
+            <Button layoutX="433.0" layoutY="319.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="TE">
               <font>
                 <Font size="14.0" />
               </font>
             </Button>
-            <Button layoutX="240.0" layoutY="229.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="JEA">
+            <Button layoutX="312.0" layoutY="319.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="JEA">
               <font>
                 <Font size="14.0" />
               </font>
             </Button>
-            <Button layoutX="130.0" layoutY="229.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="JAX">
+            <Button layoutX="175.0" layoutY="319.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="JAX">
               <font>
                 <Font size="14.0" />
               </font>
             </Button>
-            <Button layoutX="380.0" layoutY="309.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="258.0" text="Cancel" />
+            <Button layoutX="550.0" layoutY="400.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="258.0" text="Cancel" />
           </children>
         </Pane>
       </content>
     </Tab>
     <Tab text="Existing Metrics">
       <content>
-        <Pane prefHeight="400.0" prefWidth="800.0">
-          <children>
-            <Button layoutX="20.0" layoutY="229.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="CBO">
-              <font>
-                <Font size="14.0" />
-              </font>
-            </Button>
-            <ImageView fitHeight="150.0" fitWidth="170.0" layoutX="461.0" layoutY="35.0" pickOnBounds="true" preserveRatio="true">
-              <image>
-                <Image url="@../PNG%20Folder/metrics%20(2).png" />
-              </image>
-            </ImageView>
-            <Label layoutX="28.0" layoutY="79.0" prefHeight="58.0" prefWidth="334.0" text="Choose A Metric :">
-              <font>
-                <Font name="System Bold" size="40.0" />
-              </font>
-            </Label>
-            <Button layoutX="580.0" layoutY="229.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="LCOM" />
-            <Button layoutX="460.0" layoutY="229.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="RFC" />
-            <Button layoutX="350.0" layoutY="229.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="WMC" />
-            <Button layoutX="240.0" layoutY="229.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="DIT" />
-            <Button layoutX="130.0" layoutY="229.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="NOC" />
-            <Button layoutX="380.0" layoutY="309.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="258.0" text="Cancel" />
-          </children>
-        </Pane>
+        <TabPane prefHeight="400.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE">
+          <tabs>
+            <Tab text="Chidamber and Kemerer">
+              <content>
+                <Pane prefHeight="400.0" prefWidth="800.0">
+                  <children>
+                    <Button layoutX="28.0" layoutY="289.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="CBO">
+                      <font>
+                        <Font size="14.0" />
+                      </font>
+                    </Button>
+                    <Button layoutX="175.0" layoutY="289.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="NOC" />
+                    <Button layoutX="312.0" layoutY="289.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="DIT" />
+                    <Button layoutX="433.0" layoutY="289.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="RFC" />
+                    <Button layoutX="571.0" layoutY="289.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="LCOM" />
+                    <Button layoutX="710.0" layoutY="289.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="WMC" />
+                    <Button layoutX="550.0" layoutY="369.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="258.0" text="Cancel" />
+                              <Label layoutX="28.0" layoutY="48.0" prefHeight="98.0" prefWidth="432.0" text="Choose A Metric :">
+                                 <font>
+                                    <Font name="System Bold" size="40.0" />
+                                 </font>
+                              </Label>
+                              <ImageView fx:id="MetricIcon7" fitHeight="150.0" fitWidth="170.0" layoutX="630.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../PNG%20Folder/metrics%20(2).png" />
+                                 </image>
+                              </ImageView>
+                  </children>
+                </Pane>
+              </content>
+            </Tab>
+            <Tab text="Tang et Chen">
+              <content>
+                <Pane prefHeight="400.0" prefWidth="800.0">
+                  <children>
+                    <Button layoutX="79.0" layoutY="290.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="337.0" text="Number of Object Memory Allocation">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font></Button>
+                    <Button layoutX="467.0" layoutY="290.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="294.0" text="Average Method Complexity">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font></Button>
+                    <Button layoutX="550.0" layoutY="369.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="258.0" text="Cancel" />
+                              <Label layoutX="28.0" layoutY="48.0" prefHeight="98.0" prefWidth="432.0" text="Choose A Metric :">
+                                 <font>
+                                    <Font name="System Bold" size="40.0" />
+                                 </font>
+                              </Label>
+                              <ImageView fx:id="MetricIcon6" fitHeight="150.0" fitWidth="170.0" layoutX="630.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../PNG%20Folder/metrics%20(2).png" />
+                                 </image>
+                              </ImageView>
+                  </children>
+                </Pane>
+              </content>
+            </Tab>
+            <Tab text="Henderson">
+              <content>
+                <Pane prefHeight="400.0" prefWidth="800.0">
+                  <children>
+                    <Button layoutX="79.0" layoutY="290.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="200.0" text="Number of Attributes">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font></Button>
+                    <Button layoutX="467.0" layoutY="290.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="255.0" text="Number of Methods per Class">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font></Button>
+                    <Button layoutX="550.0" layoutY="369.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="258.0" text="Cancel" />
+                              <Label layoutX="28.0" layoutY="48.0" prefHeight="98.0" prefWidth="432.0" text="Choose A Metric :">
+                                 <font>
+                                    <Font name="System Bold" size="40.0" />
+                                 </font>
+                              </Label>
+                              <ImageView fx:id="MetricIcon5" fitHeight="150.0" fitWidth="170.0" layoutX="630.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../PNG%20Folder/metrics%20(2).png" />
+                                 </image>
+                              </ImageView>
+                  </children>
+                </Pane>
+              </content>
+            </Tab>
+            <Tab text="Li and Henry">
+              <content>
+                <Pane prefHeight="400.0" prefWidth="800.0">
+                  <children>
+                    <Button layoutX="79.0" layoutY="290.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="252.0" text="Data Abstracting Coupling">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font></Button>
+                    <Button layoutX="467.0" layoutY="290.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="235.0" text="Message Passing Coupling">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font></Button>
+                    <Button layoutX="550.0" layoutY="369.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="258.0" text="Cancel" />
+                              <Label layoutX="28.0" layoutY="48.0" prefHeight="98.0" prefWidth="432.0" text="Choose A Metric :">
+                                 <font>
+                                    <Font name="System Bold" size="40.0" />
+                                 </font>
+                              </Label>
+                              <ImageView fx:id="MetricIcon4" fitHeight="150.0" fitWidth="170.0" layoutX="630.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../PNG%20Folder/metrics%20(2).png" />
+                                 </image>
+                              </ImageView>
+                  </children>
+                </Pane>
+              </content>
+            </Tab>
+            <Tab text="Li">
+              <content>
+                <Pane prefHeight="400.0" prefWidth="800.0">
+                  <children>
+                    <Button layoutX="79.0" layoutY="290.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="292.0" text="Coupling Through Abstract Data Types">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font></Button>
+                    <Button layoutX="467.0" layoutY="290.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="291.0" text="Coupling Through Message Passing">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font></Button>
+                    <Button layoutX="550.0" layoutY="369.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="258.0" text="Cancel" />
+                              <Label layoutX="28.0" layoutY="48.0" prefHeight="98.0" prefWidth="432.0" text="Choose A Metric :">
+                                 <font>
+                                    <Font name="System Bold" size="40.0" />
+                                 </font>
+                              </Label>
+                              <ImageView fx:id="MetricIcon3" fitHeight="150.0" fitWidth="170.0" layoutX="630.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../PNG%20Folder/metrics%20(2).png" />
+                                 </image>
+                              </ImageView>
+                  </children>
+                </Pane>
+              </content>
+            </Tab>
+            <Tab text="MOOD">
+              <content>
+                <Pane prefHeight="400.0" prefWidth="800.0">
+                  <children>
+                    <Button layoutX="55.0" layoutY="210.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="200.0" text="Attributes Hiding Factor">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font></Button>
+                    <Button layoutX="300.0" layoutY="210.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="228.0" text="Method Inheritance Factor">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font></Button>
+                    <Button layoutX="583.0" layoutY="210.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="200.0" text="Method Hiding Factor">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font></Button>
+                    <Button layoutX="55.0" layoutY="290.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="200.0" text="Coupling Factor">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font></Button>
+                    <Button layoutX="314.0" layoutY="290.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="200.0" text="Polymorphism Factor">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font></Button>
+                    <Button layoutX="569.0" layoutY="290.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="228.0" text="Attribute Inheritance Factor">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font></Button>
+                    <Button layoutX="550.0" layoutY="369.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="258.0" text="Cancel" />
+                              <Label layoutX="28.0" layoutY="48.0" prefHeight="98.0" prefWidth="432.0" text="Choose A Metric :">
+                                 <font>
+                                    <Font name="System Bold" size="40.0" />
+                                 </font>
+                              </Label>
+                              <ImageView fx:id="MetricIcon1" fitHeight="150.0" fitWidth="170.0" layoutX="630.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../PNG%20Folder/metrics%20(2).png" />
+                                 </image>
+                              </ImageView>
+                  </children>
+                </Pane>
+              </content>
+            </Tab>
+            <Tab text="QMOOD">
+              <content>
+                <Pane prefHeight="400.0" prefWidth="800.0">
+                  <children>
+                    <Button layoutX="30.0" layoutY="210.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="225.0" text="Number of Public Methods">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font></Button>
+                    <Button layoutX="300.0" layoutY="210.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="200.0" text="Data Access Metrics">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font></Button>
+                    <Button layoutX="560.0" layoutY="210.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="200.0" text="Measure of Aggregation">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font></Button>
+                    <Button layoutX="80.0" layoutY="290.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="267.0" text="Measure of Functional Abstraction">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font></Button>
+                    <Button layoutX="450.0" layoutY="290.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="262.0" text="Cohesion Among Methods of Class">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font></Button>
+                    <Button layoutX="550.0" layoutY="369.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="258.0" text="Cancel" />
+                              <Label layoutX="28.0" layoutY="48.0" prefHeight="98.0" prefWidth="432.0" text="Choose A Metric :">
+                                 <font>
+                                    <Font name="System Bold" size="40.0" />
+                                 </font>
+                              </Label>
+                              <ImageView fx:id="MetricIcon2" fitHeight="150.0" fitWidth="170.0" layoutX="630.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../PNG%20Folder/metrics%20(2).png" />
+                                 </image>
+                              </ImageView>
+                  </children>
+                </Pane>
+              </content>
+            </Tab>
+          </tabs>
+        </TabPane>
       </content>
     </Tab>
   </tabs>

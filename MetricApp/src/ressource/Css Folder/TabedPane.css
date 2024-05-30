@@ -12,7 +12,8 @@
  -fx-border-radius : 4px;
  -fx-border-color:#008080;
  -fx-font-weight: bold;
-  -fx-border-radius: 15px;
+ -fx-border-radius: 15px;
+ -fx-padding: 15px;
  }
  
 
@@ -41,4 +42,9 @@
 }
 .tab:selected{
 	-fx-background-color: #FFFFFF;
+}
+
+#MetricIcon{
+-fx-pref-width: 450px;
+	-fx-pref-height:300px;
 }
