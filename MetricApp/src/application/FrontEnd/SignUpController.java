@@ -1,6 +1,17 @@
 package application.FrontEnd;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Properties;
+
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import application.BackEnd.RegularExpression;
 import javafx.event.ActionEvent;
@@ -119,6 +130,72 @@ public class SignUpController {
  }
  }
  
+ 
+ private static String TokenGenerator(String Email , String UserName) {
+	  LocalDateTime now = LocalDateTime.now();
+      int hour = now.getHour();
+      int day = now.getDayOfMonth();
+      int month = now.getMonthValue();
+      int second = now.getSecond();
+      int minute = now.getMinute();
+      int token = (day*69+hour/2+month+20+second*34)/3+minute-UserName.length()+Email.length();
+     return Integer.toString(token);
+ }
+ 
+ private static void SendMailAuthentification(String mailReceiver,String UserName) {
+	    Properties properties = new Properties();
+	    properties.put("mail.smtp.auth", "true");
+	    properties.put("mail.smtp.starttls.enable", "false");
+        properties.put("mail.smtp.debug", "true");
+	    properties.put("mail.smtp.host", "smtp.gmail.com");
+	    properties.put("mail.smtp.port", "465");
+	    properties.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+	    properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory"); // Added SSL configuration
+	    properties.put("mail.smtp.socketFactory.port", "465"); // Added SSL configuration
+	    properties.put("mail.smtp.socketFactory.fallback", "false"); // Added SSL configuration
+        
+	    String Email = "chabanechaoucherabah4@gmail.com";
+	    String Password = "cverzgtgpzglnmxh";
+
+	    Session session = Session.getInstance(properties, new Authenticator() {
+	        @Override
+	        protected PasswordAuthentication getPasswordAuthentication() {
+	            return new PasswordAuthentication(Email, Password);
+	        }
+	    });
+
+	    session.setDebug(true);
+	    Message message = PrepareMessage(session, UserName,Email, mailReceiver);
+	    try {
+	        Transport ts = session.getTransport("smtp");
+	        ts.connect("smtp.gmail.com", Email, Password);
+	        ts.sendMessage(message, message.getAllRecipients());
+	        
+	        System.out.println("Mail Sent Successfully");
+	        ts.close();
+	    } catch (MessagingException e) {
+	        e.printStackTrace();
+	        System.out.println("Failed to send mail: " + e.getMessage());
+	    }
+	}
+
+
+	private static Message PrepareMessage(Session session, String UserName,String mailSender, String mailReceiver) {
+	    Message message = new MimeMessage(session);
+	    try {
+	        message.setFrom(new InternetAddress(mailSender));
+	        message.setRecipient(Message.RecipientType.TO, new InternetAddress(mailReceiver));
+	        message.setSubject("Mail Authentication For Metric App");
+	        String Token = TokenGenerator(mailReceiver,UserName);
+	        message.setText("Hello, please confirm that your email address is: " + mailReceiver +" By Inputing The Following Token "+Token+" In The Metric Application");
+	        message.saveChanges();
+	    } catch (MessagingException e) {
+	        e.printStackTrace();
+	        System.out.println("Failed to prepare message: " + e.getMessage());
+	    }
+	    return message;
+	}
+ 
  @FXML
  private void SignUP(ActionEvent event) {
   UserNameError.setText("  ");
@@ -200,7 +277,10 @@ public class SignUpController {
 	 }
 	 
 	 if(Accepted) {
-		 System.out.println("SignUp Succecfully");
+		 System.out.println("Prepare Sending");
+		 SendMailAuthentification(Email,UserName);
+		 
+		 
 	 }
  }
 
