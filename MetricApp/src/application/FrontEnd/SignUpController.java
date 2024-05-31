@@ -62,11 +62,15 @@ public class SignUpController {
     ImageView LockIcon2;
     
     
-  
+    private static String Token;
     boolean IsVisible1= false;
     boolean IsVisible2=false;
 	
 	
+    
+    static String GetToken() {
+    	return Token;
+    }
 	
  @FXML
  private void SwitchToLogin(MouseEvent event) {
@@ -88,6 +92,24 @@ public class SignUpController {
     stage.show();
     stagesignup.close();
  
+ }
+ 
+ 
+ private void ShowTokenConfirmation() {
+	  FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/TokenConfirmation.fxml"));
+	     Parent root = null;
+				try {
+					root = fxmlLoader.load();
+				} catch (IOException exception) {
+					// TODO Auto-generated catch block
+					exception.printStackTrace();
+				}
+		  Scene scene = new Scene(root);
+	    String css = this.getClass().getResource("/ressource/Css Folder/Login.css").toExternalForm();
+	    scene.getStylesheets().add(css);
+	    Stage stage = new Stage();
+	    stage.setScene(scene);
+	    stage.show();
  }
  
  @FXML
@@ -186,7 +208,7 @@ public class SignUpController {
 	        message.setFrom(new InternetAddress(mailSender));
 	        message.setRecipient(Message.RecipientType.TO, new InternetAddress(mailReceiver));
 	        message.setSubject("Mail Authentication For Metric App");
-	        String Token = TokenGenerator(mailReceiver,UserName);
+	        Token = TokenGenerator(mailReceiver,UserName);
 	        message.setText("Hello, please confirm that your email address is: " + mailReceiver +" By Inputing The Following Token "+Token+" In The Metric Application");
 	        message.saveChanges();
 	    } catch (MessagingException e) {
@@ -279,7 +301,7 @@ public class SignUpController {
 	 if(Accepted) {
 		 System.out.println("Prepare Sending");
 		 SendMailAuthentification(Email,UserName);
-		 
+		 ShowTokenConfirmation();
 		 
 	 }
  }
