@@ -41,7 +41,7 @@ public class LoginController {
 				exception.printStackTrace();
 			}
    	  Scene scene = new Scene(root);
-       String css = this.getClass().getResource("/ressource/Css Folder/Login.css").toExternalForm();
+       String css = this.getClass().getResource("/ressource/Css Folder/SignUp.css").toExternalForm();
        scene.getStylesheets().add(css);
        Stage stage = new Stage();
        stage.setScene(scene);

@@ -68,6 +68,16 @@ public class RegularExpression {
 	    return Line.matches(ClassPattern1)||Line.matches(ClassPattern2);
 	}
 	
+	public static boolean IsGmail(String mail) {
+		  mail = mail.replace(" ", "");
+		   Pattern GMAIL_PATTERN = Pattern.compile("^[\\w.+%\\-]+@gmail\\.com$");
+		    Pattern ILLEGAL_PATTERN = Pattern.compile("[._%+\\-]{2,}");
+
+	      boolean isValidGmail = GMAIL_PATTERN.matcher(mail).matches();
+         boolean FoundIllegalPattern = ILLEGAL_PATTERN.matcher(mail).find();
+	       return isValidGmail && !FoundIllegalPattern;
+	    }
+	
 	static boolean IsAnnotation(String Line) {
 		return Line.startsWith("@") && !Line.equals("@Overload") && !Line.equals("@Override") ;
 	}

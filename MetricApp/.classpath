@@ -12,6 +12,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/javaFX"/>
-	<classpathentry kind="lib" path="C:/Users/DELL/eclipse-workspace/MetricApp/Lib/javaparser-core-3.23.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/DELL/Downloads/postgresql-42.7.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
