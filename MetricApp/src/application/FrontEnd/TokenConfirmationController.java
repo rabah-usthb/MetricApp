@@ -1,7 +1,9 @@
 package application.FrontEnd;
 
+import application.BackEnd.SQLBackEnd;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -28,7 +30,17 @@ else if(!TokenInput.equals(SignUpController.GetToken())) {
 	ErrorToken.setText("Error Wrong Token");
 }
 else {
-	System.out.println("SIGNUP SUCCESSFULLY");
+	if(SQLBackEnd.InjectInDB(SignUpController.GetUserName(), SignUpController.GetEmail(), SignUpController.GetPassword())) {
+		showSignUpSuccessDialog();
+	}
 }
+}
+
+private void showSignUpSuccessDialog() {
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setTitle("Sign Up Successful");
+    alert.setHeaderText(null);
+    alert.setContentText("Your sign up was successful!");
+    alert.showAndWait();
 }
 }

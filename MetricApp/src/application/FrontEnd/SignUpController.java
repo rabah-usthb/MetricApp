@@ -1,6 +1,12 @@
 package application.FrontEnd;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.Properties;
 
@@ -14,6 +20,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import application.BackEnd.RegularExpression;
+import application.BackEnd.SQLBackEnd;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,6 +36,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 public class SignUpController {
+	
+	private static String UserNameInput="";
+    private static String EmailInput="";
+    private static String PasswordInput="";
 	
 	@FXML
 	Label UserNameError;
@@ -70,6 +81,18 @@ public class SignUpController {
     
     static String GetToken() {
     	return Token;
+    }
+    
+    static String GetUserName() {
+    	return UserNameInput;
+    }
+    
+    static String GetEmail() {
+    	return EmailInput;
+    }
+    
+    static String GetPassword() {
+    	return PasswordInput;
     }
 	
  @FXML
@@ -279,6 +302,12 @@ public class SignUpController {
 		 EmailError.setText("Not An Email");
 		 Accepted = false;
 	 }
+	 else if(UserName.length()>=4 && !UserName.isBlank()) {
+		 if(SQLBackEnd.SqlFetchData(UserName, Email)) {
+			 EmailError.setText("UserName Or Email Already Used");
+		    Accepted = false;
+		 }
+	 }
 	 
 	 if(Password==null||Password.isBlank()||Password.isEmpty()) {
 		 PasswordError.setText("PasswordField Is Empty");
@@ -298,7 +327,10 @@ public class SignUpController {
 		 Accepted = false;
 	 }
 	 
-	 if(Accepted) {
+	 if(Accepted) {  
+		 PasswordInput = Password;
+		 UserNameInput = UserName;
+		 EmailInput = Email;
 		 System.out.println("Prepare Sending");
 		 SendMailAuthentification(Email,UserName);
 		 ShowTokenConfirmation();
