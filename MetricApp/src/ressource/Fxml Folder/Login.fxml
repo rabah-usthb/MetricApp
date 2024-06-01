@@ -17,7 +17,7 @@
          <font>
             <Font size="38.0" />
          </font></Label>
-      <Button layoutX="103.0" layoutY="311.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="266.0" text="Login" />
+      <Button fx:id="LoginButton" layoutX="103.0" layoutY="311.0" mnemonicParsing="false" onAction="#LoginAction" prefHeight="27.0" prefWidth="266.0" text="Login" />
       <TextField fx:id="UserField" layoutX="104.0" layoutY="139.0" prefHeight="29.0" prefWidth="266.0" promptText="UserName/Email">
          <font>
             <Font size="14.0" />
@@ -61,6 +61,16 @@
       <ImageView fx:id="VisibilityOnIcon" fitHeight="20.0" fitWidth="20.0" layoutX="340.0" layoutY="227.0" onMouseClicked="#ChangeVisibility" pickOnBounds="true" preserveRatio="true" />
       <Label layoutX="134.0" layoutY="350.0" text="Don't Have An Account ?" />
       <Hyperlink fx:id="RegisterHyperlink" focusTraversable="false" layoutX="270.0" layoutY="347.0" onMouseClicked="#SwitchToSignUp" snapToPixel="false" text="Register" />
-      <Hyperlink fx:id="PasswordHyperlink" focusTraversable="false" layoutX="166.0" layoutY="259.0" onMouseClicked="#SwitchToForgotPassword" snapToPixel="false" text="Forgot Your Password ?" />
+      <Hyperlink fx:id="PasswordHyperlink" focusTraversable="false" layoutX="166.0" layoutY="279.0" onMouseClicked="#SwitchToForgotPassword" snapToPixel="false" text="Forgot Your Password ?" />
+      <Label fx:id="UserNameError" alignment="CENTER" layoutX="104.0" layoutY="183.0" prefHeight="20.0" prefWidth="266.0" text="       " textFill="RED">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="PasswordError" alignment="CENTER" layoutX="104.0" layoutY="263.0" prefHeight="20.0" prefWidth="266.0" text="       " textFill="RED">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
    </children>
 </Pane>

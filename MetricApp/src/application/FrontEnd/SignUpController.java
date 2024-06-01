@@ -241,9 +241,7 @@ public class SignUpController {
 	    return message;
 	}
 	
-	private boolean IsFieldEmpty(String value) {
-		return value==null||value.isBlank();
-	}
+	
  
  @FXML
  private void SignUP(ActionEvent event) {
@@ -289,13 +287,13 @@ public class SignUpController {
 	 }catch(NullPointerException e) {
 		 ConfrimPassword = null;
 	 }
-	 boolean IsEmptyUserName = IsFieldEmpty(UserName);
+	 boolean IsEmptyUserName = RegularExpression.IsFieldEmpty(UserName);
 	 boolean IsUserNameRightLength = UserName.length()>=4;
-	 boolean IsEmptyEmail = IsFieldEmpty(Email);
+	 boolean IsEmptyEmail = RegularExpression.IsFieldEmpty(Email);
 	 boolean IsEmail = RegularExpression.IsGmail(Email);
-	 boolean IsEmptyPassword=IsFieldEmpty(Password);
+	 boolean IsEmptyPassword=RegularExpression.IsFieldEmpty(Password);
 	 boolean IsPasswordRightSize=Password.length()>=8;
-	 boolean IsConfirmPasswordEmpty = IsFieldEmpty(ConfrimPassword);
+	 boolean IsConfirmPasswordEmpty = RegularExpression.IsFieldEmpty(ConfrimPassword);
 	 boolean IsSamePassword = Password.equals(ConfrimPassword);
 	 
 	 if(IsEmptyUserName) {

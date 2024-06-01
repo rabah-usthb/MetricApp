@@ -13,6 +13,17 @@ public class SQLBackEnd {
     private static final String DB_PASSWORD = System.getenv("DB_PASSWORD");
     private static boolean IsMailUsed = false;
     private static boolean IsNameUsed = false;
+    private static boolean UserExist = false;
+    private static boolean PasswordExist = false;
+    
+    
+    public static boolean GetExistUser() {
+    	return 	UserExist;
+    }
+    
+    public static boolean GetPasswordExist() {
+    	return PasswordExist;
+    }
     
     public static boolean GetIsMailUsed() {
     	return IsMailUsed;
@@ -49,6 +60,45 @@ public class SQLBackEnd {
             e.printStackTrace();
         }
         return InjectionSuccessfull;
+    }
+    
+    public static boolean UserExist(String User, String Password) {
+    	System.out.println("hey");
+    	UserExist = false;
+    	PasswordExist =false;
+    	User = User.replace(" ", "");
+    	String sqlQuery = "SELECT username, email , password FROM public.\"User\" WHERE (username = ? OR email = ?) OR password = ?;";
+    	try(Connection con = DriverManager.getConnection(DB_URL,DB_USER,DB_PASSWORD);
+    		PreparedStatement pst = con.prepareStatement(sqlQuery);){
+    		pst.setString(1, User);
+    		pst.setString(2, User);
+    		pst.setString(3, Password);
+    		
+    		 try (ResultSet rs = pst.executeQuery()) {
+                 while (rs.next()) {
+                	 System.out.println(User);
+                	 
+                     String fetchedUserName = rs.getString("username");
+                     String fetchedEmail = rs.getString("email");
+                     String fetchedPassword = rs.getString("password");
+                     System.out.println(fetchedUserName);
+                     if(fetchedUserName.equals(User)||fetchedEmail.equals(User)) {
+                    	 UserExist = true;
+                     }
+                     if(fetchedPassword.equals(Password)) {
+                    	 PasswordExist = true;
+                     }
+                    if((fetchedUserName.equals(User)||fetchedEmail.equals(User))&&fetchedPassword.equals(Password)) {
+                    	return true;
+                    }
+                    
+                 }
+             }
+    		
+    	}catch(SQLException e) {
+    		e.printStackTrace();
+    	}
+    	return false;
     }
     
     public static boolean SqlFetchData(String UserName , String Email) {

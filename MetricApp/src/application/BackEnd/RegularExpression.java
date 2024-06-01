@@ -68,6 +68,9 @@ public class RegularExpression {
 	    return Line.matches(ClassPattern1)||Line.matches(ClassPattern2);
 	}
 	
+	public static boolean IsFieldEmpty(String value) {
+		return value==null||value.isBlank();
+	}
 	public static boolean IsGmail(String mail) {
 		  mail = mail.replace(" ", "");
 		   Pattern GMAIL_PATTERN = Pattern.compile("^[\\w.+%\\-]+@gmail\\.com$");
