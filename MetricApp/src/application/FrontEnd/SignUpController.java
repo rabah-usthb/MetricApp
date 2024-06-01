@@ -240,6 +240,10 @@ public class SignUpController {
 	    }
 	    return message;
 	}
+	
+	private boolean IsFieldEmpty(String value) {
+		return value==null||value.isBlank();
+	}
  
  @FXML
  private void SignUP(ActionEvent event) {
@@ -285,44 +289,58 @@ public class SignUpController {
 	 }catch(NullPointerException e) {
 		 ConfrimPassword = null;
 	 }
-	  if(UserName == null||UserName.isBlank()||UserName.isEmpty()) {
+	 boolean IsEmptyUserName = IsFieldEmpty(UserName);
+	 boolean IsUserNameRightLength = UserName.length()>=4;
+	 boolean IsEmptyEmail = IsFieldEmpty(Email);
+	 boolean IsEmail = RegularExpression.IsGmail(Email);
+	 boolean IsEmptyPassword=IsFieldEmpty(Password);
+	 boolean IsPasswordRightSize=Password.length()>=8;
+	 boolean IsConfirmPasswordEmpty = IsFieldEmpty(ConfrimPassword);
+	 boolean IsSamePassword = Password.equals(ConfrimPassword);
+	 
+	 if(IsEmptyUserName) {
 		 UserNameError.setText("UserName Field Is Empty");
 		 Accepted = false;
 	 }
-	 else if (UserName.length()<4) {
+	 else if (!IsUserNameRightLength) {
 		 UserNameError.setText("UserName Needs To Be At Least 4 Character");
 		 Accepted = false;
 	 }
 	 
-	 if(Email==null||Email.isBlank()||Email.isEmpty()) {
+	 if(IsEmptyEmail) {
 		 EmailError.setText("EmailField Is Empty");
 		 Accepted = false;
 	 }
-	 else if(!RegularExpression.IsGmail(Email)) {
+	 else if(!IsEmail) {
 		 EmailError.setText("Not An Email");
 		 Accepted = false;
 	 }
-	 else if(UserName.length()>=4 && !UserName.isBlank()) {
-		 if(SQLBackEnd.SqlFetchData(UserName, Email)) {
-			 EmailError.setText("UserName Or Email Already Used");
-		    Accepted = false;
+	  if((IsUserNameRightLength && !IsEmptyUserName)||(!IsEmptyEmail && IsEmail)) {
+		 if(SQLBackEnd.SqlFetchData(UserName,Email)) {
+			if( SQLBackEnd.GetIsMailUsed()) {
+			 EmailError.setText("Email Already Used");
+			}
+			if(SQLBackEnd.GetIsNameUsed()) {
+			UserNameError.setText("Name Already Used");	
+			}
+			 Accepted = false;
 		 }
 	 }
 	 
-	 if(Password==null||Password.isBlank()||Password.isEmpty()) {
+	 if(IsEmptyPassword) {
 		 PasswordError.setText("PasswordField Is Empty");
 		 Accepted = false;
 	 }
-	 else if(Password.length()<8) {
+	 else if(!IsPasswordRightSize) {
 		 PasswordError.setText("Password At Least 8 Characater");
 		 Accepted = false;
 	 }
 	 
-	 if(ConfrimPassword==null||ConfrimPassword.isBlank()||ConfrimPassword.isEmpty()) {
+	 if(IsConfirmPasswordEmpty) {
 		 ConfirmPasswordError.setText("ConfirmPasswordField Is Empty");
 		 Accepted = false;
 	 }
-	 else if(!Password.equals(ConfrimPassword)) {
+	 else if(!IsSamePassword) {
 		 ConfirmPasswordError.setText("Not Same Password");
 		 Accepted = false;
 	 }

@@ -1,6 +1,7 @@
 package application.BackEnd;
 
 import java.sql.Connection;
+
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,10 +11,21 @@ public class SQLBackEnd {
 	private static final String DB_URL = System.getenv("MetricDB_URL");
     private static final String DB_USER = System.getenv("DB_USER");
     private static final String DB_PASSWORD = System.getenv("DB_PASSWORD");
+    private static boolean IsMailUsed = false;
+    private static boolean IsNameUsed = false;
     
+    public static boolean GetIsMailUsed() {
+    	return IsMailUsed;
+    }
+    
+    public static boolean GetIsNameUsed() {
+    	return IsNameUsed;
+    }
     
     public static boolean InjectInDB(String userName, String email, String password) {
-        boolean InjectionSuccessfull = false;
+        userName= userName.replace(" ","");
+        email = email.replace(" ", "");
+    	boolean InjectionSuccessfull = false;
     	String Role = "user";
     	String sqlInsert = "INSERT INTO public.\"User\" (username, email, password,role) VALUES (?, ?, ?,?);";
 
@@ -40,7 +52,11 @@ public class SQLBackEnd {
     }
     
     public static boolean SqlFetchData(String UserName , String Email) {
-   	 String sqlQuery = "SELECT username, email FROM public.\"User\" WHERE username = ? OR email = ?;";
+   	   UserName = UserName.replace(" ", "");
+   	   Email = Email.replace(" ", "");
+    	IsMailUsed = false;
+    	IsNameUsed =false;
+   	   String sqlQuery = "SELECT username, email FROM public.\"User\" WHERE username = ? OR email = ?;";
         boolean AlreadyUsed = false;
         try (Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
              PreparedStatement pst = con.prepareStatement(sqlQuery)) {
@@ -52,6 +68,12 @@ public class SQLBackEnd {
                 while (rs.next()) {
                     String fetchedUserName = rs.getString("username");
                     String fetchedEmail = rs.getString("email");
+                    if(fetchedUserName.equals(UserName)) {
+                    	IsNameUsed =true;
+                    }
+                    if(fetchedEmail.equals(Email)) {
+                    	IsMailUsed = true;
+                    }
                     System.out.println("Username: " + fetchedUserName + ", Email: " + fetchedEmail);
                     AlreadyUsed = true;
                 }
