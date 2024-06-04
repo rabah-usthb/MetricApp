@@ -27,8 +27,12 @@ public class RegularExpression {
   static String ReturnType = "(\\s*\\w+\\s+" +")|("+collectionPattern+")|("+MapPattern +")|("+ArrayTypePattern+")";
   static String Paramter="\\s*"+NormalPattern+"\\s*|\\s*("+ArrayDeclarationPattern+")\\s*|\\s*("+collectionPattern+")\\w+\\s*|\\s*("+MapPattern+")\\w+\\s*";
   static String Arg = "\\s*\\(\\s*(("+Paramter+")"+"(,\\s*("+Paramter+"))*)?\\s*\\)\\s*";
-  
+  static String StaticModifier="(\\s*\\w+\\s+)?";
     
+  static String SingleCatch="\\s*\\w+\\s+\\w+\\s*";
+  static String MultipleCatch="\\s*\\w+\\s*(\\s*\\|\\s*\\w+\\s*)*\\s*\\|\\s*\\w+\\s+\\w+\\s*";
+  static String InsideCatch=SingleCatch+"|"+MultipleCatch;
+  static String OptionalClosingCurlyBraces="(\\s*\\}\\s*)?";
     
 	 
 	//Method to Know If Line Is Bracket Only Line
@@ -43,7 +47,7 @@ public class RegularExpression {
 	
 	//Method To Know If Line Is Import
 	static boolean IsImport(String Line) {
-		String ImportPattern="\\s*import\\s+\\w+(\\s*\\.\\s*(\\*|\\w+))+\\s*;\\s*";
+		String ImportPattern="\\s*import\\s+("+StaticModifier+")\\w+(\\s*\\.\\s*(\\*|\\w+))+\\s*;\\s*";
 		return Line.matches(ImportPattern);
 	}
 	
@@ -232,10 +236,9 @@ public class RegularExpression {
 
 			//Method To Know If Line Is Catch
 			static boolean IsCatch(String line) {
-			    line = line.trim();
-			    String PipeCatch = "(\\s*\\|\\s*\\w+(\\s+\\w+)?\\s*)*";
-			    String PatternCatch = "(\\})?\\s*catch\\s*\\(\\s*\\w+(\\s+\\w+)?"+PipeCatch+"\\s*\\)\\s*(\\{)?\\s*";
-			    return line.matches(PatternCatch);
+				String CatchPattern = "\\s*"+OptionalClosingCurlyBraces+"catch\\s*\\(("+InsideCatch+")\\)\\s*("+RegularExpression.CurlyBraces+")\\s*";
+				   
+				return line.matches(CatchPattern);
 			}
 
 			//Method To Fetch Exception From Catch
