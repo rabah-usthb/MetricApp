@@ -1,13 +1,35 @@
 package application.BackEnd;
 
+
+
 import java.util.ArrayList;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RegularExpression {
-
-	
+  
+   static String CurlyBraces="\\s*(\\{|\\{\\s*\\})?\\s*";
+   static String PatternAcessModfiers="(?:private\\s+|protected\\s+|public\\s+)?";
+   static String PatternNonAcessModifier="(?:static\\s+final\\s+|static\\s+|final\\s+|abstract\\s+)?";
+   static String ThrowsPattern = "(\\s*throws\\s+\\w+\\s*(\\s*\\,\\s*\\w+\\s*)*)?"; // Making the throws clause optional
+   static String Bracket = "(\\[\\s*\\]){1,2}";
+   static String ArrayDeclarationPattern = "\\w+\\s+\\w+\\s*(" + Bracket + ")|\\w+\\s*(" + Bracket + ")\\s*\\w+\\s*";
+   static String ArrayTypePattern="\\w+\\s*(" + Bracket + ")|\\w+\\s*(" + Bracket + ")\\s*";;
+ 
+  static String NormalPattern = "\\w+\\s+\\w+";
+  static String WrapperClass="\\s*\\w+\\s*";
+  static String SimpleInside="\\s*"+WrapperClass+"\\s*|\\s*("+ArrayTypePattern+")\\s*";
+  static String InsideCollection = "("+SimpleInside+")|\\s*\\w+<\\s*("+SimpleInside+")\\s*>";
+    
+  static String collectionPattern ="\\w+\\s*<\\s*("+InsideCollection+")\\s*>\\s*";
+  static String MapPattern="\\w+\\s*<\\s*("+InsideCollection+")\\s*,\\s*("+InsideCollection+")\\s*>*";
+  static String ReturnType = "(\\s*\\w+\\s+" +")|("+collectionPattern+")|("+MapPattern +")|("+ArrayTypePattern+")";
+  static String Paramter="\\s*"+NormalPattern+"\\s*|\\s*("+ArrayDeclarationPattern+")\\s*|\\s*("+collectionPattern+")\\w+\\s*|\\s*("+MapPattern+")\\w+\\s*";
+  static String Arg = "\\s*\\(\\s*(("+Paramter+")"+"(,\\s*("+Paramter+"))*)?\\s*\\)\\s*";
+  
+    
+    
 	 
 	//Method to Know If Line Is Bracket Only Line
 	static boolean IsBracket(String Line) {
@@ -128,19 +150,17 @@ public class RegularExpression {
 	    return classNames;
 	}
 
-	 static boolean IsConstructor(String line) {
-		    String PattrneAcessModfiers="(?:private\\s+|protected\\s+|public\\s+)?";
-			    String ThrowsPattern = "(\\s*throws\\s+\\w+\\s*(\\s*\\,\\s*\\w+\\s*)*)?"; // Making the throws clause optional
-			    String ConstructorPattern = PattrneAcessModfiers+"(?!(return|catch|else|while|for|if))\\w+\\s*\\([^()]*\\)\\s*"+ ThrowsPattern +"\\s*(\\{|\\{\\s*\\})?\\s*";
-			    return  line.matches(ConstructorPattern);	
-		}
+	static boolean IsConstructor(String line) {
+
+	    
+	    String ConstructorPattern = "("+PatternAcessModfiers+")\\w+\\s*("+Arg+")\\s*("+ ThrowsPattern+")"+"("+CurlyBraces+")";
+	 
+	    
+	    return  line.matches(ConstructorPattern);	
+}
 		
 	 static boolean IsMethod(String line) {
-			String PattrneAcessModfiers="(?:private\\s+|protected\\s+|public\\s+)?";
-			String CollectionPatterne="(<[\\s\\S]+?>|(\\[\\s*\\]\\s*){1,2})?";
-		    String PatterneNonAcessModifier="(?:static\\s+final\\s+|static\\s+|final\\s+|abstract\\s+)?";
-		    String ThrowsPattern = "(\\s*throws\\s+\\w+\\s*(\\s*\\,\\s*\\w+\\s*)*)?"; // Making the throws clause optional
-		    String MethodPattern = PattrneAcessModfiers + PatterneNonAcessModifier + "(?!else|return)\\b\\w+\\b\\s*" + CollectionPatterne+ "(\\s*|\\s+)(?!if)\\b\\w+\\b\\s*\\([^()]*\\)\\s*" + ThrowsPattern + "\\s*(;|\\{|\\{\\s*\\})?\\s*";
+			String MethodPattern = "("+PatternAcessModfiers +")("+ PatternNonAcessModifier + ")"+"(" + ReturnType+ ")\\w+\\s*("+Arg+")\\s*(" + ThrowsPattern +")"+"("+ CurlyBraces+")";
 		    return line.matches(MethodPattern); 
 		}
 	
