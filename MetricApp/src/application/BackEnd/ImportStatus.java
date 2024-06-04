@@ -428,7 +428,7 @@ public static void RemoveUnusedImports(String FilePath) {
 		   
 		       	   
 	   
-	   }   else if(!ImportI.contains(".")&&(!ImportI.isEmpty()&&!ImportI.isBlank())) {
+	   }   else if((!ImportI.isEmpty()&&!ImportI.isBlank())) {
       	 break;
      }
 		
@@ -446,13 +446,13 @@ public static void RemoveUnusedImports(String FilePath) {
 						   iterator.remove();
 					   }
 				   }
-		else if(!ImportJ.contains(".")&&(!ImportJ.isEmpty()&&!ImportJ.isBlank())) {
+		else if((!ImportJ.isEmpty()&&!ImportJ.isBlank())) {
 			      	 break;  
 				     }
 			   }
 		   }
 	   }
-	   else if(!ImportI.contains(".")&&(!ImportI.isEmpty()&&!ImportI.isBlank())) {
+	   else if((!ImportI.isEmpty()&&!ImportI.isBlank())) {
 	      	 break;  
 	      	 }
    }
@@ -491,14 +491,14 @@ public static void RemoveDuplicate(String FilePath) {
 	    		  iterator.remove();
 	    	  }
 	       }
-	    	  else if(!ImportJ.contains(".")&&(!ImportJ.isEmpty()&&!ImportJ.isBlank())) {
+	    	  else if((!ImportJ.isEmpty()&&!ImportJ.isBlank())) {
 	    	      	 break;
 	    	     }
 	       }
 	   }
             	   
 	   
-	   else if(!lines.get(i).contains(".")&&(!lines.get(i).isEmpty()&&!lines.get(i).isBlank())) {
+	   else if((!lines.get(i).isEmpty()&&!lines.get(i).isBlank())) {
       	 break;
      }
 		
@@ -546,13 +546,13 @@ public static void ReplaceWildCardImport(String filePath, int lineIndex, String 
        int i =0;
        while (iterator.hasNext()) {
            String Line = iterator.next();
-           if(Line.startsWith("import ")) {
+           if(RegularExpression.IsImport(Line)) {
             if( (i<lineIndex||i>lineIndex)&&FetchPackageName(Line).equals(Pkg)) { 	
             	iterator.remove();
               	}
     	     }
         	        	
-       else if(!Line.contains(".")&&(!Line.isEmpty()&&!Line.isBlank())) {
+       else if((!Line.isEmpty()&&!Line.isBlank())) {
         	 break;
        }
         	    ++i;    	

@@ -43,12 +43,14 @@ public class RegularExpression {
 	
 	//Method To Know If Line Is Import
 	static boolean IsImport(String Line) {
-		Line = Line.trim();
-		return Line.startsWith("import ");
+		String ImportPattern="\\s*import\\s+\\w+(\\s*\\.\\s*(\\*|\\w+))+\\s*;\\s*";
+		return Line.matches(ImportPattern);
 	}
 	
 	public static boolean IsPackage(String Line) {
-		return Line.startsWith("package ");
+		String PackagePattern = "\\s*package\\s+\\w+(\\s*\\.\\s*\\w+)*\\s*;\\s*";
+		
+		return Line.matches(PackagePattern);
 	}
 	
 	
