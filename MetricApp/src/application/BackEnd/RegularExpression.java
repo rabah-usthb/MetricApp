@@ -28,7 +28,29 @@ public class RegularExpression {
   static String Paramter="\\s*"+NormalPattern+"\\s*|\\s*("+ArrayDeclarationPattern+")\\s*|\\s*("+collectionPattern+")\\w+\\s*|\\s*("+MapPattern+")\\w+\\s*";
   static String Arg = "\\s*\\(\\s*(("+Paramter+")"+"(,\\s*("+Paramter+"))*)?\\s*\\)\\s*";
   static String StaticModifier="(\\s*\\w+\\s+)?";
-    
+  
+  static String FloatPattern="\\s*(\\+\\s*|\\-\\s*)?\\d+\\.\\d+(f)?\\s*";
+  static String IntPattern="\\s*(\\+\\s*|\\-\\s*)?\\d+\\s*";
+  
+  static String Char="[\\-\\+{}\\[\\]\\*\\(\\)£$\\^&=!?~#;:,\\.<>\\w\\s']";
+  
+  static String StringVar="\\s*\\(\\s*\\w+\\s*\\)\\s*|\\s*\\w+\\s*";
+  
+  static String NestedVarString="\\(\\s*("+StringVar+")\\s*(\\s*\\+\\s*("+StringVar+")\\s*)*\\s*\\)|\\s*("+StringVar+")\\s*(\\s*\\+\\s*("+StringVar+")\\s*)*\\s*";
+  static String VariableMiddle="\\s*\"\\s*\\+\\s*("+NestedVarString+")\\s*\\+\\s*\"\\s*";
+ 
+  
+  static String VariableEnd="(\\s*\\+\\s*\\w+\\s*)?";
+  static String VariableBeginning="(\\s*\\w+\\s*\\+\\s*)?";
+  static String StringLiteralPattern="\\s*"+VariableBeginning+"\\s*\"(("+VariableMiddle+")|("+Char+"))*\"("+VariableEnd+")\\s*";
+ 
+  static String VarName="\\s*\\w+\\s*";
+  
+  static String paramterException="("+StringLiteralPattern+")|("+VarName+")|("+IntPattern+")|("+FloatPattern+")";
+  static String InsideException="(\\s*("+paramterException+")\\s*(\\s*,\\s*("+paramterException+")\\s*)*\\s*)?";
+  
+ 
+  
   static String SingleCatch="\\s*\\w+\\s+\\w+\\s*";
   static String MultipleCatch="\\s*\\w+\\s*(\\s*\\|\\s*\\w+\\s*)*\\s*\\|\\s*\\w+\\s+\\w+\\s*";
   static String InsideCatch=SingleCatch+"|"+MultipleCatch;
@@ -258,10 +280,8 @@ public class RegularExpression {
 			}
 			//Method To Know If Line Is Throw
 	static boolean IsThrow(String line) {
-		String MultipleThrowPattern="(,\\s*new\\s+\\w+\\s*\\(([^()]*)?\\)\\s*)*";
-		String pattern = "throw\\s+new\\s+\\w+\\s*\\(([^()]*)?\\)"+MultipleThrowPattern+"\\s*;";
-				
-			return line.matches(pattern);
+		String ThrowPattern="\\s*throw\\s+new\\s+\\w+\\s*\\(\\s*("+InsideException+")\\s*\\)\\s*;\\s*";
+			return line.matches(ThrowPattern);
 		}
 
 	//Method To Fetch Exception From Throw	
