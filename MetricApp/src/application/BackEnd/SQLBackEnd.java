@@ -38,15 +38,18 @@ public class SQLBackEnd {
         email = email.replace(" ", "");
     	boolean InjectionSuccessfull = false;
     	String Role = "user";
-    	String sqlInsert = "INSERT INTO public.\"User\" (username, email, password,role) VALUES (?, ?, ?,?);";
-
+    	String sqlInsert = "INSERT INTO public.\"User\" (username, email, password,role,salting) VALUES (?, ?, ?,?,?);";
+        Hashing hash = new Hashing(password);
+        String HashedPassword = hash.hashWrapper();
+        String Salting = hash.getSalt();
         try (Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
              PreparedStatement pst = con.prepareStatement(sqlInsert)) {
 
             pst.setString(1, userName);
             pst.setString(2, email);
-            pst.setString(3, password);
+            pst.setString(3, HashedPassword);
             pst.setString(4, Role);
+            pst.setString(5, Salting);
             
             int rowsAffected = pst.executeUpdate();
             if (rowsAffected > 0) {
@@ -67,7 +70,7 @@ public class SQLBackEnd {
     	UserExist = false;
     	PasswordExist =false;
     	User = User.replace(" ", "");
-    	String sqlQuery = "SELECT username, email , password FROM public.\"User\" WHERE (username = ? OR email = ?) OR password = ?;";
+    	String sqlQuery = "SELECT username, email , password,salting FROM public.\"User\" WHERE (username = ? OR email = ?) OR password = ?;";
     	try(Connection con = DriverManager.getConnection(DB_URL,DB_USER,DB_PASSWORD);
     		PreparedStatement pst = con.prepareStatement(sqlQuery);){
     		pst.setString(1, User);
@@ -81,11 +84,14 @@ public class SQLBackEnd {
                      String fetchedUserName = rs.getString("username");
                      String fetchedEmail = rs.getString("email");
                      String fetchedPassword = rs.getString("password");
+                     String Salt = rs.getString("salting");
+                     Hashing hash = new Hashing(Password,Salt);
+                     String HashedPassword = hash.hashWrapper();
                      System.out.println(fetchedUserName);
                      if(fetchedUserName.equals(User)||fetchedEmail.equals(User)) {
                     	 UserExist = true;
                      }
-                     if(fetchedPassword.equals(Password)) {
+                     if(fetchedPassword.equals(HashedPassword)) {
                     	 PasswordExist = true;
                      }
                     if((fetchedUserName.equals(User)||fetchedEmail.equals(User))&&fetchedPassword.equals(Password)) {
