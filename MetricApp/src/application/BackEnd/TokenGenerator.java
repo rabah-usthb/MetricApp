@@ -12,7 +12,9 @@ public class TokenGenerator {
     private final String name;
     private final String email;
     private final String randomNum;
-
+    private static final SecureRandom secureRandom = new SecureRandom();
+    private static final int SALT_LENGTH = 15;
+    
     public TokenGenerator(String name, String email) {
         this.name = name;
         this.email = email;
@@ -40,25 +42,15 @@ public class TokenGenerator {
         int second = now.getSecond();
         int minute = now.getMinute();
         int token = (day * 69 + hour / 2 + month + 20 + second * 34) / 3 + minute - name.length() + email.length();
-        SecureRandom random = new SecureRandom();
         while (token < 100) {
-            token = token + 1 + random.nextInt(10);
+            token = token + 1 + secureRandom.nextInt(10);
         }
         return String.format("%03d", token); 
     }
 
     private String getSalting() {
         StringBuilder salt = new StringBuilder();
-        int num = Integer.parseInt(randomNum);
-        int sum = 0;
-        while (num > 0) {
-            sum += (num % 10);
-            num /= 10;
-        }
-        
-        int length = sum / 2;
-
-       
+        int length = SALT_LENGTH;
         while (length > 0) {
             salt.append(getRandomFunction());
             length--;
@@ -67,7 +59,7 @@ public class TokenGenerator {
     }
 
     private static String getRandomFunction() {
-    	int randomNum = 1 + new SecureRandom().nextInt(4);
+    int	randomNum = secureRandom.nextInt(5);
         switch (randomNum) {
             case 1:
                 return getRandomMin();
@@ -82,19 +74,19 @@ public class TokenGenerator {
 
 
     private static String getRandomSpecial() {
-        return ListSpecialChar[new SecureRandom().nextInt(ListSpecialChar.length)];
+        return ListSpecialChar[secureRandom.nextInt(ListSpecialChar.length)];
     }
 
     private static String getRandomNum() {
-        return ListNumber[new SecureRandom().nextInt(ListNumber.length)];
+        return ListNumber[secureRandom.nextInt(ListNumber.length)];
     }
 
     private static String getRandomMaj() {
-        return ListAlphabetMaj[new SecureRandom().nextInt(ListAlphabetMaj.length)];
+        return ListAlphabetMaj[secureRandom.nextInt(ListAlphabetMaj.length)];
     }
 
     private static String getRandomMin() {
-        return ListAlphabetMin[new SecureRandom().nextInt(ListAlphabetMin.length)];
+        return ListAlphabetMin[secureRandom.nextInt(ListAlphabetMin.length-1)];
     }
 
 
