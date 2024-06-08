@@ -21,6 +21,7 @@ import javax.mail.internet.MimeMessage;
 
 import application.BackEnd.RegularExpression;
 import application.BackEnd.SQLBackEnd;
+import application.BackEnd.TokenGenerator;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -176,16 +177,6 @@ public class SignUpController {
  }
  
  
- private static String TokenGenerator(String Email , String UserName) {
-	  LocalDateTime now = LocalDateTime.now();
-      int hour = now.getHour();
-      int day = now.getDayOfMonth();
-      int month = now.getMonthValue();
-      int second = now.getSecond();
-      int minute = now.getMinute();
-      int token = (day*69+hour/2+month+20+second*34)/3+minute-UserName.length()+Email.length();
-     return Integer.toString(token);
- }
  
  private static void SendMailAuthentification(String mailReceiver,String UserName) {
 	    Properties properties = new Properties();
@@ -231,8 +222,9 @@ public class SignUpController {
 	        message.setFrom(new InternetAddress(mailSender));
 	        message.setRecipient(Message.RecipientType.TO, new InternetAddress(mailReceiver));
 	        message.setSubject("Mail Authentication For Metric App");
-	        Token = TokenGenerator(mailReceiver,UserName);
-	        message.setText("Hello, please confirm that your email address is: " + mailReceiver +" By Inputing The Following Token "+Token+" In The Metric Application");
+	        TokenGenerator TGEN= new TokenGenerator(UserName, mailReceiver);
+	        Token = TGEN.Wrapper();
+	        message.setText("Hello "+UserName+ ", please confirm that your email address is: " + mailReceiver +" By Inputing The Following Token "+Token+" In The Metric Application");
 	        message.saveChanges();
 	    } catch (MessagingException e) {
 	        e.printStackTrace();

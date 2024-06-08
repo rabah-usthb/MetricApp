@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 public class TokenGenerator {
     static final String[] ListAlphabetMin = "abcdefghijklmnopqrstuvwxyz".split("");
     static final String[] ListAlphabetMaj = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-    static final String[] ListSpecialChar = {"-","[","/","\\","@","'","+","?",":",";",")","*","^","]","%","£","!","_","{",">","~","#","<","}","("};
+    static final String[] ListSpecialChar = {"-","[","/","\\","@","+","?",";",")","$","¬","*","^","]","%","£","!","_","{",">","~","#","<","}","("};
     static final String[] ListNumber = "0123456789".split("");
     private final String name;
     private final String email;
@@ -86,14 +86,9 @@ public class TokenGenerator {
     }
 
     private static String getRandomMin() {
-        return ListAlphabetMin[secureRandom.nextInt(ListAlphabetMin.length-1)];
+        return ListAlphabetMin[secureRandom.nextInt(ListAlphabetMin.length)];
     }
 
 
-    public static void main(String[] args) {
-        String email = "popolssa032@gmail.com";
-        String name = "faithy_90";
-        TokenGenerator toto = new TokenGenerator(name, email);
-        System.out.println(toto.Wrapper());
-    }
+    
 }
