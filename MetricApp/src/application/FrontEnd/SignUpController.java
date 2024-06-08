@@ -74,15 +74,12 @@ public class SignUpController {
     ImageView LockIcon2;
     
     
-    private static String Token;
     boolean IsVisible1= false;
     boolean IsVisible2=false;
 	
 	
     
-    static String GetToken() {
-    	return Token;
-    }
+    
     
     static String GetUserName() {
     	return UserNameInput;
@@ -223,7 +220,8 @@ public class SignUpController {
 	        message.setRecipient(Message.RecipientType.TO, new InternetAddress(mailReceiver));
 	        message.setSubject("Mail Authentication For Metric App");
 	        TokenGenerator TGEN= new TokenGenerator(UserName, mailReceiver);
-	        Token = TGEN.Wrapper();
+	        String Token = TGEN.Wrapper();
+	        SQLBackEnd.InjectToken(UserName, mailReceiver, Token);
 	        message.setText("Hello "+UserName+ ", please confirm that your email address is: " + mailReceiver +" By Inputing The Following Token "+Token+" In The Metric Application");
 	        message.saveChanges();
 	    } catch (MessagingException e) {
@@ -339,6 +337,7 @@ public class SignUpController {
 		 PasswordInput = Password;
 		 UserNameInput = UserName;
 		 EmailInput = Email;
+		 SQLBackEnd.InjectPendingUser(UserName, Email, Password);
 		 System.out.println("Prepare Sending");
 		 SendMailAuthentification(Email,UserName);
 		 ShowTokenConfirmation();

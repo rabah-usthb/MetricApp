@@ -1,6 +1,7 @@
 package application.FrontEnd;
 
 import application.BackEnd.SQLBackEnd;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -26,11 +27,15 @@ private void TokenConfirmation(ActionEvent event) {
 if(TokenInput==null||TokenInput.isEmpty()||TokenInput.isBlank()) {
 	ErrorToken.setText("Token Field Is Empty");
 }
-else if(!TokenInput.equals(SignUpController.GetToken())) {
+else if(SQLBackEnd.IsRightToken(SignUpController.GetEmail(), TokenInput)==0) {
 	ErrorToken.setText("Error Wrong Token");
 }
-else {
-	if(SQLBackEnd.InjectInDB(SignUpController.GetUserName(), SignUpController.GetEmail(), SignUpController.GetPassword())) {
+else if(SQLBackEnd.IsRightToken(SignUpController.GetEmail(), TokenInput)==-1) {
+	ErrorToken.setText("Token Expired");
+}
+else { 
+	SQLBackEnd.deleteTokenAfterConfirmation(SignUpController.GetEmail());
+	if(SQLBackEnd.InjectInDB(SignUpController.GetUserName(), SignUpController.GetEmail())) {
 		showSignUpSuccessDialog();
 	}
 }

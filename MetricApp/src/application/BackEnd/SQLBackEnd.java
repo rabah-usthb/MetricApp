@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 public class SQLBackEnd {
@@ -34,23 +35,31 @@ public class SQLBackEnd {
     	return IsNameUsed;
     }
     
-    public static boolean IsRightToken(String email ,String Token) {
+    public static int IsRightToken(String email ,String Token) {
     	email = email.replace(" ", "");
-    	boolean IsSameToken = false;
-    	String SqlNestedQuery="SELECT token FROM public.\"Auth_Tokens\" WHERE userid IN(SELECT userid FROM public.\"PendingUser\" WHERE email = ?);";
+    	LocalDateTime Now = LocalDateTime.now();
+    	Timestamp NowSQL = Timestamp.valueOf(Now);
+    	int IsSameToken = 0;
+    	String SqlNestedQuery="SELECT expiresat,token FROM public.\"auth_tokens\" WHERE userid IN(SELECT userid FROM public.\"pendinguser\" WHERE email = ?);";
     	   try (Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
                    
                    PreparedStatement PstQuery = con.prepareStatement(SqlNestedQuery)){
                    PstQuery.setString(1, email);
                    String fetchedToken="";
+                   Timestamp ExpiresAt= null;
                    try (ResultSet rs = PstQuery.executeQuery()) {
                        while (rs.next()) {
-                           fetchedToken = rs.getString("token");    
+                           fetchedToken = rs.getString("token");
+                           ExpiresAt = rs.getTimestamp("expiresat");
                        }
                    }
            
-                   if(fetchedToken.equals(Token)) {
-                	   IsSameToken = true;
+                   if(NowSQL.after(ExpiresAt)) {
+                	   IsSameToken=-1;
+                   }
+                   
+                   else if(fetchedToken.equals(Token)) {
+                	   IsSameToken = 1;
                    }
                    
                   
@@ -65,15 +74,12 @@ public class SQLBackEnd {
      return IsSameToken;
     }
     
-    public static boolean InjectToken(String UserName , String email) {
+    public static boolean InjectToken(String UserName , String email,String Token) {
     	UserName = UserName.replace(" ", "");
     	email = email.replace(" ", "");
     	boolean InjectionSuccessfull = false;
-    	String SqlInsert = "INSERT INTO public.\"Auth_Tokens\" (token,createdat,expiresat,userid) VALUES(?,?,?,?); ";
-        String SqlQuery="SELECT email FROM public.\"PendingUser\" WHERE email = ?";
-    	
-    	TokenGenerator TOKENGEN = new TokenGenerator(UserName, email);
-    	String Token = TOKENGEN.Wrapper();
+    	String SqlInsert = "INSERT INTO public.\"auth_tokens\" (token,createdat,expiresat,userid) VALUES(?,?,?,?); ";
+        String SqlQuery="SELECT pendinguserid FROM public.\"pendinguser\" WHERE email = ?";
         LocalDateTime createdAt = LocalDateTime.now();
         LocalDateTime expiresAt = createdAt.plusHours(1);  // 1-hour expiry
         
@@ -82,10 +88,10 @@ public class SQLBackEnd {
                 PreparedStatement PstInsert = con.prepareStatement(SqlInsert); 
                 PreparedStatement PstQuery = con.prepareStatement(SqlQuery)){
                 PstQuery.setString(1, email);
-                String fetchedEmail="";
+                int fetchedID=0;
                 try (ResultSet rs = PstQuery.executeQuery()) {
                     while (rs.next()) {
-                        fetchedEmail = rs.getString("email");    
+                        fetchedID = rs.getInt("pendinguserid");    
                     }
                 }
        
@@ -93,7 +99,7 @@ public class SQLBackEnd {
                PstInsert.setString(1, Token);
                PstInsert.setTimestamp(2, java.sql.Timestamp.valueOf(createdAt));
                PstInsert.setTimestamp(3, java.sql.Timestamp.valueOf(expiresAt));
-               PstInsert.setString(4, fetchedEmail);
+               PstInsert.setInt(4, fetchedID);
                
                int rowsAffected = PstInsert.executeUpdate();
                if (rowsAffected > 0) {
@@ -112,10 +118,11 @@ public class SQLBackEnd {
     }
     
     public static boolean InjectPendingUser(String UserName,String email,String Password) {
+    	System.out.println("Injectin Pending User");
     	UserName = UserName.replace(" ", "");
     	email = email.replace(" ", "");
     	boolean InjectionSuccessfull = false;
-    	String SqlInsert = "INSERT INTO public.\"PendingUser\" (username , email , password ,salting) VALUES(?,?,?,?);";
+    	String SqlInsert = "INSERT INTO public.\"pendinguser\" (username , email , password ,salting) VALUES(?,?,?,?);";
     	Hashing hash = new Hashing(Password);
     	String HashedPassword =hash.hashWrapper();
     	String Salting = hash.getSalt();
@@ -142,32 +149,51 @@ public class SQLBackEnd {
     	return InjectionSuccessfull;
     }
     
-    public static boolean InjectInDB(String userName, String email, String password) {
+    public static boolean InjectInDB(String userName, String email) {
         userName= userName.replace(" ","");
         email = email.replace(" ", "");
     	boolean InjectionSuccessfull = false;
     	String Role = "user";
     	String sqlInsert = "INSERT INTO public.\"User\" (username, email, password,role,salting) VALUES (?, ?, ?,?,?);";
-        Hashing hash = new Hashing(password);
-        String HashedPassword = hash.hashWrapper();
-        String Salting = hash.getSalt();
+        String SqlQuery = "SELECT password , salting FROM public.\"pendinguser\" WHERE email = ?;";
+        String SqlDel = "DELETE FROM public.\"pendinguser\" WHERE email = ? ";
         try (Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             PreparedStatement pst = con.prepareStatement(sqlInsert)) {
-
-            pst.setString(1, userName);
-            pst.setString(2, email);
-            pst.setString(3, HashedPassword);
-            pst.setString(4, Role);
-            pst.setString(5, Salting);
+             PreparedStatement PstInsert = con.prepareStatement(sqlInsert);
+        	 PreparedStatement PstQuery = con.prepareStatement(SqlQuery);
+        	 PreparedStatement PstDel = con.prepareStatement(SqlDel);) {
             
-            int rowsAffected = pst.executeUpdate();
+        	PstQuery.setString(1,email);
+        	String HashedPassword="";
+        	String Salting="";
+        	try (ResultSet rs = PstQuery.executeQuery()) {
+                while (rs.next()) {
+                    HashedPassword = rs.getString("password");
+                    Salting = rs.getString("salting");
+                }
+            }
+            PstInsert.setString(1, userName);
+            PstInsert.setString(2, email);
+            PstInsert.setString(3, HashedPassword);
+            PstInsert.setString(4, Role);
+            PstInsert.setString(5, Salting);
+            
+            int rowsAffected = PstInsert.executeUpdate();
             if (rowsAffected > 0) {
             	InjectionSuccessfull=true;
                 System.out.println("A new user was inserted successfully!");
             } else {
                 System.out.println("No rows affected.");
             }
-
+            
+            PstDel.setString(1, email);
+            int rowDeleted = PstDel.executeUpdate();
+            if(rowDeleted==1) {
+            	System.out.println("Deleted Pending Succecfully");
+            }
+            else {
+            	System.out.println("ERROR");
+            }
+            
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -212,6 +238,43 @@ public class SQLBackEnd {
     	}
     	return false;
     }
+    
+    public static void deleteExpiredTokens() {
+        String sqlDelete = "DELETE FROM public.\"auth_tokens\" WHERE ExpiresAt < NOW()";
+
+        try (Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+             PreparedStatement pst = con.prepareStatement(sqlDelete)) {
+
+            int rowsAffected = pst.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println(rowsAffected + " expired tokens were deleted successfully!");
+            } else {
+                System.out.println("No expired tokens found.");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void deleteTokenAfterConfirmation(String email) {
+        String sqlDelete = "DELETE FROM public.\"auth_tokens\" WHERE userid IN (SELECT pendinguserid FROM public.\"pendinguser\" WHERE email = ?);";
+
+        try (Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+            PreparedStatement pst = con.prepareStatement(sqlDelete)) {
+            pst.setString(1 , email);
+            int rowsAffected = pst.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println(rowsAffected + "  token were deleted successfully!");
+            } else {
+                System.out.println("No expired tokens found.");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
     
     public static boolean SqlFetchData(String UserName , String Email) {
    	   UserName = UserName.replace(" ", "");

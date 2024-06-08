@@ -2,6 +2,7 @@ package application.FrontEnd;
 
 import java.io.IOException;
 
+
 import application.BackEnd.RegularExpression;
 import application.BackEnd.SQLBackEnd;
 import javafx.event.ActionEvent;
@@ -41,7 +42,7 @@ public class LoginController {
     	
     	Node source = (Node) event.getSource();
         Stage stagelogin = (Stage) source.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/SingUp.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/SignUp.fxml"));
         Parent root = null;
 			try {
 				root = fxmlLoader.load();
