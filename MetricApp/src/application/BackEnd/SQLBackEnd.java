@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 public class SQLBackEnd {
 	private static final String DB_URL = System.getenv("MetricDB_URL");
@@ -31,6 +32,114 @@ public class SQLBackEnd {
     
     public static boolean GetIsNameUsed() {
     	return IsNameUsed;
+    }
+    
+    public static boolean IsRightToken(String email ,String Token) {
+    	email = email.replace(" ", "");
+    	boolean IsSameToken = false;
+    	String SqlNestedQuery="SELECT token FROM public.\"Auth_Tokens\" WHERE userid IN(SELECT userid FROM public.\"PendingUser\" WHERE email = ?);";
+    	   try (Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+                   
+                   PreparedStatement PstQuery = con.prepareStatement(SqlNestedQuery)){
+                   PstQuery.setString(1, email);
+                   String fetchedToken="";
+                   try (ResultSet rs = PstQuery.executeQuery()) {
+                       while (rs.next()) {
+                           fetchedToken = rs.getString("token");    
+                       }
+                   }
+           
+                   if(fetchedToken.equals(Token)) {
+                	   IsSameToken = true;
+                   }
+                   
+                  
+                  
+
+              } catch (SQLException e) {
+                  e.printStackTrace();
+              }
+
+
+    	
+     return IsSameToken;
+    }
+    
+    public static boolean InjectToken(String UserName , String email) {
+    	UserName = UserName.replace(" ", "");
+    	email = email.replace(" ", "");
+    	boolean InjectionSuccessfull = false;
+    	String SqlInsert = "INSERT INTO public.\"Auth_Tokens\" (token,createdat,expiresat,userid) VALUES(?,?,?,?); ";
+        String SqlQuery="SELECT email FROM public.\"PendingUser\" WHERE email = ?";
+    	
+    	TokenGenerator TOKENGEN = new TokenGenerator(UserName, email);
+    	String Token = TOKENGEN.Wrapper();
+        LocalDateTime createdAt = LocalDateTime.now();
+        LocalDateTime expiresAt = createdAt.plusHours(1);  // 1-hour expiry
+        
+    	
+        try (Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+                PreparedStatement PstInsert = con.prepareStatement(SqlInsert); 
+                PreparedStatement PstQuery = con.prepareStatement(SqlQuery)){
+                PstQuery.setString(1, email);
+                String fetchedEmail="";
+                try (ResultSet rs = PstQuery.executeQuery()) {
+                    while (rs.next()) {
+                        fetchedEmail = rs.getString("email");    
+                    }
+                }
+       
+                
+               PstInsert.setString(1, Token);
+               PstInsert.setTimestamp(2, java.sql.Timestamp.valueOf(createdAt));
+               PstInsert.setTimestamp(3, java.sql.Timestamp.valueOf(expiresAt));
+               PstInsert.setString(4, fetchedEmail);
+               
+               int rowsAffected = PstInsert.executeUpdate();
+               if (rowsAffected > 0) {
+               	InjectionSuccessfull=true;
+                   System.out.println("A new token was inserted successfully!");
+               } else {
+                   System.out.println("No rows affected.");
+               }
+
+           } catch (SQLException e) {
+               e.printStackTrace();
+           }
+
+    	
+    	return InjectionSuccessfull;
+    }
+    
+    public static boolean InjectPendingUser(String UserName,String email,String Password) {
+    	UserName = UserName.replace(" ", "");
+    	email = email.replace(" ", "");
+    	boolean InjectionSuccessfull = false;
+    	String SqlInsert = "INSERT INTO public.\"PendingUser\" (username , email , password ,salting) VALUES(?,?,?,?);";
+    	Hashing hash = new Hashing(Password);
+    	String HashedPassword =hash.hashWrapper();
+    	String Salting = hash.getSalt();
+
+        try (Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+                PreparedStatement pst = con.prepareStatement(SqlInsert)) {
+
+               pst.setString(1, UserName);
+               pst.setString(2, email);
+               pst.setString(3, HashedPassword);
+               pst.setString(4, Salting);
+               
+               int rowsAffected = pst.executeUpdate();
+               if (rowsAffected > 0) {
+               	InjectionSuccessfull=true;
+                   System.out.println("A new user was inserted successfully!");
+               } else {
+                   System.out.println("No rows affected.");
+               }
+
+           } catch (SQLException e) {
+               e.printStackTrace();
+           }
+    	return InjectionSuccessfull;
     }
     
     public static boolean InjectInDB(String userName, String email, String password) {
@@ -79,15 +188,12 @@ public class SQLBackEnd {
     		
     		 try (ResultSet rs = pst.executeQuery()) {
                  while (rs.next()) {
-                	 System.out.println(User);
-                	 
-                     String fetchedUserName = rs.getString("username");
+                	 String fetchedUserName = rs.getString("username");
                      String fetchedEmail = rs.getString("email");
                      String fetchedPassword = rs.getString("password");
                      String Salt = rs.getString("salting");
                      Hashing hash = new Hashing(Password,Salt);
                      String HashedPassword = hash.hashWrapper();
-                     System.out.println(fetchedUserName);
                      if(fetchedUserName.equals(User)||fetchedEmail.equals(User)) {
                     	 UserExist = true;
                      }
@@ -130,7 +236,6 @@ public class SQLBackEnd {
                     if(fetchedEmail.equals(Email)) {
                     	IsMailUsed = true;
                     }
-                    System.out.println("Username: " + fetchedUserName + ", Email: " + fetchedEmail);
                     AlreadyUsed = true;
                 }
             }
