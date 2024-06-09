@@ -1,4 +1,6 @@
 package application.BackEnd;
+//Token PassowrdReset Table
+//Function Update Password
 
 import java.sql.Connection;
 
@@ -73,6 +75,79 @@ public class SQLBackEnd {
     	
      return IsSameToken;
     }
+    
+    public static boolean UpdatePassword(String NewPassword,String email) {
+    	email = email.replace(" ", "");
+        boolean UpdatedSucessfull = false;
+    	String SqlUpdate = "UPDATE public.\"User\" SET password = ? , salting = ? WHERE email = ?;";
+        try (Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+                PreparedStatement PstUpdate = con.prepareStatement(SqlUpdate)){
+               Hashing hash = new Hashing(NewPassword);
+               String Salting = hash.getSalt();
+               String HashedPassword = hash.hashWrapper();
+        	   PstUpdate.setString(1, HashedPassword);
+        	   PstUpdate.setString(2,Salting);
+        	   PstUpdate.setString(3, email);
+               
+               
+               int rowsUpdated = PstUpdate.executeUpdate();
+               if (rowsUpdated > 0) {
+               	UpdatedSucessfull=true;
+                   System.out.println("A new Row was Updated successfully!");
+               } else {
+                   System.out.println("No rows Updated.");
+               }
+
+           } catch (SQLException e) {
+               e.printStackTrace();
+           }
+
+   
+    	return UpdatedSucessfull;
+    }
+    
+    public static boolean InjectToken(String email,String Token) {
+    	email = email.replace(" ", "");	
+    	boolean InjectionSuccessfull = false;
+    	String SqlInsert = "INSERT INTO public.\"reset_password_tokens\" (token,expiresat,userid) VALUES(?,?,?); ";
+        String SqlQuery="SELECT userid FROM public.\"User\" WHERE email = ?";
+        LocalDateTime createdAt = LocalDateTime.now();
+        LocalDateTime expiresAt = createdAt.plusHours(1);  // 1-hour expiry
+        
+    	
+        try (Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+                PreparedStatement PstInsert = con.prepareStatement(SqlInsert); 
+                PreparedStatement PstQuery = con.prepareStatement(SqlQuery)){
+                PstQuery.setString(1, email);
+                int fetchedID=0;
+                try (ResultSet rs = PstQuery.executeQuery()) {
+                    while (rs.next()) {
+                        fetchedID = rs.getInt("userid");    
+                    }
+                }
+       
+                
+               PstInsert.setString(1, Token);
+               PstInsert.setTimestamp(2, java.sql.Timestamp.valueOf(expiresAt));
+               PstInsert.setInt(3, fetchedID);
+               
+               int rowsAffected = PstInsert.executeUpdate();
+               if (rowsAffected > 0) {
+               	InjectionSuccessfull=true;
+                   System.out.println("A new token was inserted successfully!");
+               } else {
+                   System.out.println("No rows affected.");
+               }
+
+           } catch (SQLException e) {
+               e.printStackTrace();
+           }
+
+    	
+    	return InjectionSuccessfull;
+
+    }
+    
     
     public static boolean InjectToken(String UserName , String email,String Token) {
     	UserName = UserName.replace(" ", "");
