@@ -38,7 +38,7 @@ public class MailSender {
  }
  
  
- private void SendMail(String UserName,int MessageFlag) {
+ public void SendMail(String UserName,int MessageFlag) {
 	    Session session = Session.getInstance(this.properties, new Authenticator() {
 	        @Override
 	        protected PasswordAuthentication getPasswordAuthentication() {
@@ -52,7 +52,7 @@ public class MailSender {
 	    	message = PrepareMessageAuth(session, UserName);
 	    }
 	    else {
-	    	message =null;
+	    	message =PrepareMessageReset(session, UserName);
 	    }
 	    try {
 	    	
@@ -87,5 +87,22 @@ public class MailSender {
 	    return message;
 	}
 	
+	private  Message PrepareMessageReset(Session session, String UserName) {
+	    Message message = new MimeMessage(session);
+	    try {
+	        message.setFrom(new InternetAddress(DB_MAIL));
+	        message.setRecipient(Message.RecipientType.TO, new InternetAddress(this.MailReceiver));
+	        message.setSubject("Mail Reset Password For Metric App");
+	        TokenGenerator TGEN= new TokenGenerator(UserName, this.MailReceiver);
+	        String Token = TGEN.Wrapper();
+	        SQLBackEnd.InjectTokenReset(this.MailReceiver, Token);
+	        message.setText("Hello "+UserName+ ", please confirm the token : "+Token+" In The Metric Application To Reset Password");
+	        message.saveChanges();
+	    } catch (MessagingException e) {
+	        e.printStackTrace();
+	        System.out.println("Failed to prepare message: " + e.getMessage());
+	    }
+	    return message;
+	}
 	
 }

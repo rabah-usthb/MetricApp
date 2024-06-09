@@ -106,7 +106,31 @@ public class SQLBackEnd {
     	return UpdatedSucessfull;
     }
     
-    public static boolean InjectToken(String email,String Token) {
+    public static boolean MailExist(String email) {
+    	email = email.replace(" ", "");
+    	boolean MailExisting=false;
+    	String SqlQuery="SELECT email FROM public.\"User\" WHERE email = ?";
+
+    	try (Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+           
+                PreparedStatement PstQuery = con.prepareStatement(SqlQuery)){
+                PstQuery.setString(1, email);
+                
+                try (ResultSet rs = PstQuery.executeQuery()) {
+                    while (rs.next()) {
+                        MailExisting = true;    
+                    }
+                }
+       
+                
+           } catch (SQLException e) {
+               e.printStackTrace();
+           }
+
+    	return MailExisting;
+    }
+    
+    public static boolean InjectTokenReset(String email,String Token) {
     	email = email.replace(" ", "");	
     	boolean InjectionSuccessfull = false;
     	String SqlInsert = "INSERT INTO public.\"reset_password_tokens\" (token,expiresat,userid) VALUES(?,?,?); ";
