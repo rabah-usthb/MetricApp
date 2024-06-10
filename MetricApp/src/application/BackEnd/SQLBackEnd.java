@@ -356,25 +356,7 @@ public class SQLBackEnd {
         }
     }
 
-    public static void deleteTokenAfterConfirmation(String email) {
-        String sqlDelete = "DELETE FROM public.\"auth_tokens\" WHERE userid IN (SELECT pendinguserid FROM public.\"pendinguser\" WHERE email = ?);";
 
-        try (Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-            PreparedStatement pst = con.prepareStatement(sqlDelete)) {
-            pst.setString(1 , email);
-            int rowsAffected = pst.executeUpdate();
-            if (rowsAffected > 0) {
-                System.out.println(rowsAffected + "  token were deleted successfully!");
-            } else {
-                System.out.println("No expired tokens found.");
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    
     public static boolean SqlFetchData(String UserName , String Email) {
    	   UserName = UserName.replace(" ", "");
    	   Email = Email.replace(" ", "");

@@ -34,7 +34,6 @@ else if(SQLBackEnd.IsRightToken(SignUpController.GetEmail(), TokenInput)==-1) {
 	ErrorToken.setText("Token Expired");
 }
 else { 
-	SQLBackEnd.deleteTokenAfterConfirmation(SignUpController.GetEmail());
 	if(SQLBackEnd.InjectInDB(SignUpController.GetUserName(), SignUpController.GetEmail())) {
 		showSignUpSuccessDialog();
 	}
