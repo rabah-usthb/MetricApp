@@ -1,7 +1,7 @@
 package application.BackEnd;
 
-
-
+import java.util.ArrayList;
+import java.util.*;
 import java.util.ArrayList;
 
 import java.util.regex.Matcher;
@@ -10,29 +10,39 @@ import java.util.regex.Pattern;
 public class RegularExpression {
   
    static String CurlyBraces="\\s*(\\{|\\{\\s*\\})?\\s*";
-   static String PatternAcessModfiers="(?:private\\s+|protected\\s+|public\\s+)?";
-   static String PatternNonAcessModifier="(?:static\\s+final\\s+|static\\s+|final\\s+|abstract\\s+)?";
+   static String PatternAcessModifiers="(private\\s+|protected\\s+|public\\s+)?";
+   static String NonAcessModifierSimple = "(static\\s+|final\\s+|abstract\\s+)?";
+   static String ModifierSimple = "("+PatternAcessModifiers+")("+NonAcessModifierSimple+")|("+NonAcessModifierSimple+")("+PatternAcessModifiers+")";
+   static String ModifierComplex = "("+PatternAcessModifiers+")final\\s+static\\s+|("+PatternAcessModifiers+")static\\s+final\\s+|final\\s+("+PatternAcessModifiers+")static\\s+|static\\s+("+PatternAcessModifiers+")final\\s+|static\\s+final\\s+("+PatternAcessModifiers+")|final\\s+static\\s+("+PatternAcessModifiers+")";
+   static String MethodModifierPattern = "("+ModifierSimple+")|("+ModifierComplex+")";
    static String ThrowsPattern = "(\\s*throws\\s+\\w+\\s*(\\s*\\,\\s*\\w+\\s*)*)?"; // Making the throws clause optional
    static String Bracket = "(\\[\\s*\\]){1,2}";
    static String ArrayDeclarationPattern = "\\w+\\s+\\w+\\s*(" + Bracket + ")|\\w+\\s*(" + Bracket + ")\\s*\\w+\\s*";
-   static String ArrayTypePattern="\\w+\\s*(" + Bracket + ")|\\w+\\s*(" + Bracket + ")\\s*";;
+   static String ArrayTypePattern="\\w+\\s*(" + Bracket + ")\\s*";
  
   static String NormalPattern = "\\w+\\s+\\w+";
   static String WrapperClass="\\s*\\w+\\s*";
-  static String SimpleInside="\\s*"+WrapperClass+"\\s*|\\s*("+ArrayTypePattern+")\\s*";
-  static String InsideCollection = "("+SimpleInside+")|\\s*\\w+<\\s*("+SimpleInside+")\\s*>";
-    
-  static String collectionPattern ="\\w+\\s*<\\s*("+InsideCollection+")\\s*>\\s*";
-  static String MapPattern="\\w+\\s*<\\s*("+InsideCollection+")\\s*,\\s*("+InsideCollection+")\\s*>*";
-  static String ReturnType = "(\\s*\\w+\\s+" +")|("+collectionPattern+")|("+MapPattern +")|("+ArrayTypePattern+")";
-  static String Paramter="\\s*"+NormalPattern+"\\s*|\\s*("+ArrayDeclarationPattern+")\\s*|\\s*("+collectionPattern+")\\w+\\s*|\\s*("+MapPattern+")\\w+\\s*";
+
+
+  static String WildCardGen = "\\s*\\?(extends\\s+\\w+|super\\s+\\w+)?\\s*"; 
+
+  static String SimpleInside="\\s*"+WrapperClass+"\\s*|\\s*("+ArrayTypePattern+")\\s*|\\s*("+WildCardGen+")\\s*";
+  static String InsideCollection = "("+SimpleInside+")|\\s*\\w+<\\s*("+SimpleInside+")\\s*>|\\s*\\w+\\s*<\\s*("+SimpleInside+")\\s*,\\s*("+SimpleInside+")\\s*>\\s*";
+	 
+  static String SetListPattern ="\\w+\\s*<\\s*("+InsideCollection+")\\s*>\\s*";
+  static String MapPattern="\\w+\\s*<\\s*("+InsideCollection+")\\s*,\\s*("+InsideCollection+")\\s*>\\s*";
+  static String CollectionPattern ="("+MapPattern+")|("+SetListPattern+")";
+  static String ReturnType = "(\\s*\\w+\\s+)|("+CollectionPattern+")|("+ArrayTypePattern+")";
+  static String Paramter="\\s*"+NormalPattern+"\\s*|\\s*("+ArrayDeclarationPattern+")\\s*|\\s*("+CollectionPattern+")\\w+\\s*|\\s*("+MapPattern+")\\w+\\s*";
   static String Arg = "\\s*\\(\\s*(("+Paramter+")"+"(,\\s*("+Paramter+"))*)?\\s*\\)\\s*";
-  static String StaticModifier="(\\s*\\w+\\s+)?";
+  static String StaticModifier="(static\\s+)?";
   
-  static String FloatPattern="\\s*(\\+\\s*|\\-\\s*)?\\d+\\.\\d+(f)?\\s*";
-  static String IntPattern="\\s*(\\+\\s*|\\-\\s*)?\\d+\\s*";
+  static String SignPattern="(\\+\\s*|\\-\\s*)?";
   
-  static String Char="[\\-\\+{}\\[\\]\\*\\(\\)£$\\^&=!?~#;:,\\.<>\\w\\s']";
+  static String FloatPattern="\\s*"+SignPattern+"\\d+\\.\\d+(f)?\\s*";
+  static String IntPattern="\\s*"+SignPattern+"\\d+\\s*";
+  
+  static String Char="[^\"\\n]";
   
   static String StringVar="\\s*\\(\\s*\\w+\\s*\\)\\s*|\\s*\\w+\\s*";
   
@@ -56,8 +66,20 @@ public class RegularExpression {
   static String InsideCatch=SingleCatch+"|"+MultipleCatch;
   static String OptionalClosingCurlyBraces="(\\s*\\}\\s*)?";
     
+  
+  //static String StaticModifier = "(static\textbackslash s+)?";
+  static String FinalModifier = "(final\\s+)?";
+  static String VarModifer = (PatternAcessModifiers)+(FinalModifier)+(StaticModifier)+"|"+(PatternAcessModifiers)+(StaticModifier)+(FinalModifier)+"|"+(StaticModifier)+(PatternAcessModifiers)+(FinalModifier)+"|"+(StaticModifier)+(FinalModifier)+(PatternAcessModifiers)+"|"+(FinalModifier)+(PatternAcessModifiers)+(StaticModifier)+"|"+(FinalModifier)+(StaticModifier)+(PatternAcessModifiers);
 	 
-	//Method to Know If Line Is Bracket Only Line
+  static String NonAcessModifierClass = "(abstract\\s+|final\\s+)?";
+  static String ModifierClass = "("+PatternAcessModifiers+")("+NonAcessModifierClass+")|("+NonAcessModifierClass+")("+PatternAcessModifiers+")";
+  static String ExtendsPattern = "(\\s+extends\\s+\\w+(\\s*<\\s*\\w+\\s*>\\s*)?)?";
+  static String ImplementsPattern = "(\\s+implements\\s+\\w+\\s*(\\s*,\\s*\\w+\\s*)*)?";
+	
+  static String MultipleBoundPattern = "(\\s+extends\\s+\\w+(\\s*<\\s*\\w+\\s*>\\s*)?(\\s+&\\s+\\w+(\\s*<\\s*\\w+\\s*>)?)*\\s*)?";
+  static String TypeParameterGen = "(\\s*<\\s*\\w+("+MultipleBoundPattern+")\\s*(,\\s*\\w+("+MultipleBoundPattern+")\\s*)*\\s*>\\s*)?";
+  
+  //Method to Know If Line Is Bracket Only Line
 	static boolean IsBracket(String Line) {
 		String line = Line;
 		line = line.replace(" ", "");
@@ -108,14 +130,8 @@ public class RegularExpression {
 	
 	
 	public static boolean IsClass(String Line) {
-	    String AccessModifiersPattern = "(?:private\\s+|protected\\s+|public\\s+)?";
-	    String NonAccessModifiersPattern = "(?:static\\s+|final\\s+|abstract\\s+)?";
-	    String ExtendsPattern = "(?:\\s+extends\\s+\\b\\w+\\b(?:\\s*<\\s*\\w+\\s*>\\s*)?)?";
-	    String ImplementsPattern = "(?:\\s+implements\\s+\\w+\\s*(\\s*,\\s*\\w+\\s*)*)?";
-	    String ClassPattern1 = (AccessModifiersPattern + NonAccessModifiersPattern)+ "class\\s+\\w+" + ExtendsPattern + ImplementsPattern + "\\s*(?:\\{\\s*)?";
-	    String ClassPattern2 = (NonAccessModifiersPattern + AccessModifiersPattern)+ "class\\s+\\w+" + ExtendsPattern + ImplementsPattern + "\\s*(?:\\{\\s*)?";
-	    
-	    return Line.matches(ClassPattern1)||Line.matches(ClassPattern2);
+	 String ClassPattern = "\\s*("+ModifierClass+")class\\s+\\w+("+TypeParameterGen+")("+ExtendsPattern+")("+ImplementsPattern+")\\s*(\\{)?\\s*";
+		return Line.matches(ClassPattern);
 	}
 	
 	public static boolean IsFieldEmpty(String value) {
@@ -158,9 +174,9 @@ public class RegularExpression {
 	    //Method To Know If Line Is New Line Instantiation
 	static boolean IsNew(String Line) {
 		String trimmedLine = Line.trim();
-		String pattern = "(\\(|\\=)\\s*new\\s+";
+		String NewPattern = ".+(\\(|\\=)\\s*new\\s+.+";
 
-	    return trimmedLine.matches(".*"+pattern+".*");
+	    return trimmedLine.matches(NewPattern);
 	}
 	
  //Method To Extract ClassNames From NewLine	
@@ -181,14 +197,14 @@ public class RegularExpression {
 	static boolean IsConstructor(String line) {
 
 	    
-	    String ConstructorPattern = "("+PatternAcessModfiers+")\\w+\\s*("+Arg+")\\s*("+ ThrowsPattern+")"+"("+CurlyBraces+")";
+	    String ConstructorPattern = "("+PatternAcessModifiers+")("+TypeParameterGen+")\\w+\\s*("+Arg+")\\s*("+ ThrowsPattern+")"+"("+CurlyBraces+")";
 	 
 	    
 	    return  line.matches(ConstructorPattern);	
 }
 		
 	 static boolean IsMethod(String line) {
-			String MethodPattern = "("+PatternAcessModfiers +")("+ PatternNonAcessModifier + ")"+"(" + ReturnType+ ")\\w+\\s*("+Arg+")\\s*(" + ThrowsPattern +")"+"("+ CurlyBraces+")";
+			String MethodPattern = "("+MethodModifierPattern+")("+TypeParameterGen+")("+ReturnType+")\\w+\\s*("+Arg+")\\s*("+ThrowsPattern+")("+CurlyBraces+")";
 		    return line.matches(MethodPattern); 
 		}
 	
@@ -299,14 +315,9 @@ public class RegularExpression {
         return classNames;	
 	}
 	//Detect If Line Is Variable
-	   static boolean IsVariable(String line) {
-		   String PattrneAcessModfiers="(?:private\\s+|protected\\s+|public\\s+)?";
-			String PattrneStatic="(?:static\\s+)?";
-			String PatterneFinal="(?:final\\s+)?";
-		    String variablePattern = PattrneAcessModfiers+PattrneStatic+PatterneFinal+"(?!return\\s+)\\w+\\s+\\w+\\s*(=\\s*.+)?;?";
-		    String ArrayPattern= PattrneAcessModfiers+PattrneStatic+PatterneFinal+"\\w+\\s*(\\[\\s*\\]\\s*){1,2}\\w+\\s*(=\\s*.+)?;?";
-		    String CollectionPattern=  PattrneAcessModfiers+PattrneStatic+PatterneFinal+"\\w+\\s*\\<[\\s\\S]+?>\\s*\\w+\\s*(=\\s*.+)?;?";
-		    return line.matches(variablePattern) || line.matches(CollectionPattern) || line.matches(ArrayPattern);
+	   static boolean IsVariable(String line) {	    
+		    String VariablePattern = "\\s*("+VarModifer+")((?!return\\s+)\\w+\\s+\\w+|("+ArrayDeclarationPattern+")|("+CollectionPattern+")\\w+)\\s*(=\\s*.+)?\\s*;\\s*";
+		    return line.matches(VariablePattern);
 		}
 		
 		
