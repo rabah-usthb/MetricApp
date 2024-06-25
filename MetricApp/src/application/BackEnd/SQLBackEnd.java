@@ -11,6 +11,8 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
+import javafx.fxml.FXML;
+
 public class SQLBackEnd {
 	private static final String DB_URL = System.getenv("MetricDB_URL");
     private static final String DB_USER = System.getenv("DB_USER");
@@ -398,6 +400,7 @@ public class SQLBackEnd {
     public String GetUSER() {
     	return DB_USER;
     }
+   
     
     public String GetPASSWORD() {
     	return DB_PASSWORD;

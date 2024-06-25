@@ -1,7 +1,6 @@
 package application.BackEnd;
 
-import java.util.ArrayList;
-import java.util.*;
+
 import java.util.ArrayList;
 
 import java.util.regex.Matcher;
@@ -41,25 +40,11 @@ public class RegularExpression {
   
   static String FloatPattern="\\s*"+SignPattern+"\\d+\\.\\d+(f)?\\s*";
   static String IntPattern="\\s*"+SignPattern+"\\d+\\s*";
-  
+  static String NumberPattern = "("+FloatPattern+")|("+IntPattern+")";
   static String Char="[^\"\\n]";
   
-  static String StringVar="\\s*\\(\\s*\\w+\\s*\\)\\s*|\\s*\\w+\\s*";
-  
-  static String NestedVarString="\\(\\s*("+StringVar+")\\s*(\\s*\\+\\s*("+StringVar+")\\s*)*\\s*\\)|\\s*("+StringVar+")\\s*(\\s*\\+\\s*("+StringVar+")\\s*)*\\s*";
-  static String VariableMiddle="\\s*\"\\s*\\+\\s*("+NestedVarString+")\\s*\\+\\s*\"\\s*";
- 
-  
-  static String VariableEnd="(\\s*\\+\\s*\\w+\\s*)?";
-  static String VariableBeginning="(\\s*\\w+\\s*\\+\\s*)?";
-  static String StringLiteralPattern="\\s*"+VariableBeginning+"\\s*\"(("+VariableMiddle+")|("+Char+"))*\"("+VariableEnd+")\\s*";
  
   static String VarName="\\s*\\w+\\s*";
-  
-  static String paramterException="("+StringLiteralPattern+")|("+VarName+")|("+IntPattern+")|("+FloatPattern+")";
-  static String InsideException="(\\s*("+paramterException+")\\s*(\\s*,\\s*("+paramterException+")\\s*)*\\s*)?";
-  
- 
   
   static String SingleCatch="\\s*\\w+\\s+\\w+\\s*";
   static String MultipleCatch="\\s*\\w+\\s*(\\s*\\|\\s*\\w+\\s*)*\\s*\\|\\s*\\w+\\s+\\w+\\s*";
@@ -78,7 +63,21 @@ public class RegularExpression {
 	
   static String MultipleBoundPattern = "(\\s+extends\\s+\\w+(\\s*<\\s*\\w+\\s*>\\s*)?(\\s+&\\s+\\w+(\\s*<\\s*\\w+\\s*>)?)*\\s*)?";
   static String TypeParameterGen = "(\\s*<\\s*\\w+("+MultipleBoundPattern+")\\s*(,\\s*\\w+("+MultipleBoundPattern+")\\s*)*\\s*>\\s*)?";
-  
+  static String ClassCall = "(\\w+\\.)+\\w+";
+  static String ClassVariable = "\\w+\\.\\w+";
+  static String SimpleArgMethodCall = "("+ClassVariable+")|("+NumberPattern+")|\\w+";
+  static String SimpleMethodCall = "\\s*("+ClassCall+")\\((("+SimpleArgMethodCall+")(\\s*,\\s*("+SimpleArgMethodCall+"))*)?\\s*\\)\\s*";
+  static String Inside = "("+SimpleArgMethodCall+")|("+ClassCall+")\\((("+SimpleMethodCall+")(\\s*,\\s*("+SimpleMethodCall+"))*)?\\s*\\)\\s*|("+SimpleMethodCall+")";
+  static String MethodCall = "\\s*("+ClassCall+")\\((("+Inside+")(\\s*,\\s*("+Inside+"))*)?\\s*\\)\\s*";
+	      	
+  static String StringConcatElement = "("+ClassVariable+")|("+MethodCall+")|\\w+|\"("+Char+")\"";
+  static String StringConcat = "("+StringConcatElement+")(\\+("+StringConcatElement+"))*";
+  static String LiteralStringPattern = "(("+StringConcat+")\\+)?\"(("+Char+")|\"\\+("+StringConcat+")\\+\")\"(\\+("+StringConcat+"))?";
+  static String SimpleArgMethodcall = "("+ClassVariable+")|("+NumberPattern+")|\\w+|("+LiteralStringPattern+")";
+  static String SimpleMethodcall = "\\s*("+ClassCall+")\\((("+SimpleArgMethodcall+")(\\s*,\\s*("+SimpleArgMethodcall+"))*)?\\s*\\)\\s*";
+  static String inside = "("+SimpleArgMethodcall+")|("+ClassCall+")\\((("+SimpleMethodcall+")(\\s*,\\s*("+SimpleMethodcall+"))*)?\\s*\\)\\s*|("+SimpleMethodcall+")";
+  static String Methodcall = "\\s*("+ClassCall+")\\((("+Inside+")(\\s*,\\s*("+Inside+"))*)?\\s*\\)\\s*";
+	
   //Method to Know If Line Is Bracket Only Line
 	static boolean IsBracket(String Line) {
 		String line = Line;
@@ -148,15 +147,18 @@ public class RegularExpression {
 	    }
 	
 	static boolean IsAnnotation(String Line) {
-		return Line.startsWith("@") && !Line.equals("@Overload") && !Line.equals("@Override") ;
-	}
+		String AnnotationPatten="\\s*@\\s*(?!(Overload|Override))\\w+\\s*";	 
+		return Line.matches(AnnotationPatten);	
+		}
 	
 	static String FetchAnnotation(String Line) {
+		Line = Line.replace(" ", "");
 		return Line.substring(Line.indexOf("@")+1);
 		}
 
 	 static boolean IsStaticCall(String Line) {
-		 return Line.contains(".");
+		 String StaticCallPetten =".+("+Methodcall+").+";
+		 return Line.matches(StaticCallPetten);
 	 }
 	 
 	 static ArrayList<String> FetchStaticCall(String Line ) {
@@ -204,7 +206,7 @@ public class RegularExpression {
 }
 		
 	 static boolean IsMethod(String line) {
-			String MethodPattern = "("+MethodModifierPattern+")("+TypeParameterGen+")("+ReturnType+")\\w+\\s*("+Arg+")\\s*("+ThrowsPattern+")("+CurlyBraces+")";
+			String MethodPattern = "("+MethodModifierPattern+")("+TypeParameterGen+")("+ReturnType+")\\w+\\s*("+Arg+")\\s*("+ThrowsPattern+")(("+CurlyBraces+")|\\s*;\\s*)";
 		    return line.matches(MethodPattern); 
 		}
 	
@@ -296,7 +298,7 @@ public class RegularExpression {
 			}
 			//Method To Know If Line Is Throw
 	static boolean IsThrow(String line) {
-		String ThrowPattern="\\s*throw\\s+new\\s+\\w+\\s*\\(\\s*("+InsideException+")\\s*\\)\\s*;\\s*";
+		String ThrowPattern="\\s*throw\\s+new\\s+\\w+\\s*\\(\\s*("+inside+")\\s*\\)\\s*;\\s*";
 			return line.matches(ThrowPattern);
 		}
 
