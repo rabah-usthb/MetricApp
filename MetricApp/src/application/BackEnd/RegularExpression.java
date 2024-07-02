@@ -70,7 +70,7 @@ public class RegularExpression {
   static String Inside = "("+SimpleArgMethodCall+")|("+ClassCall+")\\((("+SimpleMethodCall+")(\\s*,\\s*("+SimpleMethodCall+"))*)?\\s*\\)\\s*|("+SimpleMethodCall+")";
   static String MethodCall = "\\s*("+ClassCall+")\\((("+Inside+")(\\s*,\\s*("+Inside+"))*)?\\s*\\)\\s*";
 	      	
-  static String StringConcatElement = "("+ClassVariable+")|("+MethodCall+")|\\w+|\"("+Char+")\"";
+  static String StringConcatElement = "("+ClassVariable+")|("+MethodCall+")|\\w+|\"("+Char+")\"|("+NumberPattern+")";
   static String StringConcat = "("+StringConcatElement+")(\\+("+StringConcatElement+"))*";
   static String LiteralStringPattern = "(("+StringConcat+")\\+)?\"(("+Char+")|\"\\+("+StringConcat+")\\+\")\"(\\+("+StringConcat+"))?";
   static String SimpleArgMethodcall = "("+ClassVariable+")|("+NumberPattern+")|\\w+|("+LiteralStringPattern+")";
@@ -157,7 +157,7 @@ public class RegularExpression {
 		}
 
 	 static boolean IsStaticCall(String Line) {
-		 String StaticCallPetten =".+("+Methodcall+").+";
+		 String StaticCallPetten =".+(("+Methodcall+")|("+ClassCall+")).+";
 		 return Line.matches(StaticCallPetten);
 	 }
 	 

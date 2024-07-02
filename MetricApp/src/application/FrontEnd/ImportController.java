@@ -61,7 +61,7 @@ public class ImportController {
 	            //TreeItem<TreeItemData> ImportItem = createTreeItem(Import);
 	            if(Import.ConflictStatus!=1) {
 	            	
-	            if(Import.DuplicatStatus==1) {
+	            if(Import.DuplicatStatus>=1) {
 	            	DuplicateImport.getChildren().add(new TreeItem<>(new TreeItemData(Import.ImportName,PackageSvg)));
 	            }
 	        	if(Import.ImportStatus == 1) {

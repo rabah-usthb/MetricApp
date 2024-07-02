@@ -1,6 +1,7 @@
 package application.BackEnd;
 
 import java.net.URLClassLoader;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -15,13 +16,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-import static application.FrontEnd.SignUpController.*;
-
 import java.util.Iterator;
 
 import java.nio.file.*;
 import java.util.LinkedHashSet;
-           import java  .util. *;
+import java.util.*;
 import java.util.*;
 import java.util.Set;
 import java.util.Set;
@@ -376,7 +375,7 @@ public static ArrayList<ImportStatus> ImportFetch(File file){
          while (iterator.hasNext()) {
              ImportStatus importTypeJ = iterator.next();
              if (importTypeI.ImportName.equals(importTypeJ.ImportName)) {
-                 importTypeI.DuplicatStatus = 1;
+                 ++importTypeI.DuplicatStatus;
                  iterator.remove();
              }
          }

@@ -26,6 +26,7 @@ public class TabedPaneController {
         switch(buttonId) {
         case "ICMButton":
         	ICOMLoading();
+        	ICMPIELoad();
         	stage.close();
         	break;
         case "JAXButton":
@@ -81,6 +82,23 @@ public class TabedPaneController {
         stage.setScene(scene);
         stage.show();
 	}
+	
+	 public void ICMPIELoad() {
+
+	        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/ImportPie.fxml"));
+	        Parent root = null;
+			try {
+				root = fxmlLoader.load();
+			} catch (IOException exception) {
+		
+				exception.printStackTrace();
+			}
+	        
+	        Scene scene = new Scene(root);
+	        Stage stage = new Stage();
+	        stage.setScene(scene);
+	        stage.show();
+	    }
 	
 	private void ICOMLoading() {
 
