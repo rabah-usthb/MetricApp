@@ -13,6 +13,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.PieChart;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 
@@ -21,6 +22,8 @@ public class ImportPieController{
 	
 @FXML
 private PieChart ImportPie;
+@FXML
+private Label Description;
 
 	
 	public void initialize() {
@@ -47,6 +50,8 @@ private PieChart ImportPie;
         		);
         
         ImportPie.getData().addAll(ImportPieData);
+        File file = new File(MetricController.FileSelectedPath);
+        Description.setText("The File "+file.getName()+" Has In Total "+TotalImportNumber+" Imports , "+UsedRatio+"% are used , "+NotUsedRatio+"% are never used , "+DuplicateRatio+"% are Duplicate , and finally "+ConflictRatio+"% are in conflict.");
     }
 	
 	
