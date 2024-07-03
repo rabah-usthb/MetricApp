@@ -41,6 +41,7 @@ public class TabedPaneController {
     
         case "SMButton":
         	SMLoading();
+            SMPIELoad();
         	stage.close();
         	break;
         
@@ -117,11 +118,35 @@ public class TabedPaneController {
 			}
 	        
 	        Scene scene = new Scene(root);
+	        String css = this.getClass().getResource("/ressource/Css Folder/Pie.css").toExternalForm();
+	        scene.getStylesheets().add(css);
+	        
+	        Stage stage = new Stage();
+	        stage.setScene(scene);
+	        stage.show();
+	    }
+
+	 public void SMPIELoad() {
+
+	        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/SwingPie.fxml"));
+	        Parent root = null;
+			try {
+				root = fxmlLoader.load();
+			} catch (IOException exception) {
+		
+				exception.printStackTrace();
+			}
+	        
+	        Scene scene = new Scene(root);
+	        String css = this.getClass().getResource("/ressource/Css Folder/Pie.css").toExternalForm();
+	        scene.getStylesheets().add(css);
+	        
 	        Stage stage = new Stage();
 	        stage.setScene(scene);
 	        stage.show();
 	    }
 	
+
 	private void ICOMLoading() {
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/Import.fxml"));
