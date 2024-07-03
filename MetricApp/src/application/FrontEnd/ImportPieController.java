@@ -5,6 +5,7 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import application.BackEnd.ImportStatus;
 import javafx.beans.binding.Bindings;
@@ -42,14 +43,19 @@ private Label Description;
 		
         ImportPie.setTitle("Import Usage Ratio");
          
-        ImportPieData.forEach(data ->
+        
+        ObservableList<PieChart.Data> filteredData = FXCollections.observableArrayList(
+        		ImportPieData.stream().filter(data -> data.getPieValue() > 0).collect(Collectors.toList())
+        );
+        
+        filteredData.forEach(data ->
                 data.nameProperty().bind(Bindings.concat(
                 		data.getName(),data.getPieValue(),"%")
                 		)
                
         		);
         
-        ImportPie.getData().addAll(ImportPieData);
+        ImportPie.getData().addAll(filteredData);
         File file = new File(MetricController.FileSelectedPath);
         Description.setText("The File "+file.getName()+" Has In Total "+TotalImportNumber+" Imports , "+UsedRatio+"% are used , "+NotUsedRatio+"% are never used , "+DuplicateRatio+"% are Duplicate , and finally "+ConflictRatio+"% are in conflict.");
     }

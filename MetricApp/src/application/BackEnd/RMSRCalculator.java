@@ -9,6 +9,7 @@ import java.util.Scanner;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.text.DecimalFormat;
 
 
 
@@ -36,12 +37,13 @@ public class RMSRCalculator {
          t.totalMethods = countTotalMethods(loadedClass);
          t.overloadedMethods = countOverloadedMethods(loadedClass);
          t.overrideMethods = countOverrideMethods(loadedClass);
+         DecimalFormat df = new DecimalFormat("#.##");
+         t.RatioMethodsSur = (double) (t.overloadedMethods) / t.totalMethods;
+       t.RatioMethodsSur= Double.parseDouble(df.format(t.RatioMethodsSur))*100;
+         t.RatioMethodsRedef = (double) (t.overrideMethods) / t.totalMethods;
+         t.RatioMethodsRedef= Double.parseDouble(df.format(t.RatioMethodsRedef))*100;
+         t.rmsr = t.RatioMethodsRedef+t.RatioMethodsSur;
         
-         t.RatioMethodsSur = (double) t.overloadedMethods / t.totalMethods;
-         t.RatioMethodsRedef = (double) t.overrideMethods / t.totalMethods;
-         t.rmsr = (double) (t.overrideMethods+t.overrideMethods) / t.totalMethods;
-
-  
 		return t;
         
         //il reste le calcule des methodes surchargees(override), il me faut une idee

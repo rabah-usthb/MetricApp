@@ -53,6 +53,7 @@ public class TabedPaneController {
        
         case "RMRSButton": 	
         	RMRSBLoading();
+        	RMRSPIELoad();
         	stage.close();
         	break;
         
@@ -85,6 +86,27 @@ public class TabedPaneController {
         stage.show();
 	}
 	
+	
+	public void RMRSPIELoad() {
+
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/RMRSPie.fxml"));
+        Parent root = null;
+		try {
+			root = fxmlLoader.load();
+		} catch (IOException exception) {
+	
+			exception.printStackTrace();
+		}
+        
+        Scene scene = new Scene(root);
+        String css = this.getClass().getResource("/ressource/Css Folder/Pie.css").toExternalForm();
+        scene.getStylesheets().add(css);
+        
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.show();
+    }
+
 	
 	 public void TEPIELoad() {
 

@@ -2,6 +2,7 @@ package application.FrontEnd;
 
 import java.io.File;
 import java.text.DecimalFormat;
+import java.util.stream.Collectors;
 
 import application.BackEnd.Encapsulation;
 import javafx.beans.binding.Bindings;
@@ -54,8 +55,12 @@ public void initialize() {
 	        );	
 	
    EncapsulationPie.setTitle("Encapsulation Ratio");
-    
-   EncapsulationPieData.forEach(data ->
+   
+   ObservableList<PieChart.Data> filteredData = FXCollections.observableArrayList(
+		   EncapsulationPieData.stream().filter(data -> data.getPieValue() > 0).collect(Collectors.toList())
+   );
+   
+   filteredData.forEach(data ->
            data.nameProperty().bind(Bindings.concat(
            		data.getName(),data.getPieValue(),"%")
            		)
@@ -63,7 +68,7 @@ public void initialize() {
    		);
    
   
-   EncapsulationPie.getData().addAll(EncapsulationPieData);
+   EncapsulationPie.getData().addAll(filteredData);
    
    Description.setText("The File "+file.getName()+" has "+TotalMemberNumber+" Members , "+PrivateRatio+"% are private , "+ProtectedRatio+"% are protected , "+NoneRatio+"% don't have acess modifiers , "+PublicRatio+"% are public , and finally the ratio of encapsulation is "+TERatio+"%");
 
