@@ -30,7 +30,7 @@ import application.BackEnd.ImportStatus;
 import application.BackEnd.Package;
 import javafx.util.Callback;
 public class ExceptionController {
-
+        static ArrayList<ExceptionStatus>ListException = new ArrayList<>();
 	    @FXML
 	    private TreeView<TreeItemData> treeView;
 	    @FXML
@@ -39,7 +39,7 @@ public class ExceptionController {
 	    public void initialize(String FilePath) {
 	        File file = new File(FilePath);
 	        ExceptionLabel.setText("Exceptions Of "+file.getName());
-	        ArrayList<ExceptionStatus>ListException = new ArrayList<>();
+	        
 	       try {
 			ListException = ExceptionStatus.FetchThrowable(file, FilePath.substring(0,FilePath.indexOf("\\src\\")+4));
 		System.out.println(ListException);
