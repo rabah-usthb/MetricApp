@@ -31,6 +31,7 @@ public class TabedPaneController {
         	break;
         case "JAXButton":
         	JAXLoading();
+        	JAXPIELoad();
         	stage.close();
         	break;
         	
@@ -86,7 +87,28 @@ public class TabedPaneController {
         stage.setScene(scene);
         stage.show();
 	}
+
+
+	public void JAXPIELoad() {
+
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/AnalysisPie.fxml"));
+        Parent root = null;
+		try {
+			root = fxmlLoader.load();
+		} catch (IOException exception) {
 	
+			exception.printStackTrace();
+		}
+        
+        Scene scene = new Scene(root);
+        String css = this.getClass().getResource("/ressource/Css Folder/Pie.css").toExternalForm();
+        scene.getStylesheets().add(css);
+        
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.show();
+    }
+
 
 	public void JEAPIELoad() {
 
