@@ -1,8 +1,10 @@
 package application.BackEnd;
 
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.ArrayList;
-
+import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -78,6 +80,70 @@ public class RegularExpression {
   static String inside = "("+SimpleArgMethodcall+")|("+ClassCall+")\\((("+SimpleMethodcall+")(\\s*,\\s*("+SimpleMethodcall+"))*)?\\s*\\)\\s*|("+SimpleMethodcall+")";
   static String Methodcall = "\\s*("+ClassCall+")\\((("+Inside+")(\\s*,\\s*("+Inside+"))*)?\\s*\\)\\s*";
 	
+  static void AddCurlyBraces(String Line , LinkedList<String> listopening , LinkedList<String> listclosing) {
+		
+			 if(Line.contains("{")) {
+				listopening.add("{");
+			 }
+			 if(Line.contains("}")) {
+				 listclosing.add("}");
+			 }
+		
+		
+  }
+  
+  static void JumpMethodContent(String Line,BufferedReader reader) {
+		LinkedList<String>listopening = new LinkedList<>();
+		LinkedList<String>listclosing = new LinkedList<>();
+	    
+		AddCurlyBraces(Line, listopening,listclosing);
+	    System.out.println("Method : "+Line);
+	    try {
+			while (!(listclosing.size()==listopening.size())&&(Line = reader.readLine()) != null) { 
+	        Line = Line.trim();
+			Line = Qoute.RemoveQoute(Line);
+			ArrayList<String> ListCode=new ArrayList<String>();
+          	if(!Line.isBlank() && !Line.isEmpty() && !Comment.IsCommentOnlyCompleted(Line)) {
+          		if(Comment.ContainsComment(Line)) {
+  	              Line = Comment.RemoveComment(Line);
+  	            	}
+          		else {
+          			if(Comment.FinishedComment(Line)) {
+	            			if(!Comment.ContainsOpeningComment(Line)) {
+	            				ListCode.add(Comment.CodeOpeningComment(Line));
+	            			}
+	            			if(!Comment.ContainsClosingComment(Line)) {
+	            				ListCode.add(Comment.CodeClosingComment(Line));
+	            			}
+	            		}
+          			else if (Comment.NotFinishedComment(Line)) {
+	            			Comment.JumpComment(Line,ListCode,reader);
+	            		}
+
+          			if(!ListCode.isEmpty()) {
+          				for(String code : ListCode) {
+          					AddCurlyBraces(Line, listopening,listclosing);
+          				      					
+          				}
+          			}
+          		}
+          		if(ListCode.isEmpty()) {
+          			AddCurlyBraces(Line, listopening,listclosing);
+          		   
+          		}
+          	}
+		
+			}
+		}
+		catch(IOException e) {
+			
+		}
+	   
+		}
+	
+	
+  
+  
   //Method to Know If Line Is Bracket Only Line
 	static boolean IsBracket(String Line) {
 		String line = Line;

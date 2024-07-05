@@ -99,16 +99,24 @@ public class Encapsulation {
 	          			if(!ListCode.isEmpty()) {
 	          				for(String code : ListCode) {
 	          					if(RegularExpression.IsVariable(code) || RegularExpression.IsMethodPrototype(code)) {
-	          	            		UpdateEncapsulationFlag(encapsulation, code);
+	          	            	//	System.out.println(code);
+	          						UpdateEncapsulationFlag(encapsulation, code);
 	          	            	}
 	          					
+	          					if(RegularExpression.IsMethodPrototype(code)) {
+	    	          				RegularExpression.JumpMethodContent(code,reader);
+	    	          			}	
 	          				}
 	          			}
 	          		}
 	          		if(ListCode.isEmpty()) {
 	          			if(RegularExpression.IsVariable(Line) || RegularExpression.IsMethodPrototype(Line)) {
-	  	            		UpdateEncapsulationFlag(encapsulation, Line);
+	  	            	    //System.out.println(Line);
+	          				UpdateEncapsulationFlag(encapsulation, Line);
 	  	            	}
+	          			if(RegularExpression.IsMethodPrototype(Line)) {
+	          				RegularExpression.JumpMethodContent(Line,reader);
+	          			}
 	          			
 	          		}
 	          	}
