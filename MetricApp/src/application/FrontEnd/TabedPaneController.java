@@ -302,7 +302,7 @@ public class TabedPaneController {
 				// TODO Auto-generated catch block
 				exception.printStackTrace();
 			}
-	       RMRScontroller rmrsController = fxmlLoader.getController();
+	       OOMRcontroller rmrsController = fxmlLoader.getController();
         rmrsController.initialize(MetricController.FileSelectedPath,MetricController.SelectedItem);
         Scene scene = new Scene(root);
         String css = this.getClass().getResource("/ressource/Css Folder/RMRS.css").toExternalForm();

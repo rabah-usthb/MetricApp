@@ -6,7 +6,7 @@ import java.net.MalformedURLException;
 import java.text.DecimalFormat;
 import java.util.stream.Collectors;
 
-import application.BackEnd.RMSRCalculator;
+import application.BackEnd.OOMRCalculator;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,9 +21,9 @@ private PieChart RMRSPie;
 private Label Description;
 public void initialize() {
 	  File file = new File(MetricController.FileSelectedPath);
-      RMSRCalculator rm = null;
+      OOMRCalculator rm = null;
 		try {
-			rm = RMSRCalculator.fetchRMSR(file.getAbsolutePath(),file.getName());
+			rm = OOMRCalculator.fetchRMSR(file.getAbsolutePath(),file.getName());
 		} catch (FileNotFoundException | MalformedURLException | ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

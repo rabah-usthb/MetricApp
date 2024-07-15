@@ -130,37 +130,21 @@ public class Line {
 	    String Line = "";
 	    try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
 	        while ((Line = reader.readLine()) != null) {
-	            Line = Line.trim();
-	            if (Line.isEmpty()) {
-	                ++NbLine; // Increment if the line is empty
-	            }
-	            ++NbLine; // Increment for non-empty lines
+	          if(Line!=null) {
+	        	++NbLine;
+	          }
 	        }
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }
+	    if(Line!=null) {
+        	++NbLine;
+          }
 	    return NbLine;
 	}
 
 	
-	public static int CountLineNotEmptyNotBracket(File file) {
-		int NbLine = 0;
-		String Line;
-		 try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-	            while ((Line = reader.readLine() )!= null) {
-	            	if(!Line.isEmpty()&& !Line.isBlank() && !RegularExpression.IsBracket(Line)) {
-	            	++NbLine;
-	                
-	            	}
-	        
-	            }
-		 }
-	         catch (IOException e) {
-	            e.printStackTrace();
-	        }
 
-		return NbLine;		
-	}
 	
 	
 	

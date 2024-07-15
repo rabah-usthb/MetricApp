@@ -2,6 +2,7 @@ package application.FrontEnd;
 
 import javafx.application.Platform;
 
+
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
@@ -40,7 +41,6 @@ import java.util.ArrayList;
 
 import application.BackEnd.Java;
 import application.BackEnd.Package;
-import application.BackEnd.RMSRCalculator;
 import javafx.util.Callback;
 
 public class MetricController {
