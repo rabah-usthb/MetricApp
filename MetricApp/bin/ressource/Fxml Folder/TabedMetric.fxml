@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
 <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="850.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.FrontEnd.TabedPaneController">
@@ -15,11 +19,6 @@
       <content>
         <Pane prefHeight="400.0" prefWidth="800.0">
           <children>
-            <Button fx:id="ICMButton" layoutX="28.0" layoutY="320.0" mnemonicParsing="false" onAction="#MetricTreeLoading" prefHeight="40.0" prefWidth="80.0" text="ICM">
-              <font>
-                <Font size="14.0" />
-              </font>
-            </Button>
             <ImageView fx:id="MetricIcon" fitHeight="150.0" fitWidth="170.0" layoutX="630.0" layoutY="51.0" pickOnBounds="true" preserveRatio="true">
               <image>
                 <Image url="@../PNG%20Folder/metrics%20(2).png" />
@@ -30,32 +29,55 @@
                 <Font name="System Bold" size="40.0" />
               </font>
             </Label>
-            <Button fx:id="RMRSButton" layoutX="710.0" layoutY="319.0" mnemonicParsing="false" onAction="#MetricTreeLoading" prefHeight="40.0" prefWidth="80.0" text="RMRS">
-              <font>
-                <Font size="14.0" />
-              </font>
-            </Button>
-            <Button fx:id="SMButton" layoutX="571.0" layoutY="319.0" mnemonicParsing="false" onAction="#MetricTreeLoading" prefHeight="40.0" prefWidth="80.0" text="SM">
-              <font>
-                <Font size="14.0" />
-              </font>
-            </Button>
-            <Button fx:id="TEButton" layoutX="433.0" layoutY="319.0" mnemonicParsing="false" onAction="#MetricTreeLoading" prefHeight="40.0" prefWidth="80.0" text="TE">
-              <font>
-                <Font size="14.0" />
-              </font>
-            </Button>
-            <Button fx:id="JEAButton" layoutX="312.0" layoutY="319.0" mnemonicParsing="false" onAction="#MetricTreeLoading" prefHeight="40.0" prefWidth="80.0" text="JEA">
-              <font>
-                <Font size="14.0" />
-              </font>
-            </Button>
-            <Button fx:id="JAXButton" layoutX="175.0" layoutY="319.0" mnemonicParsing="false" onAction="#MetricTreeLoading" prefHeight="40.0" prefWidth="80.0" text="JAX">
-              <font>
-                <Font size="14.0" />
-              </font>
-            </Button>
-            <Button fx:id="CloseButton1" layoutX="550.0" layoutY="400.0" mnemonicParsing="false" onAction="#MetricTreeLoading" prefHeight="37.0" prefWidth="258.0" text="Cancel" />
+            <Button fx:id="CloseButton1" layoutX="576.0" layoutY="401.5" mnemonicParsing="false" onAction="#MetricTreeLoading" prefHeight="57.0" prefWidth="258.0" text="Cancel">
+                     <font>
+                        <Font size="14.0" />
+                     </font></Button>
+                  <GridPane hgap="20.0" layoutX="15.0" layoutY="278.5" prefHeight="81.0" prefWidth="821.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                  <Button fx:id="ICButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#MetricTreeLoading" prefWidth="50.0" text="IC" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                    <font>
+                      <Font size="14.0" />
+                    </font>
+                  </Button>
+                  <Button fx:id="JEAButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#MetricTreeLoading" prefWidth="50.0" text="JEA" GridPane.columnIndex="1">
+                    <font>
+                      <Font size="14.0" />
+                    </font>
+                  </Button>
+                  <Button fx:id="ERButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#MetricTreeLoading" prefWidth="50.0" text="ER" GridPane.columnIndex="2">
+                    <font>
+                      <Font size="14.0" />
+                    </font>
+                  </Button>
+                  <Button fx:id="SMButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#MetricTreeLoading" prefWidth="50.0" text="SM" GridPane.columnIndex="3">
+                    <font>
+                      <Font size="14.0" />
+                    </font>
+                  </Button>
+                  <Button fx:id="OOMRButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#MetricTreeLoading" prefWidth="50.0" text="OOMR" GridPane.columnIndex="5">
+                    <font>
+                      <Font size="14.0" />
+                    </font>
+                  </Button>
+                  <Button fx:id="JAXButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#MetricTreeLoading" prefWidth="50.0" text="JAX" GridPane.columnIndex="4">
+                    <font>
+                      <Font size="14.0" />
+                    </font>
+                  </Button>
+                     </children>
+                  </GridPane>
           </children>
         </Pane>
       </content>
@@ -68,17 +90,10 @@
               <content>
                 <Pane prefHeight="400.0" prefWidth="800.0">
                   <children>
-                    <Button layoutX="28.0" layoutY="289.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="CBO">
-                      <font>
-                        <Font size="14.0" />
-                      </font>
-                    </Button>
-                    <Button layoutX="175.0" layoutY="289.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="NOC" />
-                    <Button layoutX="312.0" layoutY="289.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="DIT" />
-                    <Button layoutX="433.0" layoutY="289.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="RFC" />
-                    <Button layoutX="571.0" layoutY="289.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="LCOM" />
-                    <Button layoutX="710.0" layoutY="289.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="WMC" />
-                    <Button fx:id="CloseButton2" layoutX="550.0" layoutY="369.0" mnemonicParsing="false" onAction="#MetricTreeLoading" prefHeight="37.0" prefWidth="258.0" text="Cancel" />
+                    <Button fx:id="CloseButton2" layoutX="576.0" layoutY="370.0" mnemonicParsing="false" onAction="#MetricTreeLoading" prefHeight="57.0" prefWidth="258.0" text="Cancel">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font></Button>
                               <Label layoutX="28.0" layoutY="48.0" prefHeight="98.0" prefWidth="432.0" text="Choose A Metric :">
                                  <font>
                                     <Font name="System Bold" size="40.0" />
@@ -89,6 +104,31 @@
                                     <Image url="@../PNG%20Folder/metrics%20(2).png" />
                                  </image>
                               </ImageView>
+                              <GridPane hgap="20.0" layoutX="15.0" layoutY="247.0" prefHeight="81.0" prefWidth="821.0">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                          <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefWidth="80.0" text="CBO">
+                            <font>
+                              <Font size="14.0" />
+                            </font>
+                          </Button>
+                          <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefWidth="80.0" text="NOC" GridPane.columnIndex="1" />
+                          <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefWidth="80.0" text="DIT" GridPane.columnIndex="2" />
+                          <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefWidth="80.0" text="RFC" GridPane.columnIndex="3" />
+                          <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefWidth="80.0" text="LCOM" GridPane.columnIndex="4" />
+                          <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefWidth="80.0" text="WMC" GridPane.columnIndex="5" />
+                                 </children>
+                              </GridPane>
                   </children>
                 </Pane>
               </content>
@@ -97,15 +137,10 @@
               <content>
                 <Pane prefHeight="400.0" prefWidth="800.0">
                   <children>
-                    <Button layoutX="79.0" layoutY="290.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="337.0" text="Number of Object Memory Allocation">
+                    <Button fx:id="CloseButton3" layoutX="576.0" layoutY="370.0" mnemonicParsing="false" onAction="#MetricTreeLoading" prefHeight="57.0" prefWidth="258.0" text="Cancel">
                                  <font>
                                     <Font size="14.0" />
                                  </font></Button>
-                    <Button layoutX="467.0" layoutY="290.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="294.0" text="Average Method Complexity">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font></Button>
-                    <Button fx:id="CloseButton3" layoutX="550.0" layoutY="369.0" mnemonicParsing="false" onAction="#MetricTreeLoading" prefHeight="37.0" prefWidth="258.0" text="Cancel" />
                               <Label layoutX="28.0" layoutY="48.0" prefHeight="98.0" prefWidth="432.0" text="Choose A Metric :">
                                  <font>
                                     <Font name="System Bold" size="40.0" />
@@ -116,6 +151,27 @@
                                     <Image url="@../PNG%20Folder/metrics%20(2).png" />
                                  </image>
                               </ImageView>
+                              <GridPane hgap="20.0" layoutX="15.0" layoutY="247.0" prefHeight="81.0" prefWidth="821.0">
+                                <columnConstraints>
+                                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+                                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints maxHeight="1.7976931348623157E308" valignment="CENTER" vgrow="ALWAYS" />
+                                </rowConstraints>
+                                 <children>
+                          <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Number of Object Memory Allocation" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Button>
+                          <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="81.0" prefWidth="290.0" text="Average Method Complexity" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Button>
+                                 </children>
+                              </GridPane>
                   </children>
                 </Pane>
               </content>
@@ -124,15 +180,10 @@
               <content>
                 <Pane prefHeight="400.0" prefWidth="800.0">
                   <children>
-                    <Button layoutX="79.0" layoutY="290.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="200.0" text="Number of Attributes">
+                    <Button fx:id="CloseButton4" layoutX="576.0" layoutY="370.0" mnemonicParsing="false" onAction="#MetricTreeLoading" prefHeight="57.0" prefWidth="258.0" text="Cancel">
                                  <font>
                                     <Font size="14.0" />
                                  </font></Button>
-                    <Button layoutX="467.0" layoutY="290.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="255.0" text="Number of Methods per Class">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font></Button>
-                    <Button fx:id="CloseButton4" layoutX="550.0" layoutY="369.0" mnemonicParsing="false" onAction="#MetricTreeLoading" prefHeight="37.0" prefWidth="258.0" text="Cancel" />
                               <Label layoutX="28.0" layoutY="48.0" prefHeight="98.0" prefWidth="432.0" text="Choose A Metric :">
                                  <font>
                                     <Font name="System Bold" size="40.0" />
@@ -143,6 +194,27 @@
                                     <Image url="@../PNG%20Folder/metrics%20(2).png" />
                                  </image>
                               </ImageView>
+                              <GridPane alignment="CENTER" hgap="20.0" layoutX="15.0" layoutY="247.0" prefHeight="81.0" prefWidth="821.0">
+                                <columnConstraints>
+                                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+                                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints maxHeight="1.7976931348623157E308" valignment="CENTER" vgrow="ALWAYS" />
+                                </rowConstraints>
+                                 <children>
+                          <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Number of Attributes" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Button>
+                          <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Number of Methods per Class" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Button>
+                                 </children>
+                              </GridPane>
                   </children>
                 </Pane>
               </content>
@@ -151,15 +223,10 @@
               <content>
                 <Pane prefHeight="400.0" prefWidth="800.0">
                   <children>
-                    <Button layoutX="79.0" layoutY="290.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="252.0" text="Data Abstracting Coupling">
+                    <Button fx:id="CloseButton5" layoutX="576.0" layoutY="370.0" mnemonicParsing="false" onAction="#MetricTreeLoading" prefHeight="57.0" prefWidth="258.0" text="Cancel">
                                  <font>
                                     <Font size="14.0" />
                                  </font></Button>
-                    <Button layoutX="467.0" layoutY="290.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="235.0" text="Message Passing Coupling">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font></Button>
-                    <Button fx:id="CloseButton5" layoutX="550.0" layoutY="369.0" mnemonicParsing="false" onAction="#MetricTreeLoading" prefHeight="37.0" prefWidth="258.0" text="Cancel" />
                               <Label layoutX="28.0" layoutY="48.0" prefHeight="98.0" prefWidth="432.0" text="Choose A Metric :">
                                  <font>
                                     <Font name="System Bold" size="40.0" />
@@ -170,6 +237,27 @@
                                     <Image url="@../PNG%20Folder/metrics%20(2).png" />
                                  </image>
                               </ImageView>
+                              <GridPane hgap="20.0" layoutX="15.0" layoutY="247.0" prefHeight="81.0" prefWidth="821.0">
+                                <columnConstraints>
+                                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+                                  <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints maxHeight="1.7976931348623157E308" valignment="CENTER" vgrow="ALWAYS" />
+                                </rowConstraints>
+                                 <children>
+                          <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" prefWidth="252.0" text="Data Abstracting Coupling" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Button>
+                          <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" prefWidth="235.0" text="Message Passing Coupling" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Button>
+                                 </children>
+                              </GridPane>
                   </children>
                 </Pane>
               </content>
@@ -178,15 +266,10 @@
               <content>
                 <Pane prefHeight="400.0" prefWidth="800.0">
                   <children>
-                    <Button layoutX="79.0" layoutY="290.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="292.0" text="Coupling Through Abstract Data Types">
+                    <Button fx:id="CloseButton6" layoutX="576.0" layoutY="370.0" mnemonicParsing="false" onAction="#MetricTreeLoading" prefHeight="57.0" prefWidth="258.0" text="Cancel">
                                  <font>
                                     <Font size="14.0" />
                                  </font></Button>
-                    <Button layoutX="467.0" layoutY="290.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="291.0" text="Coupling Through Message Passing">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font></Button>
-                    <Button fx:id="CloseButton6" layoutX="550.0" layoutY="369.0" mnemonicParsing="false" onAction="#MetricTreeLoading" prefHeight="37.0" prefWidth="258.0" text="Cancel" />
                               <Label layoutX="28.0" layoutY="48.0" prefHeight="98.0" prefWidth="432.0" text="Choose A Metric :">
                                  <font>
                                     <Font name="System Bold" size="40.0" />
@@ -197,6 +280,27 @@
                                     <Image url="@../PNG%20Folder/metrics%20(2).png" />
                                  </image>
                               </ImageView>
+                              <GridPane hgap="20.0" layoutX="15.0" layoutY="247.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="81.0" prefWidth="821.0" vgap="20.0">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="400.839985699219" prefWidth="400.89598776562536" />
+                                  <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="400.83999648828154" prefWidth="400.8959877656253" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints maxHeight="1.7976931348623157E308" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                          <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" prefWidth="292.0" text="Coupling Through Abstract Data Types" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Button>
+                          <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" prefWidth="291.0" text="Coupling Through Message Passing" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Button>
+                                 </children>
+                              </GridPane>
                   </children>
                 </Pane>
               </content>
@@ -205,31 +309,10 @@
               <content>
                 <Pane prefHeight="400.0" prefWidth="800.0">
                   <children>
-                    <Button layoutX="55.0" layoutY="210.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="200.0" text="Attributes Hiding Factor">
+                    <Button fx:id="CloseButton7" layoutX="576.0" layoutY="370.0" mnemonicParsing="false" onAction="#MetricTreeLoading" prefHeight="57.0" prefWidth="258.0" text="Cancel">
                                  <font>
                                     <Font size="14.0" />
                                  </font></Button>
-                    <Button layoutX="300.0" layoutY="210.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="228.0" text="Method Inheritance Factor">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font></Button>
-                    <Button layoutX="583.0" layoutY="210.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="200.0" text="Method Hiding Factor">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font></Button>
-                    <Button layoutX="55.0" layoutY="290.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="200.0" text="Coupling Factor">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font></Button>
-                    <Button layoutX="314.0" layoutY="290.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="200.0" text="Polymorphism Factor">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font></Button>
-                    <Button layoutX="569.0" layoutY="290.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="228.0" text="Attribute Inheritance Factor">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font></Button>
-                    <Button fx:id="CloseButton7" layoutX="550.0" layoutY="369.0" mnemonicParsing="false" onAction="#MetricTreeLoading" prefHeight="37.0" prefWidth="258.0" text="Cancel" />
                               <Label layoutX="28.0" layoutY="48.0" prefHeight="98.0" prefWidth="432.0" text="Choose A Metric :">
                                  <font>
                                     <Font name="System Bold" size="40.0" />
@@ -240,6 +323,49 @@
                                     <Image url="@../PNG%20Folder/metrics%20(2).png" />
                                  </image>
                               </ImageView>
+                              <GridPane hgap="20.0" layoutX="15.0" layoutY="190.0" prefHeight="162.0" prefWidth="821.0" vgap="20.0">
+                                <columnConstraints>
+                                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+                                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+                                    <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints maxHeight="1.7976931348623157E308" valignment="CENTER" vgrow="ALWAYS" />
+                                  <RowConstraints maxHeight="1.7976931348623157E308" valignment="CENTER" vgrow="ALWAYS" />
+                                </rowConstraints>
+                                 <children>
+                          <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" prefWidth="200.0" text="Attributes Hiding Factor" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Button>
+                          <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" prefWidth="228.0" text="Method Inheritance Factor" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Button>
+                          <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" prefWidth="200.0" text="Method Hiding Factor" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Button>
+                          <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" prefWidth="228.0" text="Attribute Inheritance Factor" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Button>
+                          <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" prefWidth="200.0" text="Polymorphism Factor" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Button>
+                          <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" prefWidth="200.0" text="Coupling Factor" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Button>
+                                 </children>
+                              </GridPane>
                   </children>
                 </Pane>
               </content>
@@ -248,27 +374,10 @@
               <content>
                 <Pane prefHeight="400.0" prefWidth="800.0">
                   <children>
-                    <Button layoutX="30.0" layoutY="210.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="225.0" text="Number of Public Methods">
+                    <Button fx:id="CloseButton8" layoutX="576.0" layoutY="370.0" mnemonicParsing="false" onAction="#MetricTreeLoading" prefHeight="57.0" prefWidth="258.0" text="Cancel">
                                  <font>
                                     <Font size="14.0" />
                                  </font></Button>
-                    <Button layoutX="300.0" layoutY="210.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="200.0" text="Data Access Metrics">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font></Button>
-                    <Button layoutX="560.0" layoutY="210.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="200.0" text="Measure of Aggregation">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font></Button>
-                    <Button layoutX="80.0" layoutY="290.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="267.0" text="Measure of Functional Abstraction">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font></Button>
-                    <Button layoutX="450.0" layoutY="290.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="262.0" text="Cohesion Among Methods of Class">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font></Button>
-                    <Button fx:id="CloseButton8" layoutX="550.0" layoutY="369.0" mnemonicParsing="false" onAction="#MetricTreeLoading" prefHeight="37.0" prefWidth="258.0" text="Cancel" />
                               <Label layoutX="28.0" layoutY="48.0" prefHeight="98.0" prefWidth="432.0" text="Choose A Metric :">
                                  <font>
                                     <Font name="System Bold" size="40.0" />
@@ -279,6 +388,57 @@
                                     <Image url="@../PNG%20Folder/metrics%20(2).png" />
                                  </image>
                               </ImageView>
+                              <GridPane hgap="20.0" layoutX="15.0" layoutY="180.0" prefHeight="81.0" prefWidth="821.0" vgap="20.0">
+                                <columnConstraints>
+                                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+                                    <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+                                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints maxHeight="1.7976931348623157E308" valignment="CENTER" vgrow="ALWAYS" />
+                                </rowConstraints>
+                                 <children>
+                          <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" prefWidth="200.0" text="Number of Public Methods" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Button>
+                          <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" prefWidth="200.0" text="Data Access Metrics" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Button>
+                          <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" prefWidth="200.0" text="Measure of Aggregation" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Button>
+                                 </children>
+                              </GridPane>
+                              <GridPane hgap="20.0" layoutX="50.0" layoutY="277.0" prefHeight="81.0" prefWidth="750.0">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="400.6079969296876" minWidth="10.0" prefWidth="398.59198783593786" />
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="407.51998423437504" minWidth="10.0" prefWidth="403.1999876953128" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                          <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" text="Measure of Functional Abstraction" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                       <GridPane.margin>
+                                          <Insets />
+                                       </GridPane.margin>
+                                    </Button>
+                          <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" text="Cohesion Among Methods of Class" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Button>
+                                 </children>
+                              </GridPane>
                   </children>
                 </Pane>
               </content>

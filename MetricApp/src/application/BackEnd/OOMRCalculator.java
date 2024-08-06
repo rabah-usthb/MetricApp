@@ -22,8 +22,8 @@ public class OOMRCalculator {
     
 	public double RatioMethodsSur = 0;
 	public  double RatioMethodsRedef = 0;
-	public double rmsr = 0;
-    public static OOMRCalculator fetchRMSR(String path,String filename) throws FileNotFoundException, MalformedURLException, ClassNotFoundException  {
+	public double oomr = 0;
+    public static OOMRCalculator fetchOOMR(String path,String filename) throws FileNotFoundException, MalformedURLException, ClassNotFoundException  {
     	String fileName;
     	OOMRCalculator t = new OOMRCalculator();
     	path = path.replace("\\src\\", "\\bin\\");
@@ -42,7 +42,7 @@ public class OOMRCalculator {
        t.RatioMethodsSur= Double.parseDouble(df.format(t.RatioMethodsSur))*100;
          t.RatioMethodsRedef = (double) (t.overrideMethods) / t.totalMethods;
          t.RatioMethodsRedef= Double.parseDouble(df.format(t.RatioMethodsRedef))*100;
-         t.rmsr = t.RatioMethodsRedef+t.RatioMethodsSur;
+         t.oomr = t.RatioMethodsRedef+t.RatioMethodsSur;
         
 		return t;
         

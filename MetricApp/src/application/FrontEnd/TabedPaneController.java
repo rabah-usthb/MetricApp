@@ -24,9 +24,9 @@ public class TabedPaneController {
         Stage stage = (Stage) source.getScene().getWindow();
         
         switch(buttonId) {
-        case "ICMButton":
-        	ICOMLoading();
-        	ICMPIELoad();
+        case "ICButton":
+        	ICLoading();
+        	ICPIELoad();
         	stage.close();
         	break;
         case "JAXButton":
@@ -47,15 +47,15 @@ public class TabedPaneController {
         	stage.close();
         	break;
         
-        case "TEButton":
-        	TELoading();
-        	TEPIELoad();
+        case "ERButton":
+        	ERLoading();
+        	ERPIELoad();
         	stage.close();
         	break;
        
-        case "RMRSButton": 	
-        	RMRSBLoading();
-        	RMRSPIELoad();
+        case "OOMRButton": 	
+        	OOMRLoading();
+        	OOMRPIELoad();
         	stage.close();
         	break;
         
@@ -132,9 +132,9 @@ public class TabedPaneController {
 
 	
 	
-	public void RMRSPIELoad() {
+	public void OOMRPIELoad() {
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/RMRSPie.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/OOMRPie.fxml"));
         Parent root = null;
 		try {
 			root = fxmlLoader.load();
@@ -142,8 +142,8 @@ public class TabedPaneController {
 	
 			exception.printStackTrace();
 		}
-        
-        Scene scene = new Scene(root);
+		
+		Scene scene = new Scene(root);
         String css = this.getClass().getResource("/ressource/Css Folder/Pie.css").toExternalForm();
         scene.getStylesheets().add(css);
         
@@ -153,7 +153,7 @@ public class TabedPaneController {
     }
 
 	
-	 public void TEPIELoad() {
+	 public void ERPIELoad() {
 
 	        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/EncapsulationPie.fxml"));
 	        Parent root = null;
@@ -173,7 +173,7 @@ public class TabedPaneController {
 	        stage.show();
 	    }
 	
-	 public void ICMPIELoad() {
+	 public void ICPIELoad() {
 
 	        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/ImportPie.fxml"));
 	        Parent root = null;
@@ -214,7 +214,7 @@ public class TabedPaneController {
 	    }
 	
 
-	private void ICOMLoading() {
+	private void ICLoading() {
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/Import.fxml"));
         Parent root = null;
@@ -274,7 +274,7 @@ public class TabedPaneController {
        stage.show();
 	}
 	
-	private void TELoading() {
+	private void ERLoading() {
 		 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/Encapsulation.fxml"));
          Parent root = null;
 			try {
@@ -293,8 +293,8 @@ public class TabedPaneController {
         stage.show();
 	}
 	
-	private void RMRSBLoading() {
-		 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/RMRS.fxml"));
+	private void OOMRLoading() {
+		 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/OOMR.fxml"));
          Parent root = null;
 			try {
 				root = fxmlLoader.load();
@@ -302,10 +302,10 @@ public class TabedPaneController {
 				// TODO Auto-generated catch block
 				exception.printStackTrace();
 			}
-	       OOMRcontroller rmrsController = fxmlLoader.getController();
-        rmrsController.initialize(MetricController.FileSelectedPath,MetricController.SelectedItem);
+	       OOMRcontroller OOMRController = fxmlLoader.getController();
+        OOMRController.initialize(MetricController.FileSelectedPath,MetricController.SelectedItem);
         Scene scene = new Scene(root);
-        String css = this.getClass().getResource("/ressource/Css Folder/RMRS.css").toExternalForm();
+        String css = this.getClass().getResource("/ressource/Css Folder/OOMR.css").toExternalForm();
       scene.getStylesheets().add(css);
         Stage stage = new Stage();
         stage.setScene(scene);
