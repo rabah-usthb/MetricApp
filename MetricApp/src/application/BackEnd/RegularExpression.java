@@ -92,14 +92,23 @@ public class RegularExpression {
 		
   }
   
+  
+  static String fetchClassName(String line) {
+	  String classRegex =".*class\\s+(\\w+).*";
+	  Pattern PatterneVar = Pattern.compile(classRegex);
+	  Matcher matcher = PatterneVar.matcher(line);
+	  while(matcher.find()) {
+		return matcher.group(1);  
+	  }
+	  return "";
+		
+  }
   static void JumpMethodContent(String Line,BufferedReader reader) {
 		LinkedList<String>listopening = new LinkedList<>();
 		LinkedList<String>listclosing = new LinkedList<>();
-	    
 		AddCurlyBraces(Line, listopening,listclosing);
-	    System.out.println("Method : "+Line);
 	    try {
-			while (!(listclosing.size()==listopening.size())&&(Line = reader.readLine()) != null) { 
+			while ( listclosing.size()!=listopening.size() &&  (Line = reader.readLine()) != null) { 
 	        Line = Line.trim();
 			Line = Qoute.RemoveQoute(Line);
 			ArrayList<String> ListCode=new ArrayList<String>();
@@ -122,17 +131,19 @@ public class RegularExpression {
 
           			if(!ListCode.isEmpty()) {
           				for(String code : ListCode) {
-          					AddCurlyBraces(Line, listopening,listclosing);
+          					AddCurlyBraces(code, listopening,listclosing);
           				      					
           				}
           			}
           		}
           		if(ListCode.isEmpty()) {
+          			
           			AddCurlyBraces(Line, listopening,listclosing);
           		   
           		}
           	}
 		
+          	
 			}
 		}
 		catch(IOException e) {
@@ -141,6 +152,98 @@ public class RegularExpression {
 	   
 		}
 	
+	
+  static LinkedList<Henderson> fetchClassesDataHenderson(String Line,BufferedReader reader) {
+	  LinkedList<Henderson> listHenderson = new LinkedList<>();
+		String className = fetchClassName(Line);
+	    int numberAttribut = 0;
+	    int numberMethod = 0;
+		System.out.println("class : "+Line);
+	    try {
+			while ((Line = reader.readLine()) != null) { 
+				
+				System.out.println("\n\n"+Line);
+				System.out.println(className);
+				System.out.println(numberAttribut);
+				System.out.println(numberMethod);
+		
+			Line = Line.trim();
+			Line = Qoute.RemoveQoute(Line);
+			ArrayList<String> ListCode=new ArrayList<String>();
+        	if(!Line.isBlank() && !Line.isEmpty() && !Comment.IsCommentOnlyCompleted(Line)) {
+        		if(Comment.ContainsComment(Line)) {
+	              Line = Comment.RemoveComment(Line);
+	            	}
+        		else {
+        			if(Comment.FinishedComment(Line)) {
+	            			if(!Comment.ContainsOpeningComment(Line)) {
+	            				ListCode.add(Comment.CodeOpeningComment(Line));
+	            			}
+	            			if(!Comment.ContainsClosingComment(Line)) {
+	            				ListCode.add(Comment.CodeClosingComment(Line));
+	            			}
+	            		}
+        			else if (Comment.NotFinishedComment(Line)) {
+	            			Comment.JumpComment(Line,ListCode,reader);
+	            		}
+
+        			if(!ListCode.isEmpty()) {
+        				for(String code : ListCode) {
+        				  if(IsClass(code)) {
+        			    		Henderson henderson = new Henderson(className, numberAttribut, numberMethod);
+        		                numberAttribut = 0;
+        		                numberMethod = 0;
+        		                listHenderson.add(henderson);        
+        		    
+        					  className = fetchClassName(code);
+        				  }
+        					else if(IsMethodPrototype(code)) {
+        						++numberMethod;
+        						JumpMethodContent(Line, reader);
+        					}
+        					else if (IsVariable(code)) {
+        						++numberAttribut;
+        					}
+        				      					
+        				}
+        			}
+        		}
+        		if(ListCode.isEmpty()) {
+        			if(IsClass(Line)) {
+        	    		Henderson henderson = new Henderson(className, numberAttribut, numberMethod);
+		                numberAttribut = 0;
+		                numberMethod = 0;
+		                listHenderson.add(henderson);        
+		    
+  					  className = fetchClassName(Line);
+  				  }
+        			if(IsMethodPrototype(Line)) {
+						++numberMethod;
+						JumpMethodContent(Line, reader);
+					}
+					else if (IsVariable(Line)) {
+						++numberAttribut;
+					}
+        		   
+        		}
+        	}
+		
+        	
+			}
+		}
+		catch(IOException e) {
+			
+		}
+	    Henderson henderson = new Henderson(className, numberAttribut, numberMethod);
+        numberAttribut = 0;
+        numberMethod = 0;
+        listHenderson.add(henderson);        
+
+		
+	return listHenderson;
+		}
+	   
+		
 	
   
   

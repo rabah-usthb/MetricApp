@@ -24,6 +24,10 @@ public class TabedPaneController {
         Stage stage = (Stage) source.getScene().getWindow();
         
         switch(buttonId) {
+        case "HendersonButton":
+        	HendersonLoading();
+        	stage.close();
+        	break;
         case "ICButton":
         	ICLoading();
         	ICPIELoad();
@@ -67,7 +71,26 @@ public class TabedPaneController {
        
 	}
 	
-	
+	@FXML
+	private void HendersonLoading() {
+		 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/Henderson.fxml"));
+         Parent root = null;
+			try {
+				root = fxmlLoader.load();
+			} catch (IOException exception) {
+				// TODO Auto-generated catch block
+				exception.printStackTrace();
+			}
+    	HendersonController hendersonController = fxmlLoader.getController();
+        hendersonController.initialize(MetricController.FileSelectedPath);
+        Scene scene = new Scene(root);
+        String css = this.getClass().getResource("/ressource/Css Folder/Analysis.css").toExternalForm();
+        scene.getStylesheets().add(css);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.show();
+		
+	}
 	
 	private void JAXLoading() {
 		 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/Analysis.fxml"));
