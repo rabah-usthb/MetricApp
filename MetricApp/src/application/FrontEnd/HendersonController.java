@@ -101,12 +101,8 @@ public class HendersonController {
 	                        svgPath.getStyleClass().setAll("root-node-svg");
 	                    } else if (!treeItem.isLeaf()) {
 	                        label.getStyleClass().setAll("parent-node-label");
-	                        if(treeItem.getValue().label.equals("Default Exceptions")) {
-	                        svgPath.getStyleClass().setAll("parent-node-default-svg");
-	                        }
-	                        else {
-	                        	svgPath.getStyleClass().setAll("parent-node-notdefault-svg");
-	                        }
+	                        svgPath.getStyleClass().setAll("parent-node-svg");
+	                        
 	                    } else {
 	                        label.getStyleClass().setAll("leaf-node-label");
 	                        svgPath.getStyleClass().setAll("leaf-node-svg");

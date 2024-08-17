@@ -84,7 +84,7 @@ public class TabedPaneController {
     	HendersonController hendersonController = fxmlLoader.getController();
         hendersonController.initialize(MetricController.FileSelectedPath);
         Scene scene = new Scene(root);
-        String css = this.getClass().getResource("/ressource/Css Folder/Analysis.css").toExternalForm();
+        String css = this.getClass().getResource("/ressource/Css Folder/Henderson.css").toExternalForm();
         scene.getStylesheets().add(css);
         Stage stage = new Stage();
         stage.setScene(scene);
