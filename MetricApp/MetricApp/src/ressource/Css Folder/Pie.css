@@ -1,0 +1,13 @@
+/* Adjusting the font size of the legend items */
+.chart-legend-item {
+    -fx-font-size: 20px; /* Set the desired font size */
+}
+
+/* Adjusting the font size of the PieChart data labels */
+.chart-pie-label {
+    -fx-font-size: 16px; /* Set the desired font size */
+}
+
+.chart-title{
+	-fx-font-size: 35px;
+} 

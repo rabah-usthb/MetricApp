@@ -1,0 +1,65 @@
+.root {
+    -fx-background-color: white;
+}
+
+
+#ErrorLabelPath{
+	 -fx-font-size: 14pt;
+}
+
+#ConfirmPathButton{
+ -fx-padding: 6px;
+ -fx-font-size:14px;
+ -fx-background-color :#FFFFFF;
+ -fx-font-weight: bold;
+ -fx-text-fill : #008080;
+ -fx-border-radius : 4px;
+ -fx-border-color:#008080;
+}
+ 
+ #ConfirmPathButton:hover{
+ -fx-background-color :#008080;
+ -fx-text-fill : #FFFFFF;
+ -fx-cursor :hand;
+}
+
+.root-node-label{
+	-fx-font-size:45px;
+	
+}
+
+.root-node-svg{
+	-fx-fill:#FFD700;
+	-fx-scale-x:1.75;
+	-fx-scale-y:1.75;
+}
+
+
+.parent-node-label{
+	-fx-font-size:35px;
+}
+
+.parent-node-svg{
+	-fx-fill:#CB9327;
+ }
+
+
+
+.leaf-node-label{
+	-fx-font-size:25px;
+}
+
+.leaf-node-svg{
+	-fx-fill:#0B75B2;
+}
+
+/* Remove blue background on focused tree cells */
+.tree-cell:focused {
+    -fx-background-color:  transparent;
+    -fx-border-color:blue;
+}
+
+
+
+
+
