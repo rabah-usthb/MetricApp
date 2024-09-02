@@ -29,9 +29,12 @@ public class OOMRCalculator {
     	path = path.replace("\\src\\", "\\bin\\");
     	fileName = path.substring(path.indexOf("\\bin\\")+5).replace(".java", "").replace("\\", ".");
     	path = path.replace("\\"+filename,"");
-        System.out.println(path);
-        System.out.println(fileName);
-        URLClassLoader classLoader = new URLClassLoader(new URL[]{new File(path).toURI().toURL()}); //ou vous allez tout simplement remplacer MyClass par le nom de la classe dont vous avez cree le fichier 
+    	   //added
+        path = path.substring(0,path.indexOf("\\bin\\")+5);
+      
+    	System.out.println("Path "+path);
+        System.out.println("ClassName "+fileName);
+       URLClassLoader classLoader = new URLClassLoader(new URL[]{new File(path).toURI().toURL()}); //ou vous allez tout simplement remplacer MyClass par le nom de la classe dont vous avez cree le fichier 
         //ou une classe que vous possedez deja dans votre projet
         Class<?> loadedClass = classLoader.loadClass(fileName);
          t.totalMethods = countTotalMethods(loadedClass);
@@ -45,9 +48,7 @@ public class OOMRCalculator {
          t.oomr = t.RatioMethodsRedef+t.RatioMethodsSur;
         
 		return t;
-        
-        //il reste le calcule des methodes surchargees(override), il me faut une idee
-    }
+      }
 
     public static int countTotalMethods(Class<?> clazz) {
         Method[] methods = clazz.getDeclaredMethods();
