@@ -1,0 +1,39 @@
+ 
+.button{
+ -fx-font-size: 14px;
+ -fx-background-color :#FFFFFF;
+ -fx-text-fill : #008080;
+ -fx-border-radius : 4px;
+ -fx-border-color:#008080;
+ -fx-font-weight: bold;
+  
+ }
+ 
+
+ .button:focused{
+-fx-background-color :#008080;
+-fx-text-fill : #FFFFFF;
+-fx-cursor :hand;
+
+}
+
+
+
+ 
+.header-panel{
+	   -fx-font-size: 30px;
+}
+
+ .content.label {
+    -fx-font-size: 25px;
+}
+ 
+
+ 
+.dialog-pane{
+	-fx-pref-width: 450px;
+	-fx-pref-height:300px;
+  
+}
+
+
