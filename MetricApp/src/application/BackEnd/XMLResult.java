@@ -19,7 +19,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class XMLResult {
-static String MC_Path = System.getProperty("user.dir")+"/src/Ressource/XML Folder/MC.xml";
+final static String IC_Path = System.getProperty("user.dir")+"/src/Ressource/XML Folder/IC.xml";
+final static String JEA_Path = System.getProperty("user.dir")+"/src/Ressource/XML Folder/JEA.xml";
 
 public static void PrintMap(HashMap<String, ArrayList<Object>>map) {
 	for(Map.Entry<String,ArrayList<Object>> entry : map.entrySet()) {
@@ -44,6 +45,17 @@ public static HashMap<String, ArrayList<Object>> buildMap(MapEntry...entries) {
     }
 
     return map;
+}
+
+
+public static class ValueEntry {
+   String Field;
+   Object value;
+
+    public ValueEntry(String Field, Object value) {
+        this.Field = Field;
+        this.value = value;
+    }
 }
 
 public static class MapEntry {
@@ -136,7 +148,7 @@ public static class MapEntry {
    	  return builder.newDocument(); 	  
     }
 
-    
+    /*
     @SuppressWarnings("unchecked")
 	public static <T,V,R> ArrayList<R> filterByEqualAttribute(ArrayList<T> list, String attributeName, V attributeValue,String returnAttribute) {
         ArrayList<R> filteredList = new ArrayList<>();
@@ -154,6 +166,45 @@ public static class MapEntry {
                         filteredList.add((R) returnValue);
                     }}
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return filteredList;
+    }
+
+*/
+    @SuppressWarnings("unchecked")
+	public static <T,R> ArrayList<R> filterByEqualAttribute(ArrayList<T> list,String returnAttribute,ValueEntry...entry) {
+        ArrayList<R> filteredList = new ArrayList<>();
+        boolean equal = true;
+        try {
+        	
+        	for(T element : list) {
+        		for(ValueEntry Entry : entry) {
+        		    Field field = element.getClass().getDeclaredField(Entry.Field);
+                    field.setAccessible(true);
+                	Object fieldValue = field.get(element);
+                	if(fieldValue.equals(Entry.value)) {
+                		equal = true;
+                	}else {
+                		equal = false;
+                		break;
+                	}
+                	
+        		}
+        		if(equal) {
+        		 	Field Returnfield = element.getClass().getDeclaredField(returnAttribute);
+                    Returnfield.setAccessible(true);
+                    Object returnValue = Returnfield.get(element);
+                    if (returnValue instanceof Collection<?>) {
+                        filteredList.addAll((Collection<R>) returnValue);
+                    } else {
+                        filteredList.add((R) returnValue);
+                    }
+                    }
+                              	
+        		}
+        	
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -203,9 +254,47 @@ public static class MapEntry {
     	return cmp;
     }
     
+    public static void JEA_XML(ArrayList<ExceptionStatus>ListException) {
+    	Document document = Create_Document();
+        int totalNumberException = ListException.size();
+    	int totalNumberDefaultExc = ExceptionStatus.getTotalNumberDefaultException(ListException);
+    	int totalNumberNotDefaultExc = ExceptionStatus.getTotalNumberNotDefaultException(ListException);
+    	int totalNumberCompileTimeExc = ExceptionStatus.getTotalNumberCompileTimeException(ListException);
+    	int totalNumberRunTimeExc = ExceptionStatus.getTotalNumberRunTimeException(ListException);
+        	
+        ArrayList<Integer>rootAttributeTotal = new ArrayList<>();
+        rootAttributeTotal.add(totalNumberException);
+        ArrayList<Integer>rootAttributeCompileTime = new ArrayList<>();
+        rootAttributeCompileTime.add(totalNumberCompileTimeExc);
+        ArrayList<Integer>rootAttributeRunTime = new ArrayList<>();
+        rootAttributeRunTime.add(totalNumberRunTimeExc);
+        ArrayList<Integer>parentAttributeDefault = new ArrayList<>();
+        parentAttributeDefault.add(totalNumberDefaultExc);
+        ArrayList<Integer>parentAttributeNotDefault = new ArrayList<>();
+        parentAttributeNotDefault.add(totalNumberNotDefaultExc);
+        
+        Element Exception = setRoot(document,"Exceptions", buildMap(new MapEntry("total",rootAttributeTotal) , new MapEntry("CompileTime", rootAttributeCompileTime),new MapEntry("RunTime", rootAttributeRunTime)));
+        Element DefaultException = setParent(document, Exception,"DefaultExceptions", buildMap(new MapEntry("total",parentAttributeDefault)));
+        ArrayList<String>DefaultRunTimeList= filterByEqualAttribute(ListException,"ExceptionName", new ValueEntry("DefaultStatus",0),new ValueEntry("CheckedStatus", 1));
+        ArrayList<String>DefaultCompileTimeList = filterByEqualAttribute(ListException,"ExceptionName", new ValueEntry("DefaultStatus",0),new ValueEntry("CheckedStatus", 0));
+        System.out.println("DefaultRunTimeList "+DefaultRunTimeList);
+        System.out.println("DefaultCompileTimeList "+DefaultCompileTimeList);
+        Element RunTimeDefault = setParent(document, DefaultException,"RunTime",null); 
+        Element CompileTimeDefault = setParent(document, DefaultException,"CompileTime",null); 
+        setChildren(document, CompileTimeDefault,"Exception", buildMap(new MapEntry("name",DefaultCompileTimeList)));
+        setChildren(document,RunTimeDefault,"Exception", buildMap(new MapEntry("name",DefaultRunTimeList)));
+        
+        Element NotDefaultException =  setParent(document, Exception,"NotDefaultExceptions", buildMap(new MapEntry("total",parentAttributeNotDefault)));;
+        ArrayList<String>NotDefaultRunTimeList= filterByEqualAttribute(ListException,"ExceptionName", new ValueEntry("DefaultStatus",1),new ValueEntry("CheckedStatus", 1));
+        ArrayList<String>NotDefaultCompileTimeList = filterByEqualAttribute(ListException,"ExceptionName", new ValueEntry("DefaultStatus",1),new ValueEntry("CheckedStatus", 0));
+        Element RunTimeNotDefault = setParent(document, NotDefaultException,"RunTime",null); 
+        Element CompileTimeNotDefault = setParent(document, NotDefaultException,"CompileTime",null); 
+        setChildren(document, CompileTimeNotDefault,"Exception", buildMap(new MapEntry("name",NotDefaultCompileTimeList)));
+        setChildren(document,RunTimeNotDefault,"Exception", buildMap(new MapEntry("name",NotDefaultRunTimeList)));
+        Document_To_XML(document, JEA_Path);
+    }
+    
     public static void IC_XML(ArrayList<ImportStatus> List) {
-
-      try {
       ArrayList<Integer>rootAttribute = new ArrayList<>();
       rootAttribute.add(ImportStatus.getTotalNumberImports(List));
 	  Document document = Create_Document();
@@ -226,7 +315,7 @@ public static class MapEntry {
 		  ImportName.add(Import);
 		  Element wildImport = setParent(document, Used,"Import", buildMap(new MapEntry("name",ImportName)));
 	      setChildren(document, wildImport,"Class", buildMap(new MapEntry("name",UsedClass)));		      
-	  }
+	  
 	  
 	  ArrayList<String>ListNotUsd =  filterByEqualAttribute(List,"ImportStatus",0,"ImportName");
 	  ArrayList<Integer>NotUsedTotal = new ArrayList<>();
@@ -265,9 +354,7 @@ public static class MapEntry {
 	  ); 
 	  
 	  
-	  Document_To_XML(document, MC_Path);
-      } catch (Exception e) {
-	            e.printStackTrace();
-	        }
+	  Document_To_XML(document, IC_Path);
 	}
+}
 }

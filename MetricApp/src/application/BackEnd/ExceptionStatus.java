@@ -53,6 +53,46 @@ public class ExceptionStatus {
 	
  }
  
+ static int getTotalNumberDefaultException(ArrayList<ExceptionStatus> List) {
+	 int nb = 0;
+	 for(ExceptionStatus Exc : List) {
+		 if(Exc.DefaultStatus == 0) {
+			 ++nb;
+		 }
+	 }
+	 return nb;
+ }
+ 
+ static int getTotalNumberNotDefaultException(ArrayList<ExceptionStatus> List) {
+	 int nb = 0;
+	 for(ExceptionStatus Exc : List) {
+		 if(Exc.DefaultStatus == 1) {
+			 ++nb;
+		 }
+	 }
+	 return nb;
+ }
+ 
+ static int getTotalNumberRunTimeException(ArrayList<ExceptionStatus> List) {
+	 int nb = 0;
+	 for(ExceptionStatus Exc : List) {
+		 if(Exc.CheckedStatus == 1) {
+			 ++nb;
+		 }
+	 }
+	 return nb;
+ }
+ 
+ static int getTotalNumberCompileTimeException(ArrayList<ExceptionStatus> List) {
+	 int nb = 0;
+	 for(ExceptionStatus Exc : List) {
+		 if(Exc.CheckedStatus == 0) {
+			 ++nb;
+		 }
+	 }
+	 return nb;
+ }
+ 
  static void IsThrowable(Set<String> List,String line){
 	 
 	 if(RegularExpression.IsThrow(line)) {

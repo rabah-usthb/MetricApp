@@ -28,6 +28,7 @@ package application.FrontEnd;
 import application.BackEnd.ExceptionStatus;
 import application.BackEnd.ImportStatus;
 import application.BackEnd.Package;
+import application.BackEnd.XMLResult;
 import javafx.util.Callback;
 public class ExceptionController {
         static ArrayList<ExceptionStatus>ListException = new ArrayList<>();
@@ -47,6 +48,7 @@ public class ExceptionController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	       XMLResult.JEA_XML(ListException);
 	        TreeItemData rootItemData = new TreeItemData("Exceptions","M 12 2 C 6.48 2 2 6.48 2 12 s 4.48 10 10 10 s 10 -4.48 10 -10 S 17.52 2 12 2 Z m 1 15 h -2 v -2 h 2 v 2 Z m 0 -4 h -2 V 7 h 2 v 6 Z");
 	        TreeItem<TreeItemData> rootItem = new TreeItem<>(rootItemData);
 	        treeView.setRoot(rootItem);
