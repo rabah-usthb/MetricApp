@@ -43,7 +43,6 @@ import java.util.zip.ZipEntry;
 
 public class ExceptionStatus {
  public String ExceptionName;
- 
  public int CheckedStatus;
  public int DefaultStatus;
  ExceptionStatus(String ExceptionName,int CheckedStatus,int DefaultStatus){

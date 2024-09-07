@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import application.BackEnd.Encapsulation;
 import application.BackEnd.ImportStatus;
+import application.BackEnd.XMLResult;
 import application.FrontEnd.ImportController.CustomTreeCell;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -29,6 +30,7 @@ public class EncapsulationController {
         File file = new File(FilePath);
         EncapsulationLabel.setText("Encapsulation of "+file.getName());
         Encapsulation encapsulation =   Encapsulation.EncapsulationFetch(file);
+        XMLResult.ER_XML(encapsulation);
         String TotalSvgPath="M 18 4 H 6 v 2 l 6.5 6 L 6 18 v 2 h 12 v -3 h -7 l 5 -5 l -5 -5 h 7 Z";
         TreeItemData rootItemData = new TreeItemData("Total Elements : "+encapsulation.GetTotal(),TotalSvgPath);
         TreeItem<TreeItemData> rootItem = new TreeItem<>(rootItemData);

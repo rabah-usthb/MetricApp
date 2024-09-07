@@ -21,6 +21,7 @@ import java.util.Map;
 public class XMLResult {
 final static String IC_Path = System.getProperty("user.dir")+"/src/Ressource/XML Folder/IC.xml";
 final static String JEA_Path = System.getProperty("user.dir")+"/src/Ressource/XML Folder/JEA.xml";
+final static String ER_Path = System.getProperty("user.dir")+"/src/Ressource/XML Folder/ER.xml";
 
 public static void PrintMap(HashMap<String, ArrayList<Object>>map) {
 	for(Map.Entry<String,ArrayList<Object>> entry : map.entrySet()) {
@@ -254,6 +255,29 @@ public static class MapEntry {
     	return cmp;
     }
     
+    public static void ER_XML(Encapsulation ER) {
+    	Document document = Create_Document();
+    	ArrayList<Integer>TotalElement = new ArrayList<>();
+    	TotalElement.add(ER.Total);
+    	ArrayList<Double>EncapsulationRatio = new ArrayList<>();
+        EncapsulationRatio.add(ER.GetTaux());
+        Element elementRoot = setRoot(document,"Element", buildMap(new MapEntry("Total",TotalElement),new MapEntry("ER", EncapsulationRatio))); 
+        ArrayList<Integer>PublicElement = new ArrayList<>();
+        PublicElement.add(ER.CompteurPublic);
+        ArrayList<Integer>ProtectedElement = new ArrayList<>();
+        ProtectedElement.add(ER.CompteurProtected);
+        ArrayList<Integer>PrivateElement = new ArrayList<>();
+        PrivateElement.add(ER.CompteurPrivate);
+        ArrayList<Integer>NoneElement = new ArrayList<>();
+        NoneElement.add(ER.CompteurNone);
+        Element publicElement = setParent(document,elementRoot,"Public", buildMap(new MapEntry("Total",PublicElement))); 
+        Element privateElement = setParent(document,elementRoot,"Private", buildMap(new MapEntry("Total",PrivateElement))); 
+        Element protectedElement = setParent(document,elementRoot,"Protected", buildMap(new MapEntry("Total",ProtectedElement))); 
+        Element noneElement = setParent(document,elementRoot,"None", buildMap(new MapEntry("Total",NoneElement))); 
+        
+        Document_To_XML(document, ER_Path);     
+    }
+    
     public static void JEA_XML(ArrayList<ExceptionStatus>ListException) {
     	Document document = Create_Document();
         int totalNumberException = ListException.size();
@@ -298,7 +322,7 @@ public static class MapEntry {
       ArrayList<Integer>rootAttribute = new ArrayList<>();
       rootAttribute.add(ImportStatus.getTotalNumberImports(List));
 	  Document document = Create_Document();
-      ArrayList<String>UsedImport = filterByEqualAttribute(List,"ImportStatus",1,"ImportName");
+      ArrayList<String>UsedImport = filterByEqualAttribute(List,"ImportName", new ValueEntry("ImportStatus",1));
       ArrayList<String>SimpleImport = new ArrayList<>();
       ArrayList<String>WildImport = new ArrayList<>();
       FilterUsedImport_WildImport_SimpleImport(UsedImport, SimpleImport, WildImport);
@@ -310,14 +334,14 @@ public static class MapEntry {
 	 		  buildMap(new MapEntry("name", SimpleImport))
 			  );
 	  for(String Import : WildImport) {
-		  ArrayList<String>UsedClass = filterByEqualAttribute(List,"ImportName",Import,"UsedClassList");
+		  ArrayList<String>UsedClass = filterByEqualAttribute(List,"UsedClassList",new ValueEntry("ImportName",Import));
 		  ArrayList<String>ImportName = new ArrayList<>();
 		  ImportName.add(Import);
 		  Element wildImport = setParent(document, Used,"Import", buildMap(new MapEntry("name",ImportName)));
 	      setChildren(document, wildImport,"Class", buildMap(new MapEntry("name",UsedClass)));		      
 	  
 	  
-	  ArrayList<String>ListNotUsd =  filterByEqualAttribute(List,"ImportStatus",0,"ImportName");
+	  ArrayList<String>ListNotUsd =  filterByEqualAttribute(List,"ImportName",new ValueEntry("ImportStatus",0));
 	  ArrayList<Integer>NotUsedTotal = new ArrayList<>();
 	  NotUsedTotal.add(ListNotUsd.size());
 	  Element NotUsed = setParent(document, Imports,"NotUsed", buildMap(new MapEntry("total",NotUsedTotal)));
@@ -342,7 +366,7 @@ public static class MapEntry {
 				 
 					  )
 	  ); 
-	  ArrayList<String>ConflictList = filterByEqualAttribute(List,"ConflictStatus",1,"ImportName");
+	  ArrayList<String>ConflictList = filterByEqualAttribute(List,"ImportName",new ValueEntry("ConflictStatus",1));
 	  ArrayList<Integer>ConflictTotal = new ArrayList<>();
 	  ConflictTotal.add(ConflictList.size());
 	  Element Conflict = setParent(document, Imports,"Conflict", buildMap(new MapEntry("total",ConflictTotal)));
