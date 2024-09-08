@@ -15,6 +15,7 @@ import java.io.*;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,6 +23,8 @@ public class XMLResult {
 final static String IC_Path = System.getProperty("user.dir")+"/src/Ressource/XML Folder/IC.xml";
 final static String JEA_Path = System.getProperty("user.dir")+"/src/Ressource/XML Folder/JEA.xml";
 final static String ER_Path = System.getProperty("user.dir")+"/src/Ressource/XML Folder/ER.xml";
+final static String OOMR_Path = System.getProperty("user.dir")+"/src/Ressource/XML Folder/OOMR.xml";
+
 
 public static void PrintMap(HashMap<String, ArrayList<Object>>map) {
 	for(Map.Entry<String,ArrayList<Object>> entry : map.entrySet()) {
@@ -61,11 +64,14 @@ public static class ValueEntry {
 
 public static class MapEntry {
     String key;
-    ArrayList<Object> values;
+    ArrayList<Object> values = new ArrayList<>();
 
+    public MapEntry(String key,Object...values) {
+        this.key = key;
+        Collections.addAll(this.values,values);
+    }
     public MapEntry(String key, ArrayList<?> values) {
         this.key = key;
-        // Cast the list to ArrayList<Object>
         this.values = new ArrayList<>(values);
     }
 }
@@ -255,25 +261,19 @@ public static class MapEntry {
     	return cmp;
     }
     
+    public static void OOMR_XML(OOMRCalculator oomr) {
+    	Document document = Create_Document();   
+       
+    	Document_To_XML(document, OOMR_Path);   
+    }
+    
     public static void ER_XML(Encapsulation ER) {
     	Document document = Create_Document();
-    	ArrayList<Integer>TotalElement = new ArrayList<>();
-    	TotalElement.add(ER.Total);
-    	ArrayList<Double>EncapsulationRatio = new ArrayList<>();
-        EncapsulationRatio.add(ER.GetTaux());
-        Element elementRoot = setRoot(document,"Element", buildMap(new MapEntry("Total",TotalElement),new MapEntry("ER", EncapsulationRatio))); 
-        ArrayList<Integer>PublicElement = new ArrayList<>();
-        PublicElement.add(ER.CompteurPublic);
-        ArrayList<Integer>ProtectedElement = new ArrayList<>();
-        ProtectedElement.add(ER.CompteurProtected);
-        ArrayList<Integer>PrivateElement = new ArrayList<>();
-        PrivateElement.add(ER.CompteurPrivate);
-        ArrayList<Integer>NoneElement = new ArrayList<>();
-        NoneElement.add(ER.CompteurNone);
-        Element publicElement = setParent(document,elementRoot,"Public", buildMap(new MapEntry("Total",PublicElement))); 
-        Element privateElement = setParent(document,elementRoot,"Private", buildMap(new MapEntry("Total",PrivateElement))); 
-        Element protectedElement = setParent(document,elementRoot,"Protected", buildMap(new MapEntry("Total",ProtectedElement))); 
-        Element noneElement = setParent(document,elementRoot,"None", buildMap(new MapEntry("Total",NoneElement))); 
+    	Element elementRoot = setRoot(document,"Element", buildMap(new MapEntry("Total",ER.Total),new MapEntry("ER", ER.GetTaux()))); 
+        Element publicElement = setParent(document,elementRoot,"Public", buildMap(new MapEntry("Total",ER.CompteurPublic))); 
+        Element privateElement = setParent(document,elementRoot,"Private", buildMap(new MapEntry("Total",ER.CompteurPrivate))); 
+        Element protectedElement = setParent(document,elementRoot,"Protected", buildMap(new MapEntry("Total",ER.CompteurProtected))); 
+        Element noneElement = setParent(document,elementRoot,"None", buildMap(new MapEntry("Total",ER.CompteurNone))); 
         
         Document_To_XML(document, ER_Path);     
     }
@@ -285,30 +285,17 @@ public static class MapEntry {
     	int totalNumberNotDefaultExc = ExceptionStatus.getTotalNumberNotDefaultException(ListException);
     	int totalNumberCompileTimeExc = ExceptionStatus.getTotalNumberCompileTimeException(ListException);
     	int totalNumberRunTimeExc = ExceptionStatus.getTotalNumberRunTimeException(ListException);
-        	
-        ArrayList<Integer>rootAttributeTotal = new ArrayList<>();
-        rootAttributeTotal.add(totalNumberException);
-        ArrayList<Integer>rootAttributeCompileTime = new ArrayList<>();
-        rootAttributeCompileTime.add(totalNumberCompileTimeExc);
-        ArrayList<Integer>rootAttributeRunTime = new ArrayList<>();
-        rootAttributeRunTime.add(totalNumberRunTimeExc);
-        ArrayList<Integer>parentAttributeDefault = new ArrayList<>();
-        parentAttributeDefault.add(totalNumberDefaultExc);
-        ArrayList<Integer>parentAttributeNotDefault = new ArrayList<>();
-        parentAttributeNotDefault.add(totalNumberNotDefaultExc);
         
-        Element Exception = setRoot(document,"Exceptions", buildMap(new MapEntry("total",rootAttributeTotal) , new MapEntry("CompileTime", rootAttributeCompileTime),new MapEntry("RunTime", rootAttributeRunTime)));
-        Element DefaultException = setParent(document, Exception,"DefaultExceptions", buildMap(new MapEntry("total",parentAttributeDefault)));
+        Element Exception = setRoot(document,"Exceptions", buildMap(new MapEntry("total",totalNumberException) , new MapEntry("CompileTime", totalNumberCompileTimeExc),new MapEntry("RunTime", totalNumberRunTimeExc)));
+        Element DefaultException = setParent(document, Exception,"DefaultExceptions", buildMap(new MapEntry("total",totalNumberDefaultExc)));
         ArrayList<String>DefaultRunTimeList= filterByEqualAttribute(ListException,"ExceptionName", new ValueEntry("DefaultStatus",0),new ValueEntry("CheckedStatus", 1));
         ArrayList<String>DefaultCompileTimeList = filterByEqualAttribute(ListException,"ExceptionName", new ValueEntry("DefaultStatus",0),new ValueEntry("CheckedStatus", 0));
-        System.out.println("DefaultRunTimeList "+DefaultRunTimeList);
-        System.out.println("DefaultCompileTimeList "+DefaultCompileTimeList);
         Element RunTimeDefault = setParent(document, DefaultException,"RunTime",null); 
         Element CompileTimeDefault = setParent(document, DefaultException,"CompileTime",null); 
         setChildren(document, CompileTimeDefault,"Exception", buildMap(new MapEntry("name",DefaultCompileTimeList)));
         setChildren(document,RunTimeDefault,"Exception", buildMap(new MapEntry("name",DefaultRunTimeList)));
         
-        Element NotDefaultException =  setParent(document, Exception,"NotDefaultExceptions", buildMap(new MapEntry("total",parentAttributeNotDefault)));;
+        Element NotDefaultException =  setParent(document, Exception,"NotDefaultExceptions", buildMap(new MapEntry("total",totalNumberNotDefaultExc)));;
         ArrayList<String>NotDefaultRunTimeList= filterByEqualAttribute(ListException,"ExceptionName", new ValueEntry("DefaultStatus",1),new ValueEntry("CheckedStatus", 1));
         ArrayList<String>NotDefaultCompileTimeList = filterByEqualAttribute(ListException,"ExceptionName", new ValueEntry("DefaultStatus",1),new ValueEntry("CheckedStatus", 0));
         Element RunTimeNotDefault = setParent(document, NotDefaultException,"RunTime",null); 
@@ -319,32 +306,29 @@ public static class MapEntry {
     }
     
     public static void IC_XML(ArrayList<ImportStatus> List) {
-      ArrayList<Integer>rootAttribute = new ArrayList<>();
-      rootAttribute.add(ImportStatus.getTotalNumberImports(List));
-	  Document document = Create_Document();
+      int totalImport =ImportStatus.getTotalNumberImports(List);
+      Document document = Create_Document();
       ArrayList<String>UsedImport = filterByEqualAttribute(List,"ImportName", new ValueEntry("ImportStatus",1));
       ArrayList<String>SimpleImport = new ArrayList<>();
       ArrayList<String>WildImport = new ArrayList<>();
       FilterUsedImport_WildImport_SimpleImport(UsedImport, SimpleImport, WildImport);
       Element Imports =setRoot(document,"Imports",
-	  buildMap(new MapEntry("total" ,rootAttribute)));
-	  // Create a book element with an attribute
+	  buildMap(new MapEntry("total" ,totalImport)));
+	  // Cr eate a book element with an attribute
 	  Element Used = setParent(document, Imports,"Used", null);
 	  setChildren(document,Used,"Import", 
 	 		  buildMap(new MapEntry("name", SimpleImport))
 			  );
 	  for(String Import : WildImport) {
 		  ArrayList<String>UsedClass = filterByEqualAttribute(List,"UsedClassList",new ValueEntry("ImportName",Import));
-		  ArrayList<String>ImportName = new ArrayList<>();
-		  ImportName.add(Import);
-		  Element wildImport = setParent(document, Used,"Import", buildMap(new MapEntry("name",ImportName)));
+		  
+		  Element wildImport = setParent(document, Used,"Import", buildMap(new MapEntry("name",Import)));
 	      setChildren(document, wildImport,"Class", buildMap(new MapEntry("name",UsedClass)));		      
-	  
+	  }  
 	  
 	  ArrayList<String>ListNotUsd =  filterByEqualAttribute(List,"ImportName",new ValueEntry("ImportStatus",0));
-	  ArrayList<Integer>NotUsedTotal = new ArrayList<>();
-	  NotUsedTotal.add(ListNotUsd.size());
-	  Element NotUsed = setParent(document, Imports,"NotUsed", buildMap(new MapEntry("total",NotUsedTotal)));
+	  int totalUnused=ListNotUsd.size();
+	  Element NotUsed = setParent(document, Imports,"NotUsed", buildMap(new MapEntry("total",totalUnused)));
 	  setChildren(document, NotUsed,"Import", 
 	 
 			  buildMap(
@@ -354,9 +338,8 @@ public static class MapEntry {
 	  
 	  ArrayList<Integer>NumberDuplicate = filterByGreaterAttribute(List,"DuplicatStatus",1,"DuplicatStatus");
       ArrayList<String>NameDuplicate =filterByGreaterAttribute(List,"DuplicatStatus",1,"ImportName");
-      ArrayList<Integer>TotalDuplicate = new ArrayList<>();
-      TotalDuplicate.add(totalNumberDuplicate(NumberDuplicate));
-	  Element Duplicate = setParent(document, Imports,"Duplicate", buildMap(new MapEntry("total",TotalDuplicate)));
+      int totalDuplicate =totalNumberDuplicate(NumberDuplicate);
+	  Element Duplicate = setParent(document, Imports,"Duplicate", buildMap(new MapEntry("total",totalDuplicate)));
       
 	  setChildren(document,Duplicate,"Import", 
 				 
@@ -367,9 +350,8 @@ public static class MapEntry {
 					  )
 	  ); 
 	  ArrayList<String>ConflictList = filterByEqualAttribute(List,"ImportName",new ValueEntry("ConflictStatus",1));
-	  ArrayList<Integer>ConflictTotal = new ArrayList<>();
-	  ConflictTotal.add(ConflictList.size());
-	  Element Conflict = setParent(document, Imports,"Conflict", buildMap(new MapEntry("total",ConflictTotal)));
+	  int totalConflict = ConflictList.size();
+	  Element Conflict = setParent(document, Imports,"Conflict", buildMap(new MapEntry("total",totalConflict)));
 	  setChildren(document,Conflict,"Import", 
 				 
 			  buildMap(
@@ -379,6 +361,6 @@ public static class MapEntry {
 	  
 	  
 	  Document_To_XML(document, IC_Path);
-	}
+	
 }
 }

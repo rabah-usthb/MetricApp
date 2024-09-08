@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<Exceptions CompileTime="1" RunTime="2" total="3">
+<Exceptions CompileTime="1" RunTime="0" total="1">
     <DefaultExceptions total="1">
-        <RunTime>
-            <Exception name="InputMismatchException"/>
-        </RunTime>
-        <CompileTime/>
-    </DefaultExceptions>
-    <NotDefaultExceptions total="2">
-        <RunTime>
-            <Exception name="DividedByZeroException"/>
-        </RunTime>
+        <RunTime/>
         <CompileTime>
-            <Exception name="GreaterException"/>
+            <Exception name="Exception"/>
         </CompileTime>
+    </DefaultExceptions>
+    <NotDefaultExceptions total="0">
+        <RunTime/>
+        <CompileTime/>
     </NotDefaultExceptions>
 </Exceptions>
