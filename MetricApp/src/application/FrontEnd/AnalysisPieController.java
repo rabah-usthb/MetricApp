@@ -21,19 +21,18 @@ public class AnalysisPieController {
 	@FXML
 	private Label Description;
 	public void initialize() {
+		
 		File file = new File(MetricController.FileSelectedPath);
-
-        PerformanceMetric performanceMetric = new PerformanceMetric(Paths.get(file.getAbsolutePath()));
+        Line line = new Line(file);
+		PerformanceMetric performanceMetric = new PerformanceMetric(Paths.get(file.getAbsolutePath()));
        
         String formattedRuntime = String.format("%.5f",performanceMetric.RunTime);
       
-		int total = Line.CountLineAllLines(file);
-		DecimalFormat df = new DecimalFormat("#.##");
-	    double CodeRatio = Double.parseDouble(df.format(Line.CodeRation(file)));      
-	    double CommentOnlyLineRatio = Double.parseDouble(df.format(Line.CommentRation(file)));      
-	    double BlankRatio = (double) Line.CountBlankLine(file) / total * 100;
-	    BlankRatio = Double.parseDouble(df.format(BlankRatio)); System.out.println("Blank Ratio : "+BlankRatio);
-	    double CurlyBracesRatio =  Double.parseDouble(df.format((double)(Line.CountCurlyBracesLine(file))/total))*100;
+		int total = line.totalLine;
+		double CodeRatio = line.ratioCode;      
+	    double CommentOnlyLineRatio = line.ratioComment;      
+	    double BlankRatio = line.ratioEmpty;
+	    double CurlyBracesRatio = line.ratioBraces;
 	    ObservableList<PieChart.Data> AnalysisPieData = FXCollections.observableArrayList(
 	            new PieChart.Data("Code Lines ", CodeRatio),
 	            new PieChart.Data("CommentOnly Lines ",CommentOnlyLineRatio),

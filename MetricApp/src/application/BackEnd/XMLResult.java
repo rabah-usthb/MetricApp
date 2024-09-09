@@ -25,6 +25,7 @@ final static String JEA_Path = System.getProperty("user.dir")+"/src/Ressource/XM
 final static String ER_Path = System.getProperty("user.dir")+"/src/Ressource/XML Folder/ER.xml";
 final static String OOMR_Path = System.getProperty("user.dir")+"/src/Ressource/XML Folder/OOMR.xml";
 final static String SM_Path = System.getProperty("user.dir")+"/src/Ressource/XML Folder/SM.xml";
+final static String JAX_Path = System.getProperty("user.dir")+"/src/Ressource/XML Folder/JAX.xml";
 
 public static void PrintMap(HashMap<String, ArrayList<Object>>map) {
 	for(Map.Entry<String,ArrayList<Object>> entry : map.entrySet()) {
@@ -235,6 +236,42 @@ public static class MapEntry {
     		cmp=cmp+number;
     	}
     	return cmp;
+    }
+    public static void JAX_XML(Line line) {
+    	Document document = Create_Document();   
+  
+    	Element JAX = setRoot(document,"JAX", null);
+        Element ParentLine = setParent(document, JAX, "Line", buildMap(new MapEntry("total")));
+    	/*Element Line total=##>
+    	Element Code total=## , ratio=##.##>
+    	Element CurlyBraces total=##/>
+    	Element Empty total=##/>
+    	Element Comment total=## , ratio=##.##>
+    	Element Software total=##>
+    	Element Methods total=##>
+    	Element method prototype=”method 1”/>
+    	Element method prototype=”method 2”/>
+    	Element Interfaces total=##>
+    	Element /interface name=”interface 1”/>
+    	Element /interface name=”interface 2”/>
+    	Element Classes total=##>
+    	Element SubClasses total=##>
+    	Element Class signature=”class 1 extends SuperClass 1”>
+    	Element Class signature=”Protected class 2 extends SuperClass 2”>
+    	Element /SubClasses>
+    	Element AbstractClasses total=##>
+    	Element Class signature=”Private Abstract class 3”>
+    	Element Class signature=”Public Abstract class 4”>
+    	Element /AbstractClasses>
+    	Element /Classes>
+    	Element /Software>
+    	Element Performance>
+    	Element RunTime value=##/>
+    	Element FileSize value=##/>
+    	Element /Performance>
+    */
+        Document_To_XML(document, JAX_Path);     
+    
     }
     
     public static void SM_XML(SwingComponent sm) {

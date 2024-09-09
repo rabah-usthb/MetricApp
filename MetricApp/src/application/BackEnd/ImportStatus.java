@@ -248,10 +248,10 @@ public static ArrayList<ImportStatus> update(File file , ArrayList<ImportStatus>
           	else {
           		
           		if(Comment.FinishedComment(line)) {
-          			if(!Comment.ContainsOpeningComment(line)) {
+          			if(!Comment.OpeningMultiCommentOnly(line)) {
           				ListCode.add(Comment.CodeOpeningComment(line));
           			}
-          			if(!Comment.ContainsClosingComment(line)) {
+          			if(!Comment.ClosingMultiCommentOnly(line)) {
           				ListCode.add(Comment.CodeClosingComment(line));
           			}
           		}
@@ -333,10 +333,10 @@ public static ArrayList<ImportStatus> ImportFetch(File file){
   	            	}
           		else {
           			if(Comment.FinishedComment(Line)) {
-	            			if(!Comment.ContainsOpeningComment(Line)) {
+	            			if(!Comment.OpeningMultiCommentOnly(Line)) {
 	            				ListCode.add(Comment.CodeOpeningComment(Line));
 	            			}
-	            			if(!Comment.ContainsClosingComment(Line)) {
+	            			if(!Comment.ClosingMultiCommentOnly(Line)) {
 	            				ListCode.add(Comment.CodeClosingComment(Line));
 	            			}
 	            		}

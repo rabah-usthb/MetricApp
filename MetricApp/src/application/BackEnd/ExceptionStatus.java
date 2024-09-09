@@ -326,10 +326,10 @@ public class ExceptionStatus {
 	    	            	}
 	            		else {
 	            			if(Comment.FinishedComment(Line)) {
-		            			if(!Comment.ContainsOpeningComment(Line)) {
+		            			if(!Comment.OpeningMultiCommentOnly(Line)) {
 		            				ListCode.add(Comment.CodeOpeningComment(Line));
 		            			}
-		            			if(!Comment.ContainsClosingComment(Line)) {
+		            			if(!Comment.ClosingMultiCommentOnly(Line)) {
 		            				ListCode.add(Comment.CodeClosingComment(Line));
 		            			}
 		            		}

@@ -7,18 +7,17 @@ import java.util.ArrayList;
 
 public class Comment {
 	
-	//To Jump Comment And Increment CountLine
-	static int JumpComment (String Line,BufferedReader reader) {
-		int NbLine = 0;
-		if(!ContainsOpeningComment(Line)) {
-	    ++NbLine;
+	//To Jump Comment And Increment code and comment line
+	static void JumpComment (String Line,BufferedReader reader,int totalCode,int totalComment) {
+		++totalComment;
+		if(!OpeningMultiCommentOnly(Line)) {
+	    ++totalCode;
 		}
-	//	System.out.println(Line);
 		try {
 			while ((Line = reader.readLine()) != null) { 
 			Line = Line.trim();
 			Line = Qoute.RemoveQoute(Line);
-			//System.out.println(Line);
+	        ++totalComment;
 			if(Line.contains("*/")) {
 				break;
 			}
@@ -27,45 +26,18 @@ public class Comment {
 		catch(IOException e) {
 			
 		}
-		if(!ContainsClosingComment(Line)) {
-	   ++NbLine;
+		++totalComment;
+		if(!ClosingMultiCommentOnly(Line)) {
+	     ++totalCode;
 		}
-		return NbLine;
+		
 	}
 	
 	
 	
-	static int JumpCommentForCommentOnlyLine (String Line,BufferedReader reader) {
-		int NbLine = 0;
-		if(ContainsOpeningComment(Line)) {
-	    ++NbLine;
-		}
-	//	System.out.println(Line);
-		try {
-			while ((Line = reader.readLine()) != null) { 
-			Line = Line.trim();
-			Line = Qoute.RemoveQoute(Line);
-			++NbLine;
-			if(Line.contains("*/")) {
-				break;
-			}
-			}
-		}
-		catch(IOException e) {
-			
-		}
-		if(ContainsClosingComment(Line)) {
-	   ++NbLine;
-		}
-		return NbLine;
-	}
-	
-	
-	
-
 	//To Jump Comment And Fetch Code
 	static void JumpComment (String Line,ArrayList<String> List,BufferedReader reader) {
-		if(!ContainsOpeningComment(Line)) {
+		if(!OpeningMultiCommentOnly(Line)) {
 			List.add(CodeOpeningComment(Line));
 		}
 		//System.out.println(Line);
@@ -82,7 +54,7 @@ public class Comment {
 		catch(IOException e) {
 			
 		}
-		if(!ContainsClosingComment(Line)) {
+		if(!ClosingMultiCommentOnly(Line)) {
 			List.add(CodeClosingComment(Line));
 		}
 	}
@@ -115,12 +87,12 @@ public class Comment {
 	}
 	
 	//To Know If Line Contains Code Before /*
-	static boolean ContainsOpeningComment(String Line) {
+	static boolean OpeningMultiCommentOnly(String Line) {
 		return Line.startsWith("/*");
 	}
     
 	//To Know If Line Contains Code After */
-	static boolean ContainsClosingComment(String Line) {
+	static boolean ClosingMultiCommentOnly(String Line) {
 		String line = Line.replaceAll(" ", "");
 		return line.endsWith("*/");
 	}
@@ -134,14 +106,15 @@ public class Comment {
 	static String CodeClosingComment(String Line) {
 		return Line.substring(Line.indexOf("*/")+2);
 	}
- 
+ /**/
 	
     //To Know If Line Is //Comment or /*Comment*/	
 	static boolean IsCommentOnlyCompleted(String Line) {
 		Line = Line.trim();
-	    String singleLineCommentPattern = "//.*"; 
-	    String multiLineCommentPatternCompleted = "/\\*((?!(\\*/))[^\\n]|\\n)*(\\*/)";
-	return Line.matches(multiLineCommentPatternCompleted)||Line.matches(singleLineCommentPattern);
+		Line = Line.replace(" ", "");
+	    boolean SimpleComment = Line.startsWith("//");
+	    boolean multiLineComment = Line.startsWith("/*")&&Line.endsWith("*/");
+	return SimpleComment||multiLineComment;
 	}
 
 }
