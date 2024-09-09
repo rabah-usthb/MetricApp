@@ -3,6 +3,7 @@ package application.FrontEnd;
 import java.io.File;
 
 import application.BackEnd.SwingComponent;
+import application.BackEnd.XMLResult;
 import application.FrontEnd.EncapsulationController.CustomTreeCell;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -27,6 +28,7 @@ public class SwingComponentController {
         File file = new File(FilePath);
         SwingLabel.setText("Swing Component of "+file.getName());
         SwingComponent swing =   SwingComponent.FetchSwingComponentNumber(file);
+        XMLResult.SM_XML(swing);
         String TotalSvgPath="M 18 4 H 6 v 2 l 6.5 6 L 6 18 v 2 h 12 v -3 h -7 l 5 -5 l -5 -5 h 7 Z";
         TreeItemData rootItemData = new TreeItemData("Total Swing Component : "+swing.TotalComponent,TotalSvgPath);
         TreeItem<TreeItemData> rootItem = new TreeItem<>(rootItemData);

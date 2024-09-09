@@ -24,7 +24,7 @@ final static String IC_Path = System.getProperty("user.dir")+"/src/Ressource/XML
 final static String JEA_Path = System.getProperty("user.dir")+"/src/Ressource/XML Folder/JEA.xml";
 final static String ER_Path = System.getProperty("user.dir")+"/src/Ressource/XML Folder/ER.xml";
 final static String OOMR_Path = System.getProperty("user.dir")+"/src/Ressource/XML Folder/OOMR.xml";
-
+final static String SM_Path = System.getProperty("user.dir")+"/src/Ressource/XML Folder/SM.xml";
 
 public static void PrintMap(HashMap<String, ArrayList<Object>>map) {
 	for(Map.Entry<String,ArrayList<Object>> entry : map.entrySet()) {
@@ -228,12 +228,54 @@ public static class MapEntry {
     	}
     }
     
+    
     public static int totalNumberDuplicate (ArrayList<Integer>Duplicate) {
     	int cmp = 0;
     	for(Integer number : Duplicate) {
     		cmp=cmp+number;
     	}
     	return cmp;
+    }
+    
+    public static void SM_XML(SwingComponent sm) {
+    	Document document = Create_Document();   
+    	Element Swing = setRoot(document,"Swing", buildMap(new MapEntry("total",sm.TotalComponent)));
+       
+    	Element JInternalFrame = setParent(document, Swing,"JernalFrame", buildMap(new MapEntry("total", sm.compteurJInternalFrame)));    
+    	Element JComboBox = setParent(document, Swing,"JComboBox", buildMap(new MapEntry("total", sm.compteurJComboBox)));    
+    	Element JCheckBox = setParent(document, Swing,"JCheckBox", buildMap(new MapEntry("total", sm.compteurJCheckBox)));    
+    	Element JList = setParent(document, Swing,"JList", buildMap(new MapEntry("total", sm.compteurJList)));    
+    	Element JButton = setParent(document, Swing,"JButton", buildMap(new MapEntry("total", sm.compteurJButton)));    
+    	Element JMenu = setParent(document, Swing,"JMenu", buildMap(new MapEntry("total", sm.compteurJMenu)));    
+    	Element JRadioButton = setParent(document, Swing,"JRadioButton", buildMap(new MapEntry("total", sm.compteurJRadioButton)));    
+    	Element JSlider = setParent(document, Swing,"JSlider", buildMap(new MapEntry("total", sm.compteurJSlider)));    
+    	Element JSpinner = setParent(document, Swing,"JSpinner", buildMap(new MapEntry("total", sm.compteurJSpinner)));    
+    	Element JTextField = setParent(document, Swing,"JTextField", buildMap(new MapEntry("total", sm.compteurJTextField)));    
+    	Element JPasswordField = setParent(document, Swing,"JPasswordField", buildMap(new MapEntry("total", sm.compteurJPasswordField)));    
+    	Element JColorChooser = setParent(document, Swing,"JColorChooser", buildMap(new MapEntry("total", sm.compteurJColorChooser)));    
+    	Element JEditorPane = setParent(document, Swing,"JEditorPane", buildMap(new MapEntry("total", sm.compteurJEditorPane)));    
+    	Element JTextPane = setParent(document, Swing,"JTextPane", buildMap(new MapEntry("total", sm.compteurJTextPane)));    
+    	Element JFileChooser = setParent(document, Swing,"JFileChooser", buildMap(new MapEntry("total", sm.compteurJFileChooser)));    
+    	Element JTable = setParent(document, Swing,"JTable", buildMap(new MapEntry("total", sm.compteurJTable)));    
+    	Element JLayeredPane = setParent(document, Swing,"JLayeredPane", buildMap(new MapEntry("total", sm.compteurJLayeredPane)));    
+    	Element JTextArea = setParent(document, Swing,"JTextArea", buildMap(new MapEntry("total", sm.compteurJTextArea)));    
+    	Element JTree = setParent(document, Swing,"JTree", buildMap(new MapEntry("total", sm.compteurJTree)));    
+    	Element JLabel = setParent(document, Swing,"JLabel", buildMap(new MapEntry("total", sm.compteurJLabel)));    
+    	Element JProgressBar = setParent(document, Swing,"JProgressBar", buildMap(new MapEntry("total", sm.compteurJProgressBar)));    
+    	Element JSeparator = setParent(document, Swing,"JSeparator", buildMap(new MapEntry("total", sm.compteurJSeparator)));    
+    	Element JToolTip = setParent(document, Swing,"JToolTip", buildMap(new MapEntry("total", sm.compteurJToolTip)));    
+    	Element JApplet = setParent(document, Swing,"JApplet", buildMap(new MapEntry("total", sm.compteurJApplet)));    
+    	Element JDialog = setParent(document, Swing,"JDialog", buildMap(new MapEntry("total", sm.compteurJDialog)));    
+    	Element JFrame = setParent(document, Swing,"JFrame", buildMap(new MapEntry("total", sm.compteurJFrame)));    
+    	Element JPanel = setParent(document, Swing,"JPanel", buildMap(new MapEntry("total", sm.compteurJPanel)));    
+    	Element JScrollPane = setParent(document, Swing,"JScrollPane", buildMap(new MapEntry("total", sm.compteurJScrollPane)));    
+    	Element JSplitPane = setParent(document, Swing,"JSplitPane", buildMap(new MapEntry("total", sm.compteurJSplitPane)));    
+    	Element JTabbedPane = setParent(document, Swing,"JTabbedPane", buildMap(new MapEntry("total", sm.compteurJTabbedPane)));    
+    	Element JToolBar = setParent(document, Swing,"JToolBar", buildMap(new MapEntry("total", sm.compteurJToolBar)));    
+    	
+    	
+        Document_To_XML(document, SM_Path);     
+        
     }
     
     public static void OOMR_XML(OOMRCalculator oomr) {
@@ -296,13 +338,14 @@ public static class MapEntry {
       int totalImport =ImportStatus.getTotalNumberImports(List);
       Document document = Create_Document();
       ArrayList<String>UsedImport = filterByEqualAttribute(List,"ImportName", new ValueEntry("ImportStatus",1));
+      int totalUsedImport  = UsedImport.size();
       ArrayList<String>SimpleImport = new ArrayList<>();
       ArrayList<String>WildImport = new ArrayList<>();
       FilterUsedImport_WildImport_SimpleImport(UsedImport, SimpleImport, WildImport);
       Element Imports =setRoot(document,"Imports",
 	  buildMap(new MapEntry("total" ,totalImport)));
 	  // Cr eate a book element with an attribute
-	  Element Used = setParent(document, Imports,"Used", null);
+	  Element Used = setParent(document, Imports,"Used",  buildMap(new MapEntry("total",totalUsedImport)));
 	  setChildren(document,Used,"Import", 
 	 		  buildMap(new MapEntry("name", SimpleImport))
 			  );

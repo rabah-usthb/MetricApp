@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Swing total="20">
+    <JernalFrame total="0"/>
+    <JComboBox total="0"/>
+    <JCheckBox total="0"/>
+    <JList total="0"/>
+    <JButton total="16"/>
+    <JMenu total="0"/>
+    <JRadioButton total="0"/>
+    <JSlider total="0"/>
+    <JSpinner total="0"/>
+    <JTextField total="1"/>
+    <JPasswordField total="0"/>
+    <JColorChooser total="0"/>
+    <JEditorPane total="0"/>
+    <JTextPane total="0"/>
+    <JFileChooser total="0"/>
+    <JTable total="0"/>
+    <JLayeredPane total="0"/>
+    <JTextArea total="0"/>
+    <JTree total="0"/>
+    <JLabel total="0"/>
+    <JProgressBar total="0"/>
+    <JSeparator total="0"/>
+    <JToolTip total="0"/>
+    <JApplet total="0"/>
+    <JDialog total="0"/>
+    <JFrame total="1"/>
+    <JPanel total="2"/>
+    <JScrollPane total="0"/>
+    <JSplitPane total="0"/>
+    <JTabbedPane total="0"/>
+    <JToolBar total="0"/>
+</Swing>

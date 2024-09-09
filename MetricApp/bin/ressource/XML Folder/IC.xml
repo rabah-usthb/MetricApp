@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Imports total="24">
-    <Used>
+    <Used total="14">
         <Import name="java.io.BufferedReader"/>
         <Import name="java.io.BufferedWriter"/>
         <Import name="java.io.File"/>
@@ -25,7 +25,7 @@
             <Class name="Iterator"/>
         </Import>
     </Used>
-    <NotUsed>
+    <NotUsed total="4">
         <Import name="java.net.URLClassLoader"/>
         <Import name="java.net.URL.*"/>
         <Import name="java.net.MalformedURLException"/>
@@ -38,5 +38,5 @@
         <Import name="java.util.*" total="1"/>
         <Import name="java.util.Set" total="1"/>
     </Duplicate>
-    <Conflict/>
+    <Conflict total="0"/>
 </Imports>
