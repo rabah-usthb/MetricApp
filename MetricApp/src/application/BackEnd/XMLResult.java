@@ -155,31 +155,6 @@ public static class MapEntry {
    	  return builder.newDocument(); 	  
     }
 
-    /*
-    @SuppressWarnings("unchecked")
-	public static <T,V,R> ArrayList<R> filterByEqualAttribute(ArrayList<T> list, String attributeName, V attributeValue,String returnAttribute) {
-        ArrayList<R> filteredList = new ArrayList<>();
-        try {
-            for (T element : list) {
-                Field field = element.getClass().getDeclaredField(attributeName);
-                field.setAccessible(true);
-                if (field.get(element).equals(attributeValue)) {
-                	Field Returnfield = element.getClass().getDeclaredField(returnAttribute);
-                    Returnfield.setAccessible(true);
-                    Object returnValue = Returnfield.get(element);
-                    if (returnValue instanceof Collection<?>) {
-                        filteredList.addAll((Collection<R>) returnValue);
-                    } else {
-                        filteredList.add((R) returnValue);
-                    }}
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return filteredList;
-    }
-
-*/
     @SuppressWarnings("unchecked")
 	public static <T,R> ArrayList<R> filterByEqualAttribute(ArrayList<T> list,String returnAttribute,ValueEntry...entry) {
         ArrayList<R> filteredList = new ArrayList<>();
@@ -263,8 +238,20 @@ public static class MapEntry {
     
     public static void OOMR_XML(OOMRCalculator oomr) {
     	Document document = Create_Document();   
+    	
+    	int totalMethod = oomr.totalMethods;
+    	double oomRatio = oomr.oomr; 
+    	Element Methods = setRoot(document,"Methods", buildMap(new MapEntry("total",totalMethod),new MapEntry("OOMR", oomRatio)));
        
-    	Document_To_XML(document, OOMR_Path);   
+    	int totalOverride = oomr.overrideMethods;
+        double RatioOverride = oomr.RatioMethodsRedef;
+        Element Override = setParent(document, Methods,"Override", buildMap(new MapEntry("total",totalOverride),new MapEntry("Ratio", RatioOverride)));
+    
+        int totalOverload = oomr.overloadedMethods;
+        double RatioOverload = oomr.RatioMethodsSur;
+        Element Overload = setParent(document, Methods,"Override", buildMap(new MapEntry("total",totalOverload),new MapEntry("Ratio", RatioOverload)));
+    
+        Document_To_XML(document, OOMR_Path);   
     }
     
     public static void ER_XML(Encapsulation ER) {
