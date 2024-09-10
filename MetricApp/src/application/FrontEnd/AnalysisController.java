@@ -36,7 +36,6 @@ public class AnalysisController {
         TreeItem<TreeItemData> rootItem = new TreeItem<>(new TreeItemData(" Java Analyzer ",RootSvg));
         treeView.setRoot(rootItem);
         Line line = new Line(file);
-        XMLResult.JAX_XML(line);
         TreeItemData ParentLineItemData = new TreeItemData("Total Number Of Line "+line.totalLine,"M 2 17 h 2 v 0.5 H 3 v 1 h 1 v 0.5 H 2 v 1 h 3 v -4 H 2 v 1 Z m 1 -9 h 1 V 4 H 2 v 1 h 1 v 3 Z m -1 3 h 1.8 L 2 13.1 v 0.9 h 3 v -1 H 3.2 L 5 10.9 V 10 H 2 v 1 Z m 5 -6 v 2 h 14 V 5 H 7 Z m 0 14 h 14 v -2 H 7 v 2 Z m 0 -6 h 14 v -2 H 7 v 2 Z");
         TreeItem<TreeItemData> ParentLineItem = new TreeItem<>(ParentLineItemData);
         String StatSvgPath="M 9 17 H 7 v -7 h 2 v 7 Z m 4 0 h -2 V 7 h 2 v 10 Z m 4 0 h -2 v -4 h 2 v 4 Z m 2.5 2.1 h -15 V 5 h 15 v 14.1 Z m 0 -16.1 h -15 c -1.1 0 -2 0.9 -2 2 v 14 c 0 1.1 0.9 2 2 2 h 15 c 1.1 0 2 -0.9 2 -2 V 5 c 0 -1.1 -0.9 -2 -2 -2 Z";
@@ -142,6 +141,7 @@ public class AnalysisController {
         //String ComplexitySvg="M 16 6 l 2.29 2.29 l -4.88 4.88 l -4 -4 L 2 16.59 L 3.41 18 l 6 -6 l 4 4 l 6.3 -6.29 L 22 12 V 6 Z";
         
         PerformanceMetric performanceMetric = new PerformanceMetric(Paths.get(FilePath));
+        XMLResult.JAX_XML(line, performanceMetric);
         String formattedRuntime = String.format("%.5f",performanceMetric.RunTime);
         //Complexity compl = new Complexity(Complexity.FetchComplexity(file));
         TreeItem<TreeItemData> PerformanceParent = new TreeItem<>(new TreeItemData("Performance",PerformanceSvg));

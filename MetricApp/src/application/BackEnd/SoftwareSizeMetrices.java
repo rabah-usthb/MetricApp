@@ -6,10 +6,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class SoftwareSizeMetrices {
-    public ArrayList<String>MethodList=new ArrayList<>();
-    public ArrayList<String>InterfaceList = new ArrayList<>();
-    public ArrayList<String>ClassList = new ArrayList<>();
-    public String Parent="Object";
+    public ArrayList<String> MethodList=new ArrayList<>();
+    public ArrayList<String> InterfaceList = new ArrayList<>();
+    public ArrayList<String> ClassList = new ArrayList<>();
+    public String Parent = "Object";
     
     public static void FetchData(SoftwareSizeMetrices softwareSizeMetrices , String Line , String fileName) {
     	if(RegularExpression.IsMethodPrototype(Line)) {

@@ -8,13 +8,22 @@ import java.io.IOException;
 public class PerformanceMetric {
 	public long FileSize =0;
 	public double RunTime=0;
-	public PerformanceMetric(Path filePath) {
+	
+	public PerformanceMetric(Path filePath){
+		fetchFileSize(filePath);
+		fetchRunTime(filePath);
+	}
+	
+	void fetchFileSize(Path filePath) {
 		try {
 			this.FileSize = Files.size(filePath);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	 void fetchRunTime(Path filePath) {
+		
 		long startTime = System.nanoTime();
 
         try {
