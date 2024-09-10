@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public class Line {
 final static DecimalFormat df = new DecimalFormat("#.##");
@@ -47,7 +48,7 @@ public double ratioBraces = 0.00;
 				++this.totalCode;
 			}
 			else if (Comment.NotFinishedComment(line)) {
-				Comment.JumpComment(line, reader, this.totalCode, this.totalComment);
+				Comment.JumpComment(line,reader,this);
 			}
 			else {
 				++this.totalCode;
@@ -71,9 +72,7 @@ public double ratioBraces = 0.00;
 	            e.printStackTrace();
 	        }
 		
-		 if(Line!=null) {
-	        	++this.totalLine;
-	          }
+		
 	}
 	
 	

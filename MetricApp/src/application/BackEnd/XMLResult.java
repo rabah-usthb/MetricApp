@@ -241,13 +241,13 @@ public static class MapEntry {
     	Document document = Create_Document();   
   
     	Element JAX = setRoot(document,"JAX", null);
-        Element ParentLine = setParent(document, JAX, "Line", buildMap(new MapEntry("total")));
-    	/*Element Line total=##>
-    	Element Code total=## , ratio=##.##>
-    	Element CurlyBraces total=##/>
-    	Element Empty total=##/>
-    	Element Comment total=## , ratio=##.##>
-    	Element Software total=##>
+        Element ParentLine = setParent(document, JAX, "Line", buildMap(new MapEntry("total",line.totalLine)));
+    	setChildren(document, ParentLine,"Code", buildMap(new MapEntry("total",line.totalCode),new MapEntry("Ratio",line.ratioCode)));
+    	setChildren(document, ParentLine,"Comment", buildMap(new MapEntry("total",line.totalComment),new MapEntry("Ratio",line.ratioComment)));
+    	setChildren(document, ParentLine,"Empty", buildMap(new MapEntry("total",line.totalEmpty),new MapEntry("Ratio",line.ratioEmpty)));
+    	setChildren(document, ParentLine,"Braces", buildMap(new MapEntry("total",line.totalBraces),new MapEntry("Ratio",line.ratioBraces)));
+    	 
+    	/*  Element Software total=##>
     	Element Methods total=##>
     	Element method prototype=”method 1”/>
     	Element method prototype=”method 2”/>

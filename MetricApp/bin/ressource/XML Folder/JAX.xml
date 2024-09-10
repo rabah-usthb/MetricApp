@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<JAX>
+    <Line total="563">
+        <Code Ratio="76.02" total="428"/>
+        <Comment Ratio="6.04" total="34"/>
+        <Empty Ratio="9.24" total="52"/>
+        <Braces Ratio="8.53" total="48"/>
+    </Line>
+</JAX>

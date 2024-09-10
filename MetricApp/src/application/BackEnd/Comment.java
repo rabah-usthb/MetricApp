@@ -8,16 +8,17 @@ import java.util.ArrayList;
 public class Comment {
 	
 	//To Jump Comment And Increment code and comment line
-	static void JumpComment (String Line,BufferedReader reader,int totalCode,int totalComment) {
-		++totalComment;
+	static void JumpComment (String Line,BufferedReader reader,Line line) {
+		++line.totalComment;
 		if(!OpeningMultiCommentOnly(Line)) {
-	    ++totalCode;
+			++line.totalCode;
 		}
 		try {
 			while ((Line = reader.readLine()) != null) { 
 			Line = Line.trim();
 			Line = Qoute.RemoveQoute(Line);
-	        ++totalComment;
+			++line.totalComment;
+			++line.totalLine;
 			if(Line.contains("*/")) {
 				break;
 			}
@@ -26,10 +27,10 @@ public class Comment {
 		catch(IOException e) {
 			
 		}
-		++totalComment;
+		
 		if(!ClosingMultiCommentOnly(Line)) {
-	     ++totalCode;
-		}
+			++line.totalCode;
+			}
 		
 	}
 	

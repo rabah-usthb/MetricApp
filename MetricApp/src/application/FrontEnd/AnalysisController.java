@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import application.BackEnd.Line;
 import application.BackEnd.PerformanceMetric;
 import application.BackEnd.SoftwareSizeMetrices;
+import application.BackEnd.XMLResult;
 import application.FrontEnd.ImportController.CustomTreeCell;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -35,6 +36,7 @@ public class AnalysisController {
         TreeItem<TreeItemData> rootItem = new TreeItem<>(new TreeItemData(" Java Analyzer ",RootSvg));
         treeView.setRoot(rootItem);
         Line line = new Line(file);
+        XMLResult.JAX_XML(line);
         TreeItemData ParentLineItemData = new TreeItemData("Total Number Of Line "+line.totalLine,"M 2 17 h 2 v 0.5 H 3 v 1 h 1 v 0.5 H 2 v 1 h 3 v -4 H 2 v 1 Z m 1 -9 h 1 V 4 H 2 v 1 h 1 v 3 Z m -1 3 h 1.8 L 2 13.1 v 0.9 h 3 v -1 H 3.2 L 5 10.9 V 10 H 2 v 1 Z m 5 -6 v 2 h 14 V 5 H 7 Z m 0 14 h 14 v -2 H 7 v 2 Z m 0 -6 h 14 v -2 H 7 v 2 Z");
         TreeItem<TreeItemData> ParentLineItem = new TreeItem<>(ParentLineItemData);
         String StatSvgPath="M 9 17 H 7 v -7 h 2 v 7 Z m 4 0 h -2 V 7 h 2 v 10 Z m 4 0 h -2 v -4 h 2 v 4 Z m 2.5 2.1 h -15 V 5 h 15 v 14.1 Z m 0 -16.1 h -15 c -1.1 0 -2 0.9 -2 2 v 14 c 0 1.1 0.9 2 2 2 h 15 c 1.1 0 2 -0.9 2 -2 V 5 c 0 -1.1 -0.9 -2 -2 -2 Z";
