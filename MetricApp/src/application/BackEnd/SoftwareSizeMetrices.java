@@ -11,6 +11,7 @@ public class SoftwareSizeMetrices {
     public ArrayList<String> ClassList = new ArrayList<>();
     public String Parent = "Object";
     
+
     public static void FetchData(SoftwareSizeMetrices softwareSizeMetrices , String Line , String fileName) {
     	if(RegularExpression.IsMethodPrototype(Line)) {
 				softwareSizeMetrices.MethodList.add(Line.replace("{", ""));

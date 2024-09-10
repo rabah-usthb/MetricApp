@@ -24,7 +24,8 @@ public class OOMRCalculator {
 	public  double RatioMethodsRedef = 0;
 	public double oomr = 0;
     public static OOMRCalculator fetchOOMR(String path,String filename) throws FileNotFoundException, MalformedURLException, ClassNotFoundException  {
-    	String fileName;
+    	OOMRCalculator t = new OOMRCalculator();
+    	/*String fileName;
     	OOMRCalculator t = new OOMRCalculator();
     	path = path.replace("\\src\\", "\\bin\\");
     	fileName = path.substring(path.indexOf("\\bin\\")+5).replace(".java", "").replace("\\", ".");
@@ -36,7 +37,8 @@ public class OOMRCalculator {
         System.out.println("ClassName "+fileName);
        URLClassLoader classLoader = new URLClassLoader(new URL[]{new File(path).toURI().toURL()}); //ou vous allez tout simplement remplacer MyClass par le nom de la classe dont vous avez cree le fichier 
         //ou une classe que vous possedez deja dans votre projet
-        Class<?> loadedClass = classLoader.loadClass(fileName);
+        */
+        Class<?> loadedClass = LoadClass.Loading(path);
          t.totalMethods = countTotalMethods(loadedClass);
          t.overloadedMethods = countOverloadedMethods(loadedClass);
          t.overrideMethods = countOverrideMethods(loadedClass);

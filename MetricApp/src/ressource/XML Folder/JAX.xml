@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <JAX>
-    <Line total="576">
-        <Code Ratio="74.48" total="429"/>
-        <Comment Ratio="8.51" total="49"/>
-        <Empty Ratio="9.03" total="52"/>
-        <Braces Ratio="8.33" total="48"/>
+    <Line total="408">
+        <Code Ratio="70.83" total="289"/>
+        <Comment Ratio="16.18" total="66"/>
+        <Empty Ratio="8.33" total="34"/>
+        <Braces Ratio="5.39" total="22"/>
     </Line>
+    <Performance FileSize="12541" RunTime="4.984E-4"/>
 </JAX>
