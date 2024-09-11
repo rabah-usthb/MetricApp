@@ -254,6 +254,9 @@ public class RegularExpression {
 		return line.equals("{") || line.equals("}");
 	}
 	
+	static boolean containsBraces(String line) {
+		return line.contains("{")||line.contains("}");
+	}
 		
 	
 	
