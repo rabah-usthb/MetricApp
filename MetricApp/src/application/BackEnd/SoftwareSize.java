@@ -24,10 +24,37 @@ public class SoftwareSize {
 	   StackClass(String ClassName){
 		   this.ClassName = ClassName;
 	   }
+	   @Override
+	   public String toString() {
+		   return "ClassName : "+ClassName+"\nclassStatus : "+classStatus;
+	   }
    }
    public SoftwareSize(File file) {
-	
+	fetchData(file);
     }
+   
+   public void print(int deepness,LinkedList<classType>InnerClass) {
+	   if(deepness == 0) {
+		   System.out.println("ClassName "+ClassList.ClassName);
+		   System.out.println("Methods "+ClassList.MethodList);
+		   System.out.println("Interfaces "+ClassList.InterfaceList);
+		   ++deepness;
+		   if(!ClassList.InnerClass.isEmpty()) {
+		   print(deepness,ClassList.InnerClass);
+		   }
+	   }
+	   else {
+		   for(classType Class : InnerClass) {
+			   System.out.println(" ".repeat(deepness)+"ClassName "+Class.ClassName);
+			   System.out.println(" ".repeat(deepness)+"Methods "+Class.MethodList);
+			   System.out.println(" ".repeat(deepness)+"Interfaces "+Class.InterfaceList);
+			   if(!Class.InnerClass.isEmpty()) {
+				   print(deepness+1, Class.InnerClass);
+			   }
+		   }
+		   
+	   }
+   }
    
    void RecursiveSearchMethod(LinkedList<classType>InnerClass,TrackClass clasTracker,String line,int exit) {
 	for(classType classes : InnerClass) {   
@@ -61,40 +88,33 @@ public class SoftwareSize {
 	   }
    }
    
-
-   void RecursiveSearchInterface(LinkedList<classType>InnerClass,TrackClass clasTracker,String line,int exit) {
-		for(classType classes : InnerClass) {   
-			if(classes.ClassName.equals(clasTracker.CurrentClass)) {
-				classes.InterfaceList.add(line);
-				exit =1;
-				break;
-			}
-		}
-		if (exit != 1) {
-	        for (classType classes : InnerClass) {
-	            if(classes.InnerClass.size()!=0) {
-	        	RecursiveSearchInterface(classes.InnerClass, clasTracker, line, exit);
-	            }
-	        	if (exit == 1) { 
-	                break;
-	            }
-	        }
-	    }
-	   }
-
    
-   void addInterface(String line,TrackClass classTracker) {
-	   String currentClass=classTracker.CurrentClass;
-	   String outerClass=classTracker.OuterClass;
-	   line = line.replace("{", "");
-	   line = line.replace("}", "");
-	   if(currentClass.equals(outerClass)) {
-		  this.ClassList.InterfaceList.addAll(RegularExpression.FetchImplements(line)); 
-	   }
-	   else {
-		   RecursiveSearchInterface(this.ClassList.InnerClass,classTracker,line,0);
-	   }
-     
+   
+   void inputClassName(String Line , TrackClass tracker,LinkedList<classType> InnerClasses, int exit) {
+	  if(InnerClasses.isEmpty()) {
+		  InnerClasses.add(new classType(0,Line));
+	  }
+	  else {
+		  
+		  for(classType Class : InnerClasses) {
+			  if(Class.ClassName.equals(tracker.OuterClass)) {
+				  Class.InnerClass.add(new classType(0,tracker.CurrentClass));
+				  exit =1;
+				  break;
+			  }
+		  }
+		  if(exit!=1) {
+			  for(classType Class : InnerClasses) {
+				 if(!Class.InnerClass.isEmpty()) {
+				inputClassName(Line, tracker, Class.InnerClass, exit);
+				  }
+				if(exit ==1) {
+					break;
+				}
+			  }  
+		  }
+		  
+	  }
    }
    
    void UpdateStack(String line,TrackClass tracker,String className) {
@@ -102,6 +122,7 @@ public class SoftwareSize {
 	   tracker.OuterClass = stack.peek().ClassName;
 	   }
 	   else{
+		   ClassList = new classType(0,line);
 		   tracker.OuterClass = className;
 		      
 	   }
@@ -142,10 +163,17 @@ public class SoftwareSize {
    }
    
    void addALL(String Line,BufferedReader reader,TrackClass classTracker) {
+	   if(ClassList!=null) {
+	//	   print(0, null);
+	   }
+	 //  System.out.println("\n\n");
+	   System.out.println("Normale Line "+Line);
 	   if(RegularExpression.IsClass(Line)) {
 		   String className = RegularExpression.fetchClassName(Line);
-		   //needs updating the classList
 		   UpdateStack(Line,classTracker,className);
+		   if(!className.equals(ClassList.ClassName)) {
+		   inputClassName(Line, classTracker, ClassList.InnerClass, 0);
+		   }
 		   
 	   }
 	   else if(RegularExpression.IsMethodPrototype(Line)) {
@@ -155,6 +183,7 @@ public class SoftwareSize {
 	   else if(RegularExpression.IsBracket(Line)) {
 		   UpdateTopStatus(Line, classTracker);
 	   }
+	   System.out.println(stack);
    }
    
    void fetchData(File file) {

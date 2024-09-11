@@ -18,5 +18,6 @@ LinkedList<classType>InnerClass = new LinkedList<>();
 	  this.classStatus = classStatus;
 	  this.classDeclaration = classDeclaration;
       this.ClassName = RegularExpression.fetchClassName(classDeclaration);  
-    }
+      this.InterfaceList.addAll(RegularExpression.FetchImplements(classDeclaration));
+     }
 }

@@ -107,9 +107,9 @@ public class RegularExpression {
 		LinkedList<String>listopening = new LinkedList<>();
 		LinkedList<String>listclosing = new LinkedList<>();
 		AddCurlyBraces(Line, listopening,listclosing);
-	    try {
-			while ( listclosing.size()!=listopening.size() &&  (Line = reader.readLine()) != null) { 
-	        Line = Line.trim();
+	  	try {
+			while ( (listclosing.size()==0&&listopening.size()==0||listclosing.size()!=listopening.size()) && (Line = reader.readLine()) != null) { 
+	    	Line = Line.trim();
 			Line = Qoute.RemoveQoute(Line);
 			ArrayList<String> ListCode=new ArrayList<String>();
           	if(!Line.isBlank() && !Line.isEmpty() && !Comment.IsCommentOnlyCompleted(Line)) {
