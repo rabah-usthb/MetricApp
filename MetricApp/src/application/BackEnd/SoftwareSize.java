@@ -28,13 +28,15 @@ public class SoftwareSize {
    }
    public SoftwareSize(File file) {
 	fetchData(file);
-    }
+	recursiveFillParent(null, "",file.getAbsolutePath());
+   }
    
    public void print(int deepness,LinkedList<classType>InnerClass) {
 	   if(deepness == 0) {
 		   System.out.println("ClassName "+ClassList.ClassName);
 		   System.out.println("Methods "+ClassList.MethodList);
 		   System.out.println("Interfaces "+ClassList.InterfaceList);
+		   System.out.println("Parent "+ClassList.ParentTree);
 		   ++deepness;
 		   if(!ClassList.InnerClass.isEmpty()) {
 		   print(deepness,ClassList.InnerClass);
@@ -45,6 +47,8 @@ public class SoftwareSize {
 			   System.out.println(" ".repeat(deepness)+"ClassName "+Class.ClassName);
 			   System.out.println(" ".repeat(deepness)+"Methods "+Class.MethodList);
 			   System.out.println(" ".repeat(deepness)+"Interfaces "+Class.InterfaceList);
+			   System.out.println(" ".repeat(deepness)+"Parent "+Class.ParentTree);
+			   
 			   if(!Class.InnerClass.isEmpty()) {
 				   print(deepness+1, Class.InnerClass);
 			   }
@@ -96,13 +100,13 @@ public class SoftwareSize {
    
    void inputClassName(String Line,String outerClass,LinkedList<classType> InnerClasses, int exit) {
 	  if(InnerClasses.isEmpty()) {
-		  InnerClasses.add(new classType(0,Line));
+		  InnerClasses.add(new classType(Line));
 	  }
 	  else {
 		  
 		  for(classType Class : InnerClasses) {
 			  if(Class.ClassName.equals(outerClass)) {
-				  Class.InnerClass.add(new classType(0,Line));
+				  Class.InnerClass.add(new classType(Line));
 				  exit =1;
 				  break;
 			  }
@@ -123,7 +127,7 @@ public class SoftwareSize {
    
    void UpdateStack(String line,String className) {
 	   if(stack.isEmpty()) {
-		   ClassList = new classType(0,line);	      
+		   ClassList = new classType(line);	      
 	   }
 	   stack.push(new StackClass(className));
 	   
@@ -163,7 +167,7 @@ public class SoftwareSize {
 		   inputClassName(Line,stack.peek().ClassName,ClassList.InnerClass, 0);
 			   }
 			   else {
-				   inputClassName(Line,stack.get(1).ClassName,ClassList.InnerClass, 0);
+				   inputClassName(Line,stack.get(stack.size()-2).ClassName,ClassList.InnerClass, 0);
 						   
 			   }
 			   }
@@ -234,10 +238,35 @@ public class SoftwareSize {
 		
    }
     
-    void fillParentList(String filePath) {
-        Class<?> superClass = LoadClass.Loading(filePath);
-        while (superClass != Object.class) {
-              superClass = superClass.getSuperclass();
+    void fillParentList(classType Class,Class<?> superClass) { 
+        if(superClass!=null) {
+    	superClass = superClass.getSuperclass();
+    	while (superClass != null) {
+    		  Class.ParentTree.push(superClass.getName());
+    		superClass = superClass.getSuperclass();
         }
+        }
+    }
+    
+    void recursiveFillParent(LinkedList<classType>innerClassList,String innerClassLoading,String filePath) {
+    	if(innerClassList == null) {
+    		fillParentList(this.ClassList,LoadClass.Loading(filePath));
+    		if(ClassList.InnerClass.size()!=0) {
+             innerClassLoading = "$";
+             recursiveFillParent(ClassList.InnerClass,innerClassLoading, filePath);
+    		}
+    		
+    		
+    }
+    	else {
+    		for (classType Class : innerClassList) {
+    			fillParentList(Class,LoadClass.Loading(filePath,innerClassLoading+Class.ClassName));
+    			if(Class.InnerClass.size()!=0) {
+    				innerClassLoading = innerClassLoading+Class.ClassName+"$";
+    				recursiveFillParent(Class.InnerClass, innerClassLoading, filePath);
+    			}
+    			
+    		}
+    	}
     }
 }
