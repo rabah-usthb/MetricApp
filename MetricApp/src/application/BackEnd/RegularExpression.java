@@ -58,7 +58,7 @@ public class RegularExpression {
   static String FinalModifier = "(final\\s+)?";
   static String VarModifer = (PatternAcessModifiers)+(FinalModifier)+(StaticModifier)+"|"+(PatternAcessModifiers)+(StaticModifier)+(FinalModifier)+"|"+(StaticModifier)+(PatternAcessModifiers)+(FinalModifier)+"|"+(StaticModifier)+(FinalModifier)+(PatternAcessModifiers)+"|"+(FinalModifier)+(PatternAcessModifiers)+(StaticModifier)+"|"+(FinalModifier)+(StaticModifier)+(PatternAcessModifiers);
 	 
-  static String NonAcessModifierClass = "(abstract\\s+|final\\s+)?";
+  static String NonAcessModifierClass = "(static\\s+|abstract\\s+|final\\s+)?";
   static String ModifierClass = "("+PatternAcessModifiers+")("+NonAcessModifierClass+")|("+NonAcessModifierClass+")("+PatternAcessModifiers+")";
   static String ExtendsPattern = "(\\s+extends\\s+\\w+(\\s*<\\s*\\w+\\s*>\\s*)?)?";
   static String ImplementsPattern = "(\\s+implements\\s+\\w+\\s*(\\s*,\\s*\\w+\\s*)*)?";

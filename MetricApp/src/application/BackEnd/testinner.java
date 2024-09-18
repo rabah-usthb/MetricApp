@@ -54,3 +54,9 @@ public class testinner {
 	  return 102.21;
   }
 }
+
+ class olool{
+      static class kdijoid{	
+    	  
+      }
+}

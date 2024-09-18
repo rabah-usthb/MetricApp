@@ -11,7 +11,7 @@ import java.util.Stack;
 
 public class SoftwareSize {
 	static int cmp = 0;
-	 classType ClassList;
+	 ArrayList<classType> ClassList = new ArrayList<>();
      Stack<StackClass>stack = new Stack<>();
    
    
@@ -28,10 +28,18 @@ public class SoftwareSize {
    }
    public SoftwareSize(File file) {
 	fetchData(file);
-	recursiveFillParent(null, "",file.getAbsolutePath());
+	for(classType Class : this.ClassList) {
+	recursiveFillParent(Class,Class.ClassName,null, "",file.getAbsolutePath());
+	}
    }
    
-   public void print(int deepness,LinkedList<classType>InnerClass) {
+   public void print() {
+	   for(classType Class : this.ClassList) {
+		   printOneClass(0, Class, null);
+	   }
+   }
+   
+   public void printOneClass(int deepness,classType ClassList,LinkedList<classType>InnerClass) {
 	   if(deepness == 0) {
 		   System.out.println("ClassName "+ClassList.ClassName);
 		   System.out.println("Methods "+ClassList.MethodList);
@@ -39,7 +47,7 @@ public class SoftwareSize {
 		   System.out.println("Parent "+ClassList.ParentTree);
 		   ++deepness;
 		   if(!ClassList.InnerClass.isEmpty()) {
-		   print(deepness,ClassList.InnerClass);
+		   printOneClass(deepness,ClassList,ClassList.InnerClass);
 		   }
 	   }
 	   else {
@@ -50,7 +58,7 @@ public class SoftwareSize {
 			   System.out.println(" ".repeat(deepness)+"Parent "+Class.ParentTree);
 			   
 			   if(!Class.InnerClass.isEmpty()) {
-				   print(deepness+1, Class.InnerClass);
+				   printOneClass(deepness+1,ClassList,Class.InnerClass);
 			   }
 		   }
 		   
@@ -89,10 +97,10 @@ public class SoftwareSize {
 	   line = line.replace("{", "");
 	   line = line.replace("}", "");
 	   if(currentClass.equals(outerClass)) {
-		  this.ClassList.MethodList.add(line); 
+		  this.ClassList.get(ClassList.size()-1).MethodList.add(line); 
 	   }
 	   else {
-		   RecursiveSearchMethod(currentClass,this.ClassList.InnerClass,line,0);
+		   RecursiveSearchMethod(currentClass,this.ClassList.get(ClassList.size()-1).InnerClass,line,0);
 	   }
    }
    
@@ -127,7 +135,7 @@ public class SoftwareSize {
    
    void UpdateStack(String line,String className) {
 	   if(stack.isEmpty()) {
-		   ClassList = new classType(line);	      
+		   ClassList.add(new classType(line));	      
 	   }
 	   stack.push(new StackClass(className));
 	   
@@ -162,12 +170,12 @@ public class SoftwareSize {
 			   System.out.println(stack);
 			   }
 			  
-		   if(!className.equals(ClassList.ClassName)) {
+		   if(!className.equals(ClassList.get(ClassList.size()-1).ClassName)) {
 			   if(stack.size() <2) {
-		   inputClassName(Line,stack.peek().ClassName,ClassList.InnerClass, 0);
+		   inputClassName(Line,stack.peek().ClassName,ClassList.get(ClassList.size()).InnerClass, 0);
 			   }
 			   else {
-				   inputClassName(Line,stack.get(stack.size()-2).ClassName,ClassList.InnerClass, 0);
+				   inputClassName(Line,stack.get(stack.size()-2).ClassName,ClassList.get(ClassList.size()-1).InnerClass, 0);
 						   
 			   }
 			   }
@@ -248,22 +256,22 @@ public class SoftwareSize {
         }
     }
     
-    void recursiveFillParent(LinkedList<classType>innerClassList,String innerClassLoading,String filePath) {
+    void recursiveFillParent(classType ClassList,String fileName,LinkedList<classType>innerClassList,String innerClassLoading,String filePath) {
     	if(innerClassList == null) {
-    		fillParentList(this.ClassList,LoadClass.Loading(filePath));
+    		fillParentList(ClassList,LoadClass.Loading(fileName,filePath));
     		if(ClassList.InnerClass.size()!=0) {
              innerClassLoading = "$";
-             recursiveFillParent(ClassList.InnerClass,innerClassLoading, filePath);
+             recursiveFillParent(ClassList,fileName,ClassList.InnerClass,innerClassLoading, filePath);
     		}
     		
     		
     }
     	else {
     		for (classType Class : innerClassList) {
-    			fillParentList(Class,LoadClass.Loading(filePath,innerClassLoading+Class.ClassName));
+    			fillParentList(Class,LoadClass.Loading(fileName,filePath,innerClassLoading+Class.ClassName));
     			if(Class.InnerClass.size()!=0) {
     				innerClassLoading = innerClassLoading+Class.ClassName+"$";
-    				recursiveFillParent(Class.InnerClass, innerClassLoading, filePath);
+    				recursiveFillParent(ClassList,fileName,Class.InnerClass,innerClassLoading,filePath);
     			}
     			
     		}

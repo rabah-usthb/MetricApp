@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import application.BackEnd.Line;
 import application.BackEnd.PerformanceMetric;
+import application.BackEnd.RegularExpression;
 import application.BackEnd.SoftwareSize;
 import application.BackEnd.SoftwareSizeMetrices;
 import application.BackEnd.XMLResult;
@@ -31,9 +32,10 @@ public class AnalysisController {
     private Label LineLabel;
 
     public void initialize(String FilePath) {
-        File file = new File(FilePath);
+        System.out.println("test "+RegularExpression.IsClass("static class kdijoid{	"));
+    	File file = new File(FilePath);
         SoftwareSize soft = new SoftwareSize(file);
-        soft.print(0, null);
+        soft.print();
         LineLabel.setText("The Analysis Of "+file.getName());
         String RootSvg = "M 16.44 15.38 C 16.79 14.84 17 14.19 17 13.5 c 0 -1.93 -1.57 -3.5 -3.5 -3.5 S 10 11.57 10 13.5 s 1.57 3.5 3.5 3.5 c 0.69 0 1.34 -0.21 1.88 -0.56 L 17.94 19 L 19 17.94 L 16.44 15.38 Z M 13.5 15.5 c -1.1 0 -2 -0.9 -2 -2 s 0.9 -2 2 -2 s 2 0.9 2 2 S 14.6 15.5 13.5 15.5 Z M 17.78 2 L 19 2.87 l -3.88 5.9 h 0 C 14.61 8.59 14.07 8.5 13.5 8.5 L 17.78 2 Z M 13.5 8.5 c -0.58 0 -1.13 0.1 -1.65 0.28 l 0 0 l -0.78 -1.1 l -3.41 5.36 l -2.48 -2.97 l -2.96 4.81 L 1 14 l 4 -6.5 l 2.5 3 L 11 5 L 13.5 8.5 Z";
         TreeItem<TreeItemData> rootItem = new TreeItem<>(new TreeItemData(" Java Analyzer ",RootSvg));

@@ -6,12 +6,15 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 public class LoadClass {
-   static Class<?> Loading(String path) {
+   static Class<?> Loading(String filename,String path) {
 		String fileName;
     	path = path.replace("\\src\\", "\\bin\\");
     	fileName = path.substring(path.indexOf("\\bin\\")+5).replace(".java", "").replace("\\", ".");
     	path = path.substring(0,path.indexOf("\\bin\\")+5);
-        
+        String lastPart = fileName.substring(fileName.lastIndexOf(".")+1);
+    	if(!lastPart.equals(filename)) {
+               fileName = fileName.replace(lastPart, filename);
+        }
 		try (URLClassLoader	classLoader = new URLClassLoader(new URL[]{new File(path).toURI().toURL()})){
 			return classLoader.loadClass(fileName);
 			
@@ -23,10 +26,14 @@ public class LoadClass {
  }
    
    
-   static Class<?> Loading(String path,String innerClass) {
+   static Class<?> Loading(String filename,String path,String innerClass) {
 		String fileName;
     	path = path.replace("\\src\\", "\\bin\\");
     	fileName = path.substring(path.indexOf("\\bin\\")+5).replace(".java", "").replace("\\", ".");
+    	String lastPart = fileName.substring(fileName.lastIndexOf(".")+1);
+    	if(!lastPart.equals(filename)) {
+               fileName = fileName.replace(lastPart, filename);
+        }
     	fileName = fileName +innerClass;
     	path = path.substring(0,path.indexOf("\\bin\\")+5);
         
