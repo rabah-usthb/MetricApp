@@ -38,7 +38,7 @@ public class OOMRCalculator {
        URLClassLoader classLoader = new URLClassLoader(new URL[]{new File(path).toURI().toURL()}); //ou vous allez tout simplement remplacer MyClass par le nom de la classe dont vous avez cree le fichier 
         //ou une classe que vous possedez deja dans votre projet
         */
-        Class<?> loadedClass = LoadClass.Loading(path);
+        Class<?> loadedClass = LoadClass.Loading(filename.replace(".java", ""),path);
          t.totalMethods = countTotalMethods(loadedClass);
          t.overloadedMethods = countOverloadedMethods(loadedClass);
          t.overrideMethods = countOverrideMethods(loadedClass);

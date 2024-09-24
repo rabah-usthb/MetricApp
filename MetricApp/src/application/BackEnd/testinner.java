@@ -34,7 +34,7 @@ public class testinner {
 		}
 		  
 	   abstract void print();
-	   class innr3{
+	   class innr3 extends Thread{
 		   
 	   }
 	   

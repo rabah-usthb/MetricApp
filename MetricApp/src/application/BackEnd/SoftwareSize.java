@@ -11,8 +11,8 @@ import java.util.Stack;
 
 public class SoftwareSize {
 	static int cmp = 0;
-	 ArrayList<classType> ClassList = new ArrayList<>();
-     Stack<StackClass>stack = new Stack<>();
+	public ArrayList<classType> ClassList = new ArrayList<>();
+	public Stack<StackClass>stack = new Stack<>();
    
    
    class StackClass {

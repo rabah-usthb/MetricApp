@@ -6,16 +6,16 @@ import java.util.Set;
 import java.util.Stack;
 
 public class classType {
-int finalStatus = 0;
-int staticStatus = 0;
-int abstractStatus = 0;
-int subStatus = 0;
-String classDeclaration;
-String ClassName;
-Stack<String>ParentTree = new Stack<>();
-Set<String>MethodList = new LinkedHashSet<>();
-Set<String>InterfaceList = new LinkedHashSet<>();
-LinkedList<classType>InnerClass = new LinkedList<>();
+public int finalStatus = 0;
+public int staticStatus = 0;
+public int abstractStatus = 0;
+public int subStatus = 0;
+public String classDeclaration;
+public String ClassName;
+public Stack<String>ParentTree = new Stack<>();
+public Set<String>MethodList = new LinkedHashSet<>();
+public Set<String>InterfaceList = new LinkedHashSet<>();
+public LinkedList<classType>InnerClass = new LinkedList<>();
 
      classType(String classDeclaration){ 
 	  this.classDeclaration = classDeclaration;

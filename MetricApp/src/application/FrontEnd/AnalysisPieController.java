@@ -1,13 +1,13 @@
 package application.FrontEnd;
 
 import java.io.File;
+
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.stream.Collectors;
 
 import application.BackEnd.Line;
 import application.BackEnd.PerformanceMetric;
-import application.BackEnd.SoftwareSizeMetrices;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
