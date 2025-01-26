@@ -1,42 +1,36 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Imports total="24">
-    <Used total="14">
-        <Import name="java.io.BufferedReader"/>
-        <Import name="java.io.BufferedWriter"/>
+    <Used total="22">
+        <Import name="javafx.fxml.FXML"/>
+        <Import name="javafx.fxml.FXMLLoader"/>
+        <Import name="javafx.geometry.Insets"/>
+        <Import name="javafx.geometry.Pos"/>
+        <Import name="javafx.scene.Parent"/>
+        <Import name="javafx.scene.Scene"/>
+        <Import name="javafx.scene.control.Alert"/>
+        <Import name="javafx.scene.control.ButtonType"/>
+        <Import name="javafx.scene.control.ContentDisplay"/>
+        <Import name="javafx.scene.control.Label"/>
+        <Import name="javafx.scene.control.TreeCell"/>
+        <Import name="javafx.scene.control.TreeItem"/>
+        <Import name="javafx.scene.control.TreeView"/>
+        <Import name="javafx.scene.input.KeyCode"/>
+        <Import name="javafx.scene.layout.HBox"/>
+        <Import name="javafx.scene.shape.SVGPath"/>
+        <Import name="javafx.stage.Stage"/>
         <Import name="java.io.File"/>
-        <Import name="java.io.FileReader"/>
-        <Import name="java.io.FileWriter"/>
         <Import name="java.io.IOException"/>
-        <Import name="java.io.PrintWriter"/>
-        <Import name="java.util.Iterator"/>
-        <Import name="java.util.LinkedHashSet"/>
-        <Import name="java.util.Set"/>
-        <Import name="application.FrontEnd.ImportController"/>
-        <Import name="application.FrontEnd.MetricController"/>
-        <Import name="java.nio.file.*">
-            <Class name="Path"/>
-            <Class name="Paths"/>
-            <Class name="Files"/>
-        </Import>
-        <Import name="java.util.*">
-            <Class name="LinkedHashSet"/>
-            <Class name="ArrayList"/>
-            <Class name="Set"/>
-            <Class name="Iterator"/>
+        <Import name="java.util.ArrayList"/>
+        <Import name="javafx.util.Callback"/>
+        <Import name="application.BackEnd.*">
+            <Class name="ImportStatus"/>
+            <Class name="XMLResult"/>
         </Import>
     </Used>
-    <NotUsed total="4">
-        <Import name="java.net.URLClassLoader"/>
-        <Import name="java.net.URL.*"/>
-        <Import name="java.net.MalformedURLException"/>
-        <Import name="java.net.URL"/>
+    <NotUsed total="2">
+        <Import name="java.util.LinkedHashSet"/>
+        <Import name="java.util.Set"/>
     </NotUsed>
-    <Duplicate total="6">
-        <Import name="java.net.URLClassLoader" total="2"/>
-        <Import name="java.util.Iterator" total="1"/>
-        <Import name="java.net.URL" total="1"/>
-        <Import name="java.util.*" total="1"/>
-        <Import name="java.util.Set" total="1"/>
-    </Duplicate>
+    <Duplicate total="0"/>
     <Conflict total="0"/>
 </Imports>

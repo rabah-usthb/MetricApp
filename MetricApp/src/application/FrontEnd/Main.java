@@ -1,5 +1,6 @@
 package application.FrontEnd;
 import javafx.application.Application;
+import javafx.scene.image.Image;
 
 import javafx.scene.control.*;
 import java.awt.*;
@@ -7,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
 
 public class Main extends Application {
     @Override
@@ -20,6 +22,7 @@ public class Main extends Application {
             // Set the FXML content to the scene
             Scene scene = new Scene(root);
             scene.getStylesheets().add(css);
+            primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/ressource/Icon/MetricApp.png")));
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (Exception e) {
