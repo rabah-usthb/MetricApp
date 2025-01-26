@@ -2,6 +2,7 @@
 !include "StrFunc.nsh"
 
 ${StrStr} 
+${StrTok} 
 
 Var MinJavaVersion
 var MinFxVersion
@@ -100,6 +101,34 @@ Function IsJavaInstalled
     nsExec::ExecToStack 'cmd.exe /c java -version'
 FunctionEnd
 
+
+Function CheckUserVersion
+    StrCpy $5 0
+    StrCpy $0 0
+
+    Loop:
+     ${If} $0 <= 3
+
+     ${StrTok} $1 $UserJavaVersion "." $0 1
+     ${StrTok} $2 $MinJavaVersion "." $0 1
+     IntOp $3 $1 + 0
+     IntOp $4 $2 + 0
+     
+     ${If} $3 > $4 
+       IntOp $0 $0 + 4
+
+        ${ElseIf} $3 < $4 
+           IntOp $0 $0 + 4
+           StrCpy $5 1
+     ${EndIf}
+
+      IntOp $0 $0 + 1
+    Goto Loop
+     ${EndIf}
+ Push $5
+FunctionEnd
+
+
 Function Main
     Call InitializeVar
     Call IsJavaInstalled
@@ -108,13 +137,23 @@ Function Main
 
     ${If} $JavaCheckResultCode == 0
       Call RetrieveJavaVersion
-      MessageBox MB_OK|MB_ICONINFORMATION "Java $UserJavaVersion Is Installed"
-      Call GetDownloadsFolder
-      MessageBox MB_OK|MB_ICONINFORMATION "Path $DownloadsFolder"
-      Call DownloadJava
-      Call InstallJava
+      Call CheckUserVersion
+      Pop $0
+       ${If} $0 = 0 
+         MessageBox MB_OK|MB_ICONINFORMATION "Java $UserJavaVersion Is Already Installed"
+        ${Else}
+         MessageBox MB_OK|MB_ICONINFORMATION "An Older Java Version Is Installed In Your Machine $UserJavaVersion , We Will Install The Correct Version For You Java $MinJavaVersion"
+         Call GetDownloadsFolder
+         ;MessageBox MB_OK|MB_ICONINFORMATION "Path $DownloadsFolder"
+         Call DownloadJava
+         Call InstallJava
+       ${EndIf}
+
     ${Else}
-        MessageBox MB_OK|MB_ICONEXCLAMATION "Java Isn't Installed In This Machine"
+        MessageBox MB_OK|MB_ICONEXCLAMATION "Java Isn't Installed In Your Machine , Java $MinJavaVersion Will Be Installed"
+        Call GetDownloadsFolder
+        Call DownloadJava
+        Call InstallJava
     ${EndIF}
 
 FunctionEnd
