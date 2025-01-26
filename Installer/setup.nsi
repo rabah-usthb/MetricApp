@@ -28,6 +28,20 @@ Function DownloadJava
     ${EndIf}
 FunctionEnd
 
+Function InstallJava    
+    ; Run the Java installer interactively
+    ExecWait '"$JavaBinPath"' $0
+
+    ; Check if the installer finished successfully
+    ${If} $0 == 0
+        MessageBox MB_OK "Java installation completed successfully!"
+        Delete "$JavaBinPath"
+    ${Else}
+        MessageBox MB_OK|MB_ICONSTOP "Java installation failed with error code: $0"
+    ${EndIf}
+FunctionEnd
+
+
 Function GetDownloadsFolder
     ; Define the GUID for the Downloads folder
     System::Call 'shell32::SHGetKnownFolderPath(g "{374DE290-123F-4565-9164-39C4925E467B}", i 0, i 0, *i .r0)i.r1'
@@ -57,7 +71,7 @@ Function InitializeVar
     StrCpy $MinFxVersion "21.0.6"
     StrCpy $MinJavaVersion "22.0.2"
     StrCpy $JavaURL "https://download.oracle.com/java/22/archive/jdk-22.0.2_windows-x64_bin.exe"
-    StrCpy $JavaFileName "jdk-22.0.2_windows-x64_bin.exe"
+    StrCpy $JavaFileName "jdk-21_windows-x64_bin.exe"
     StrCpy $FxURL "https://download2.gluonhq.com/openjfx/21.0.6/openjfx-21.0.6_windows-x64_bin-sdk.zip"
 FunctionEnd
 
@@ -98,6 +112,7 @@ Function Main
       Call GetDownloadsFolder
       MessageBox MB_OK|MB_ICONINFORMATION "Path $DownloadsFolder"
       Call DownloadJava
+      Call InstallJava
     ${Else}
         MessageBox MB_OK|MB_ICONEXCLAMATION "Java Isn't Installed In This Machine"
     ${EndIF}
