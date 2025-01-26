@@ -1,6 +1,6 @@
 !include "LogicLib.nsh"
 !include "StrFunc.nsh"
-
+${StrRep}
 ${StrStr} 
 ${StrTok} 
 
@@ -14,6 +14,7 @@ var UserJavaVersion
 var DownloadsFolder
 var JavaFileName
 var JavaBinPath
+var JavaSDKPath
 
 
 Function DownloadJava
@@ -31,15 +32,16 @@ FunctionEnd
 
 Function InstallJava    
     ; Run the Java installer interactively
+    ;StrCpy $JavaLogPath "$DownloadsFolder\JavaInstall.log"
     ExecWait '"$JavaBinPath"' $0
 
     ; Check if the installer finished successfully
     ${If} $0 == 0
         MessageBox MB_OK "Java installation completed successfully!"
-        Delete "$JavaBinPath"
     ${Else}
         MessageBox MB_OK|MB_ICONSTOP "Java installation failed with error code: $0"
     ${EndIf}
+    Delete "$JavaBinPath"
 FunctionEnd
 
 
@@ -69,12 +71,36 @@ FunctionEnd
 
 
 Function InitializeVar
+    StrCpy $JavaSDKPath "C:\Program Files\Java\jdk-22"
     StrCpy $MinFxVersion "21.0.6"
     StrCpy $MinJavaVersion "22.0.2"
     StrCpy $JavaURL "https://download.oracle.com/java/22/archive/jdk-22.0.2_windows-x64_bin.exe"
-    StrCpy $JavaFileName "jdk-21_windows-x64_bin.exe"
+    ;StrCpy $JavaURL "https://download.oracle.com/java/23/latest/jdk-23_windows-x64_bin.exe"
+    StrCpy $JavaFileName "jdk-22.0.2_windows-x64_bin.exe"
     StrCpy $FxURL "https://download2.gluonhq.com/openjfx/21.0.6/openjfx-21.0.6_windows-x64_bin-sdk.zip"
 FunctionEnd
+
+
+Function AddJavaToPath
+   
+    StrCpy $1 "$JavaSDKPath\bin" ; Construct the bin directory path
+    ; Add the Java bin directory to the system PATH
+    ReadEnvStr $0 "PATH" ; Read the current PATH value
+      ${StrRep} $0 $0 $1 "" 
+        ; Prepend the bin directory to the PATH
+        StrCpy $0 "$1;$0"
+
+        ; Update the PATH in the registry
+        WriteRegStr HKLM "SYSTEM\CurrentControlSet\Control\Session Manager\Environment" "PATH" "$0"
+
+        ; Update the PATH in the current environment
+        System::Call 'Kernel32::SetEnvironmentVariable(t "PATH", t "$0")'
+
+        ; Display a success message
+        MessageBox MB_OK "Added Java to the system PATH: $1"
+    
+FunctionEnd
+
 
 Function RetrieveJavaVersion
     ${StrStr} $0 $JavaCheckOuput '"'
@@ -147,6 +173,7 @@ Function Main
          ;MessageBox MB_OK|MB_ICONINFORMATION "Path $DownloadsFolder"
          Call DownloadJava
          Call InstallJava
+         Call AddJavaToPath
        ${EndIf}
 
     ${Else}
