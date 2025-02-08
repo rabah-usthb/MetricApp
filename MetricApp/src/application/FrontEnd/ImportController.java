@@ -17,7 +17,10 @@ package application.FrontEnd;
 	import javafx.scene.control.TreeItem;
 	import javafx.scene.control.TreeView;
 	import javafx.scene.input.KeyCode;
-	import javafx.scene.layout.HBox;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 	import javafx.scene.shape.SVGPath;
 	import javafx.stage.Stage;
 
@@ -35,14 +38,17 @@ public class ImportController {
 	    private TreeView<TreeItemData> treeView;
 	    @FXML
   	    private Label ImportLabel;
+	    @FXML
+	    private GridPane pane;
 	    public static ArrayList<ImportStatus>ListImport;
 
 	    public void initialize(String FilePath) {
 	        File file = new File(FilePath);
+	        CleanData cl = new CleanData(file);
 	        ImportLabel.setText("Imports of "+file.getName());
 	       ListImport = new ArrayList<ImportStatus>();
 	       ListImport = ImportStatus.update(file,(ImportStatus.ImportFetch(file)));
-	       XMLResult.IC_XML(ListImport);
+	     
 	       ImportStatus.UpdateConflictFlag(ListImport);
 	        String BookSvg="M 2 2.5 A 2.5 2.5 0 0 1 4.5 0 h 8.75 a 0.75 0.75 0 0 1 0.75 0.75 v 12.5 a 0.75 0.75 0 0 1 -0.75 0.75 h -2.5 a 0.75 0.75 0 0 1 0 -1.5 h 1.75 v -2 h -8 a 1 1 0 0 0 -0.714 1.7 a 0.75 0.75 0 1 1 -1.072 1.05 A 2.495 2.495 0 0 1 2 11.5 Z m 10.5 -1 h -8 a 1 1 0 0 0 -1 1 v 6.708 A 2.486 2.486 0 0 1 4.5 9 h 8 Z M 5 12.25 a 0.25 0.25 0 0 1 0.25 -0.25 h 3.5 a 0.25 0.25 0 0 1 0.25 0.25 v 3.25 a 0.25 0.25 0 0 1 -0.4 0.2 l -1.45 -1.087 a 0.249 0.249 0 0 0 -0.3 0 L 5.4 15.7 a 0.25 0.25 0 0 1 -0.4 -0.2 Z";
 	        String UsedSvg="M 9 16.17 L 4.83 12 l -1.42 1.41 L 9 19 L 21 7 l -1.41 -1.41 Z";
@@ -145,6 +151,21 @@ public class ImportController {
 	     
 	    }
 
+	    
+	    @FXML
+	    public void initialize() {
+	        // Add a listener to wait for the Scene to be available
+	        pane.sceneProperty().addListener((obs, oldScene, newScene) -> {
+	            if (newScene != null) {
+	            	 KeyCombination ctrlS = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
+	            	    newScene.getAccelerators().put(ctrlS, () -> {
+	            	        System.out.println("Ctrl+S detected! Saving file...");
+	            	        SaveFileController<ImportStatus> save = new SaveFileController<ImportStatus>("IC", ListImport);
+	            	        save.saveXML();
+	            	    });
+	            }
+	        });
+	    }
 	    
 	    
 	    private void showConfirmationUnused() {

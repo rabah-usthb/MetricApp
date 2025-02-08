@@ -20,12 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class XMLResult {
-final static String IC_Path = System.getProperty("user.dir")+"/src/Ressource/XML Folder/IC.xml";
-final static String JEA_Path = System.getProperty("user.dir")+"/src/Ressource/XML Folder/JEA.xml";
-final static String ER_Path = System.getProperty("user.dir")+"/src/Ressource/XML Folder/ER.xml";
-final static String OOMR_Path = System.getProperty("user.dir")+"/src/Ressource/XML Folder/OOMR.xml";
-final static String SM_Path = System.getProperty("user.dir")+"/src/Ressource/XML Folder/SM.xml";
-final static String JAX_Path = System.getProperty("user.dir")+"/src/Ressource/XML Folder/JAX.xml";
 
 public static void PrintMap(HashMap<String, ArrayList<Object>>map) {
 	for(Map.Entry<String,ArrayList<Object>> entry : map.entrySet()) {
@@ -268,11 +262,11 @@ public static class MapEntry {
     	Element /Classes>
     	Element /Software>
     */
-        Document_To_XML(document, JAX_Path);     
+        //Document_To_XML(document, JAX_Path);     
     
     }
     
-    public static void SM_XML(SwingComponent sm) {
+    public static void SM_XML(SwingComponent sm , String filePath) {
     	Document document = Create_Document();   
     	Element Swing = setRoot(document,"Swing", buildMap(new MapEntry("total",sm.TotalComponent)));
        
@@ -309,11 +303,15 @@ public static class MapEntry {
     	Element JToolBar = setParent(document, Swing,"JToolBar", buildMap(new MapEntry("total", sm.compteurJToolBar)));    
     	
     	
-        Document_To_XML(document, SM_Path);     
+        Document_To_XML(document, filePath);     
         
     }
     
-    public static void OOMR_XML(OOMRCalculator oomr) {
+    
+    
+    
+    
+    public static void OOMR_XML(OOMRCalculator oomr , String filePath) {
     	Document document = Create_Document();   
     	
     	int totalMethod = oomr.totalMethods;
@@ -328,10 +326,13 @@ public static class MapEntry {
         double RatioOverload = oomr.RatioMethodsSur;
         Element Overload = setParent(document, Methods,"Override", buildMap(new MapEntry("total",totalOverload),new MapEntry("Ratio", RatioOverload)));
     
-        Document_To_XML(document, OOMR_Path);   
+        Document_To_XML(document, filePath);   
     }
     
-    public static void ER_XML(Encapsulation ER) {
+    
+    
+    
+    public static void ER_XML(Encapsulation ER, String filePath) {
     	Document document = Create_Document();
     	Element elementRoot = setRoot(document,"Element", buildMap(new MapEntry("Total",ER.Total),new MapEntry("ER", ER.GetTaux()))); 
         Element publicElement = setParent(document,elementRoot,"Public", buildMap(new MapEntry("Total",ER.CompteurPublic))); 
@@ -339,10 +340,12 @@ public static class MapEntry {
         Element protectedElement = setParent(document,elementRoot,"Protected", buildMap(new MapEntry("Total",ER.CompteurProtected))); 
         Element noneElement = setParent(document,elementRoot,"None", buildMap(new MapEntry("Total",ER.CompteurNone))); 
         
-        Document_To_XML(document, ER_Path);     
+        Document_To_XML(document, filePath);     
     }
     
-    public static void JEA_XML(ArrayList<ExceptionStatus>ListException) {
+    
+    
+    public static void JEA_XML(ArrayList<ExceptionStatus>ListException , String filePath) {
     	Document document = Create_Document();
         int totalNumberException = ListException.size();
     	int totalNumberDefaultExc = ExceptionStatus.getTotalNumberDefaultException(ListException);
@@ -366,66 +369,71 @@ public static class MapEntry {
         Element CompileTimeNotDefault = setParent(document, NotDefaultException,"CompileTime",null); 
         setChildren(document, CompileTimeNotDefault,"Exception", buildMap(new MapEntry("name",NotDefaultCompileTimeList)));
         setChildren(document,RunTimeNotDefault,"Exception", buildMap(new MapEntry("name",NotDefaultRunTimeList)));
-        Document_To_XML(document, JEA_Path);
+        Document_To_XML(document, filePath);
     }
     
-    public static void IC_XML(ArrayList<ImportStatus> List) {
-      int totalImport =ImportStatus.getTotalNumberImports(List);
-      Document document = Create_Document();
-      ArrayList<String>UsedImport = filterByEqualAttribute(List,"ImportName", new ValueEntry("ImportStatus",1));
-      int totalUsedImport  = UsedImport.size();
-      ArrayList<String>SimpleImport = new ArrayList<>();
-      ArrayList<String>WildImport = new ArrayList<>();
-      FilterUsedImport_WildImport_SimpleImport(UsedImport, SimpleImport, WildImport);
-      Element Imports =setRoot(document,"Imports",
-	  buildMap(new MapEntry("total" ,totalImport)));
-	  // Cr eate a book element with an attribute
-	  Element Used = setParent(document, Imports,"Used",  buildMap(new MapEntry("total",totalUsedImport)));
-	  setChildren(document,Used,"Import", 
-	 		  buildMap(new MapEntry("name", SimpleImport))
-			  );
-	  for(String Import : WildImport) {
-		  ArrayList<String>UsedClass = filterByEqualAttribute(List,"UsedClassList",new ValueEntry("ImportName",Import));
-		  
-		  Element wildImport = setParent(document, Used,"Import", buildMap(new MapEntry("name",Import)));
-	      setChildren(document, wildImport,"Class", buildMap(new MapEntry("name",UsedClass)));		      
-	  }  
-	  
-	  ArrayList<String>ListNotUsd =  filterByEqualAttribute(List,"ImportName",new ValueEntry("ImportStatus",0));
-	  int totalUnused=ListNotUsd.size();
-	  Element NotUsed = setParent(document, Imports,"NotUsed", buildMap(new MapEntry("total",totalUnused)));
-	  setChildren(document, NotUsed,"Import", 
-	 
-			  buildMap(
-			  new MapEntry("name",ListNotUsd)
-			  )
-	  );
-	  
-	  ArrayList<Integer>NumberDuplicate = filterByGreaterAttribute(List,"DuplicatStatus",1,"DuplicatStatus");
-      ArrayList<String>NameDuplicate =filterByGreaterAttribute(List,"DuplicatStatus",1,"ImportName");
-      int totalDuplicate =totalNumberDuplicate(NumberDuplicate);
-	  Element Duplicate = setParent(document, Imports,"Duplicate", buildMap(new MapEntry("total",totalDuplicate)));
-      
-	  setChildren(document,Duplicate,"Import", 
-				 
-			  buildMap(
-			  new MapEntry("name",NameDuplicate),
-			  new MapEntry("total",NumberDuplicate)
-				 
-					  )
-	  ); 
-	  ArrayList<String>ConflictList = filterByEqualAttribute(List,"ImportName",new ValueEntry("ConflictStatus",1));
-	  int totalConflict = ConflictList.size();
-	  Element Conflict = setParent(document, Imports,"Conflict", buildMap(new MapEntry("total",totalConflict)));
-	  setChildren(document,Conflict,"Import", 
-				 
-			  buildMap(
-			  new MapEntry("name",ConflictList)
-			  )
-	  ); 
-	  
-	  
-	  Document_To_XML(document, IC_Path);
-	
-}
+    
+    
+    public static void IC_XML(ArrayList<ImportStatus> List , String filePath) {
+        int totalImport =ImportStatus.getTotalNumberImports(List);
+        Document document = Create_Document();
+        ArrayList<String>UsedImport = filterByEqualAttribute(List,"ImportName", new ValueEntry("ImportStatus",1));
+        int totalUsedImport  = UsedImport.size();
+        ArrayList<String>SimpleImport = new ArrayList<>();
+        ArrayList<String>WildImport = new ArrayList<>();
+        FilterUsedImport_WildImport_SimpleImport(UsedImport, SimpleImport, WildImport);
+        Element Imports =setRoot(document,"Imports",
+  	  buildMap(new MapEntry("total" ,totalImport)));
+  	  // Cr eate a book element with an attribute
+  	  Element Used = setParent(document, Imports,"Used",  buildMap(new MapEntry("total",totalUsedImport)));
+  	  setChildren(document,Used,"Import", 
+  	 		  buildMap(new MapEntry("name", SimpleImport))
+  			  );
+  	  for(String Import : WildImport) {
+  		  ArrayList<String>UsedClass = filterByEqualAttribute(List,"UsedClassList",new ValueEntry("ImportName",Import));
+  		  
+  		  Element wildImport = setParent(document, Used,"Import", buildMap(new MapEntry("name",Import)));
+  	      setChildren(document, wildImport,"Class", buildMap(new MapEntry("name",UsedClass)));		      
+  	  }  
+  	  
+  	  ArrayList<String>ListNotUsd =  filterByEqualAttribute(List,"ImportName",new ValueEntry("ImportStatus",0));
+  	  int totalUnused=ListNotUsd.size();
+  	  Element NotUsed = setParent(document, Imports,"NotUsed", buildMap(new MapEntry("total",totalUnused)));
+  	  setChildren(document, NotUsed,"Import", 
+  	 
+  			  buildMap(
+  			  new MapEntry("name",ListNotUsd)
+  			  )
+  	  );
+  	  
+  	  ArrayList<Integer>NumberDuplicate = filterByGreaterAttribute(List,"DuplicatStatus",1,"DuplicatStatus");
+        ArrayList<String>NameDuplicate =filterByGreaterAttribute(List,"DuplicatStatus",1,"ImportName");
+        int totalDuplicate =totalNumberDuplicate(NumberDuplicate);
+  	  Element Duplicate = setParent(document, Imports,"Duplicate", buildMap(new MapEntry("total",totalDuplicate)));
+        
+  	  setChildren(document,Duplicate,"Import", 
+  				 
+  			  buildMap(
+  			  new MapEntry("name",NameDuplicate),
+  			  new MapEntry("total",NumberDuplicate)
+  				 
+  					  )
+  	  ); 
+  	  ArrayList<String>ConflictList = filterByEqualAttribute(List,"ImportName",new ValueEntry("ConflictStatus",1));
+  	  int totalConflict = ConflictList.size();
+  	  Element Conflict = setParent(document, Imports,"Conflict", buildMap(new MapEntry("total",totalConflict)));
+  	  setChildren(document,Conflict,"Import", 
+  				 
+  			  buildMap(
+  			  new MapEntry("name",ConflictList)
+  			  )
+  	  ); 
+  	  
+  	  
+  	  Document_To_XML(document, filePath);
+  	
+  }
+    
+    
+   
 }

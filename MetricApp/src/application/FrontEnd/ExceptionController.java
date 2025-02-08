@@ -17,7 +17,10 @@ package application.FrontEnd;
 	import javafx.scene.control.TreeItem;
 	import javafx.scene.control.TreeView;
 	import javafx.scene.input.KeyCode;
-	import javafx.scene.layout.HBox;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 	import javafx.scene.shape.SVGPath;
 	import javafx.stage.Stage;
 
@@ -37,6 +40,9 @@ public class ExceptionController {
 	    @FXML
 	    private Label ExceptionLabel;
 
+	    @FXML
+	    GridPane pane;
+	    
 	    public void initialize(String FilePath) {
 	        File file = new File(FilePath);
 	        ExceptionLabel.setText("Exceptions Of "+file.getName());
@@ -48,7 +54,7 @@ public class ExceptionController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	       XMLResult.JEA_XML(ListException);
+	    
 	        TreeItemData rootItemData = new TreeItemData("Exceptions","M 12 2 C 6.48 2 2 6.48 2 12 s 4.48 10 10 10 s 10 -4.48 10 -10 S 17.52 2 12 2 Z m 1 15 h -2 v -2 h 2 v 2 Z m 0 -4 h -2 V 7 h 2 v 6 Z");
 	        TreeItem<TreeItemData> rootItem = new TreeItem<>(rootItemData);
 	        treeView.setRoot(rootItem);
@@ -96,6 +102,20 @@ public class ExceptionController {
 	    }
 
 
+	    @FXML
+	    public void initialize() {
+	        // Add a listener to wait for the Scene to be available
+	        pane.sceneProperty().addListener((obs, oldScene, newScene) -> {
+	            if (newScene != null) {
+	            	 KeyCombination ctrlS = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
+	            	    newScene.getAccelerators().put(ctrlS, () -> {
+	            	        System.out.println("Ctrl+S detected! Saving file...");
+	            	        SaveFileController<ExceptionStatus> save = new SaveFileController<ExceptionStatus>("JEA", ListException);
+	            	        save.saveXML();
+	            	    });
+	            }
+	        });
+	    }
 	    
 	    
 	    

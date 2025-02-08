@@ -28,7 +28,6 @@ import java.net.URL;
 /*Import static Flag
 Used Not Used with class loading access of import static
 and conflict
-change svg when folder opened
 */
 public class ImportStatus {
 public String ImportName;

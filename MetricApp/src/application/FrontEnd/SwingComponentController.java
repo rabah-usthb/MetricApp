@@ -1,7 +1,9 @@
 package application.FrontEnd;
 
 import java.io.File;
+import java.util.ArrayList;
 
+import application.BackEnd.ImportStatus;
 import application.BackEnd.SwingComponent;
 import application.BackEnd.XMLResult;
 import application.FrontEnd.EncapsulationController.CustomTreeCell;
@@ -13,6 +15,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.SVGPath;
 import javafx.util.Callback;
@@ -23,12 +29,15 @@ public class SwingComponentController {
     private TreeView<TreeItemData> treeView;
     @FXML
     private Label SwingLabel;
+    @FXML
+    private GridPane pane;
+    
+    static SwingComponent swing;
 
     public void initialize(String FilePath) {
         File file = new File(FilePath);
         SwingLabel.setText("Swing Component of "+file.getName());
-        SwingComponent swing =   SwingComponent.FetchSwingComponentNumber(file);
-        XMLResult.SM_XML(swing);
+         swing =   SwingComponent.FetchSwingComponentNumber(file);
         String TotalSvgPath="M 18 4 H 6 v 2 l 6.5 6 L 6 18 v 2 h 12 v -3 h -7 l 5 -5 l -5 -5 h 7 Z";
         TreeItemData rootItemData = new TreeItemData("Total Swing Component : "+swing.TotalComponent,TotalSvgPath);
         TreeItem<TreeItemData> rootItem = new TreeItem<>(rootItemData);
@@ -134,7 +143,22 @@ public class SwingComponentController {
     }
 
 
-    
+    @FXML
+    public void initialize() {
+        // Add a listener to wait for the Scene to be available
+        pane.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+            	 KeyCombination ctrlS = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
+            	    newScene.getAccelerators().put(ctrlS, () -> {
+            	        System.out.println("Ctrl+S detected! Saving file...");
+            	        ArrayList<SwingComponent> list  = new ArrayList<SwingComponent>();
+            	        list.add(swing);
+            	        SaveFileController<SwingComponent> save = new SaveFileController<SwingComponent>("SM",list);
+            	        save.saveXML();
+            	    });
+            }
+        });
+    }
     
     
     private void setTreeViewStyle() {

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import application.BackEnd.Encapsulation;
 import application.BackEnd.ImportStatus;
+import application.BackEnd.SwingComponent;
 import application.BackEnd.XMLResult;
 import application.FrontEnd.ImportController.CustomTreeCell;
 import javafx.fxml.FXML;
@@ -15,6 +16,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.SVGPath;
 import javafx.util.Callback;
@@ -25,12 +30,14 @@ public class EncapsulationController {
     private TreeView<TreeItemData> treeView;
     @FXML
     private Label EncapsulationLabel;
+    @FXML
+    private GridPane pane;
+    static Encapsulation encapsulation;
 
     public void initialize(String FilePath) {
         File file = new File(FilePath);
         EncapsulationLabel.setText("Encapsulation of "+file.getName());
-        Encapsulation encapsulation =   Encapsulation.EncapsulationFetch(file);
-        XMLResult.ER_XML(encapsulation);
+        encapsulation =   Encapsulation.EncapsulationFetch(file);
         String TotalSvgPath="M 18 4 H 6 v 2 l 6.5 6 L 6 18 v 2 h 12 v -3 h -7 l 5 -5 l -5 -5 h 7 Z";
         TreeItemData rootItemData = new TreeItemData("Total Elements : "+encapsulation.GetTotal(),TotalSvgPath);
         TreeItem<TreeItemData> rootItem = new TreeItem<>(rootItemData);
@@ -53,6 +60,23 @@ public class EncapsulationController {
     }
 
 
+    
+    @FXML
+    public void initialize() {
+        // Add a listener to wait for the Scene to be available
+        pane.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+            	 KeyCombination ctrlS = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
+            	    newScene.getAccelerators().put(ctrlS, () -> {
+            	        System.out.println("Ctrl+S detected! Saving file...");
+            	        ArrayList<Encapsulation> list  = new ArrayList<Encapsulation>();
+            	        list.add(encapsulation);
+            	        SaveFileController<Encapsulation> save = new SaveFileController<Encapsulation>("ER",list);
+            	        save.saveXML();
+            	    });
+            }
+        });
+    }
     
     
     

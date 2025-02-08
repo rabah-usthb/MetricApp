@@ -1,0 +1,310 @@
+package application.BackEnd;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util
+.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class RegularExpression {
+static String CurlyBraces=;
+static String PatternAcessModifiers=;
+static String NonAcessModifierSimple = ;
+static String ModifierSimple = +PatternAcessModifiers++NonAcessModifierSimple++NonAcessModifierSimple++PatternAcessModifiers+;
+static String ModifierComplex = +PatternAcessModifiers++PatternAcessModifiers++PatternAcessModifiers++PatternAcessModifiers++PatternAcessModifiers++PatternAcessModifiers+;
+static String MethodModifierPattern = +ModifierSimple++ModifierComplex+;
+static String Bracket = ;
+static String ArrayDeclarationPattern =  + Bracket +  + Bracket + ;
+static String ArrayTypePattern= + Bracket + ;
+static String NormalPattern = ;
+static String WrapperClass=;
+static String WildCardGen = ;
+static String SimpleInside=+WrapperClass++ArrayTypePattern++WildCardGen+;
+static String InsideCollection = +SimpleInside++SimpleInside++SimpleInside++SimpleInside+;
+static String SetListPattern =+InsideCollection+;
+static String MapPattern=+InsideCollection++InsideCollection+;
+static String CollectionPattern =+MapPattern++SetListPattern+;
+static String ReturnType = +CollectionPattern++ArrayTypePattern+;
+static String Paramter=+NormalPattern++ArrayDeclarationPattern++CollectionPattern++MapPattern+;
+static String Arg = +Paramter+++Paramter+;
+static String StaticModifier=;
+static String SignPattern=;
+static String FloatPattern=+SignPattern+;
+static String IntPattern=+SignPattern+;
+static String NumberPattern = +FloatPattern++IntPattern+;
+static String Char=\\n];
+static String VarName=;
+static String SingleCatch=;
+static String MultipleCatch=;
+static String InsideCatch=SingleCatch++MultipleCatch;
+static String OptionalClosingCurlyBraces=;
+static String FinalModifier = ;
+static String VarModifer = (PatternAcessModifiers)+(FinalModifier)+(StaticModifier)++(PatternAcessModifiers)+(StaticModifier)+(FinalModifier)++(StaticModifier)+(PatternAcessModifiers)+(FinalModifier)++(StaticModifier)+(FinalModifier)+(PatternAcessModifiers)++(FinalModifier)+(PatternAcessModifiers)+(StaticModifier)++(FinalModifier)+(StaticModifier)+(PatternAcessModifiers);
+static String NonAcessModifierClass = ;
+static String ModifierClass = +PatternAcessModifiers++NonAcessModifierClass++NonAcessModifierClass++PatternAcessModifiers+;
+static String ExtendsPattern = ;
+static String ImplementsPattern = ;
+static String MultipleBoundPattern = ;
+static String TypeParameterGen = +MultipleBoundPattern++MultipleBoundPattern+;
+static String ClassCall = ;
+static String ClassVariable = ;
+static String SimpleArgMethodCall = +ClassVariable++NumberPattern+;
+static String SimpleMethodCall = +ClassCall++SimpleArgMethodCall++SimpleArgMethodCall+;
+static String Inside = +SimpleArgMethodCall++ClassCall++SimpleMethodCall++SimpleMethodCall++SimpleMethodCall+;
+static String MethodCall = +ClassCall++Inside++Inside+;
+static String StringConcatElement = +ClassVariable++MethodCall+)\+NumberPattern+;
+static String StringConcat = +StringConcatElement++StringConcatElement+;
+static String LiteralStringPattern = +StringConcat+)|\+StringConcat+)\+StringConcat+;
+static String SimpleArgMethodcall = +ClassVariable++NumberPattern++LiteralStringPattern+;
+static String SimpleMethodcall = +ClassCall++SimpleArgMethodcall++SimpleArgMethodcall+;
+static String inside = +SimpleArgMethodcall++ClassCall++SimpleMethodcall++SimpleMethodcall++SimpleMethodcall+;
+static String Methodcall = +ClassCall++Inside++Inside+;
+static void AddCurlyBraces(String Line , LinkedList<String> listopening , LinkedList<String> listclosing) {
+if(Line.contains()) {
+listopening.add();
+if(Line.contains()) {
+listclosing.add();
+static String fetchClassName(String line) {
+String classRegex =;
+Pattern PatterneVar = Pattern.compile(classRegex);
+Matcher matcher = PatterneVar.matcher(line);
+while(matcher.find()) {
+return matcher.group(1);
+return ;
+static void JumpMethodContent(String Line,BufferedReader reader) {
+LinkedList<String>listopening = new LinkedList<>();
+LinkedList<String>listclosing = new LinkedList<>();
+AddCurlyBraces(Line, listopening,listclosing);
+try {
+while ( (listclosing.size()==0&&listopening.size()==0||listclosing.size()!=listopening.size()) && (Line = reader.readLine()) != null) {
+Line = Line.trim();
+Line = Qoute.RemoveQoute(Line);
+ArrayList<String> ListCode=new ArrayList<String>();
+if(!Line.isBlank() && !Line.isEmpty() && !Comment.IsCommentOnlyCompleted(Line)) {
+if(Comment.ContainsComment(Line)) {
+Line = Comment.RemoveComment(Line);
+else {
+if(Comment.FinishedComment(Line)) {
+if(!Comment.OpeningMultiCommentOnly(Line)) {
+ListCode.add(Comment.CodeOpeningComment(Line));
+if(!Comment.ClosingMultiCommentOnly(Line)) {
+ListCode.add(Comment.CodeClosingComment(Line));
+else if (Comment.NotFinishedComment(Line)) {
+Comment.JumpComment(Line,ListCode,reader);
+if(!ListCode.isEmpty()) {
+for(String code : ListCode) {
+AddCurlyBraces(code, listopening,listclosing);
+if(ListCode.isEmpty()) {
+AddCurlyBraces(Line, listopening,listclosing);
+catch(IOException e) {
+static LinkedList<Henderson> fetchClassesDataHenderson(String Line,BufferedReader reader) {
+LinkedList<Henderson> listHenderson = new LinkedList<>();
+String className = fetchClassName(Line);
+int numberAttribut = 0;
+int numberMethod = 0;
+System.out.println(+Line);
+try {
+while ((Line = reader.readLine()) != null) {
+System.out.println(+Line);
+System.out.println(className);
+System.out.println(numberAttribut);
+System.out.println(numberMethod);
+Line = Line.trim();
+Line = Qoute.RemoveQoute(Line);
+ArrayList<String> ListCode=new ArrayList<String>();
+if(!Line.isBlank() && !Line.isEmpty() && !Comment.IsCommentOnlyCompleted(Line)) {
+if(Comment.ContainsComment(Line)) {
+Line = Comment.RemoveComment(Line);
+else {
+if(Comment.FinishedComment(Line)) {
+if(!Comment.OpeningMultiCommentOnly(Line)) {
+ListCode.add(Comment.CodeOpeningComment(Line));
+if(!Comment.ClosingMultiCommentOnly(Line)) {
+ListCode.add(Comment.CodeClosingComment(Line));
+else if (Comment.NotFinishedComment(Line)) {
+Comment.JumpComment(Line,ListCode,reader);
+if(!ListCode.isEmpty()) {
+for(String code : ListCode) {
+if(IsClass(code)) {
+Henderson henderson = new Henderson(className, numberAttribut, numberMethod);
+numberAttribut = 0;
+numberMethod = 0;
+listHenderson.add(henderson);
+className = fetchClassName(code);
+else if(IsMethodPrototype(code)) {
+++numberMethod;
+JumpMethodContent(Line, reader);
+else if (IsVariable(code)) {
+++numberAttribut;
+if(ListCode.isEmpty()) {
+if(IsClass(Line)) {
+Henderson henderson = new Henderson(className, numberAttribut, numberMethod);
+numberAttribut = 0;
+numberMethod = 0;
+listHenderson.add(henderson);
+className = fetchClassName(Line);
+if(IsMethodPrototype(Line)) {
+++numberMethod;
+JumpMethodContent(Line, reader);
+else if (IsVariable(Line)) {
+++numberAttribut;
+catch(IOException e) {
+Henderson henderson = new Henderson(className, numberAttribut, numberMethod);
+numberAttribut = 0;
+numberMethod = 0;
+listHenderson.add(henderson);
+return listHenderson;
+static boolean IsBracket(String Line) {
+String line = Line;
+line = line.replace(, );
+return line.equals() || line.equals();
+static boolean containsBraces(String line) {
+return line.contains()||line.contains();
+static boolean IsImport(String Line) {
+String ImportPattern=+StaticModifier+;
+return Line.matches(ImportPattern);
+public static boolean IsPackage(String Line) {
+String PackagePattern = ;
+return Line.matches(PackagePattern);
+public static ArrayList<String> FetchImplements(String Line){
+ArrayList<String> ImplementName = new ArrayList<>();
+Pattern pattern = Pattern.compile();
+Matcher matcher = pattern.matcher(Line);
+while (matcher.find()) {
+String className = matcher.group(1);
+if(className==null) {
+className = matcher.group(2);
+ImplementName.add(className);
+return ImplementName;
+public static String FetchExtends(String Line) {
+Pattern pattern = Pattern.compile();
+Matcher matcher = pattern.matcher(Line);
+while (matcher.find()) {
+String className = matcher.group(1);
+return className;
+return ;
+public static boolean IsClass(String Line) {
+String ClassPattern = +ModifierClass++TypeParameterGen++ExtendsPattern++ImplementsPattern+;
+return Line.matches(ClassPattern);
+public static boolean IsFieldEmpty(String value) {
+return value==null||value.isBlank();
+public static boolean IsGmail(String mail) {
+mail = mail.replace(, );
+Pattern GMAIL_PATTERN = Pattern.compile();
+Pattern ILLEGAL_PATTERN = Pattern.compile();
+boolean isValidGmail = GMAIL_PATTERN.matcher(mail).matches();
+boolean FoundIllegalPattern = ILLEGAL_PATTERN.matcher(mail).find();
+return isValidGmail && !FoundIllegalPattern;
+static boolean IsAnnotation(String Line) {
+String AnnotationPatten=;
+return Line.matches(AnnotationPatten);
+static String FetchAnnotation(String Line) {
+Line = Line.replace(, );
+return Line.substring(Line.indexOf()+1);
+static boolean IsStaticCall(String Line) {
+String StaticCallPetten =+Methodcall++ClassCall+;
+return Line.matches(StaticCallPetten);
+static ArrayList<String> FetchStaticCall(String Line ) {
+ArrayList<String>ClassList = new ArrayList<>();
+Pattern pattern = Pattern.compile();
+Matcher matcher = pattern.matcher(Line);
+while (matcher.find()) {
+String className = matcher.group(1);
+ClassList.add(className);
+return ClassList;
+static boolean IsNew(String Line) {
+String trimmedLine = Line.trim();
+String NewPattern = ;
+return trimmedLine.matches(NewPattern);
+static ArrayList<String> ExtractNewClassNames(String NewLine) {
+ArrayList<String> classNames = new ArrayList<>();
+Pattern pattern = Pattern.compile();
+Matcher matcher = pattern.matcher(NewLine);
+while (matcher.find()) {
+String className = matcher.group(1);
+classNames.add(className);
+return classNames;
+static boolean IsConstructor(String line) {
+String ConstructorPattern = +PatternAcessModifiers++TypeParameterGen++Arg++ ThrowsPattern+++CurlyBraces+;
+return  line.matches(ConstructorPattern);
+static boolean IsMethod(String line) {
+String MethodPattern = +MethodModifierPattern++TypeParameterGen++ReturnType++Arg++ThrowsPattern++CurlyBraces+;
+return line.matches(MethodPattern);
+static boolean IsMethodPrototype(String Line) {
+return IsConstructor(Line) || IsMethod(Line);
+static ArrayList<String> FetchMethodThrowable(String line){
+line = line.substring(line.lastIndexOf()+1);
+ArrayList<String> classNames = new ArrayList<String>();
+Pattern ThrowsPattern = Pattern.compile( );
+Matcher matcher = ThrowsPattern.matcher(line);
+while (matcher.find()) {
+String className = matcher.group(1);
+classNames.add(className);
+return classNames;
+static ArrayList<String> FetchMethodArgumentType(String line){
+ArrayList<String> classNames= new ArrayList<String>();
+line = line.substring(line.indexOf()+1,line.indexOf()+1);
+Matcher matcher = pattern.matcher(line);
+while (matcher.find()) {
+String className = matcher.group();
+classNames.add(className);
+return classNames;
+static String FetchMethodReturnType(String line) {
+if(!RegularExpression.IsConstructor(line)) {
+String PattrneAcessModfiers=;
+String PatterneNonAcessModifier=;
+Pattern MethodPattern =  Pattern.compile( PattrneAcessModfiers + PatterneNonAcessModifier + );
+Matcher matcher = MethodPattern.matcher(line);
+while(matcher.find())
+return matcher.group(1);
+return null;
+static ArrayList<String> extractClassNamesMethod(String line) {
+ArrayList<String> classNames = new ArrayList<>();
+classNames.addAll(FetchMethodArgumentType(line));
+classNames.addAll(FetchMethodThrowable(line));
+if(FetchMethodReturnType(line)!=null) {
+classNames.add(FetchMethodReturnType(line));
+return classNames;
+static boolean IsCatch(String line) {
+String CatchPattern = +OptionalClosingCurlyBraces++InsideCatch++RegularExpression.CurlyBraces+;
+return line.matches(CatchPattern);
+static ArrayList<String> CatchException(String line) {
+ArrayList<String>classNames = new ArrayList<String>();
+Pattern pattern = Pattern.compile();
+Matcher matcher = pattern.matcher(line);
+while (matcher.find()) {
+String className = matcher.group(1);
+classNames.add(className);
+return classNames;
+static boolean IsThrow(String line) {
+String ThrowPattern=+inside+;
+return line.matches(ThrowPattern);
+static ArrayList<String>ThrowException(String line){
+ArrayList<String> classNames = new ArrayList<String>();
+Pattern ThrowsPattern = Pattern.compile();
+Matcher matcher = ThrowsPattern.matcher(line);
+while (matcher.find()) {
+String className = matcher.group(1);
+classNames.add(className);
+return classNames;
+static boolean IsVariable(String line) {
+String VariablePattern = +VarModifer++ArrayDeclarationPattern++CollectionPattern+;
+return line.matches(VariablePattern);
+static ArrayList<String> ExtractVarClassNames(String VarLine) {
+ArrayList<String> classNames = new ArrayList<>();
+String PattrneAcessModfiers=;
+String PattrneStatic=;
+String PatterneFinal=;
+Pattern PatterneVar = Pattern.compile(PattrneAcessModfiers+PattrneStatic+PatterneFinal++PattrneAcessModfiers+PattrneStatic+PatterneFinal+);
+Matcher matcher1 = PatterneVar.matcher(VarLine);
+while (matcher1.find()) {
+String className = matcher1.group(1);
+if(className==null) {
+className = matcher1.group(2);
+if(className==null) {
+className = matcher1.group(3);
+if(className==null) {
+className=matcher1.group(4);
+classNames.add(className);
+return classNames;

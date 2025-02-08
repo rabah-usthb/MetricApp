@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import application.BackEnd.Line;
 import application.BackEnd.OOMRCalculator;
+import application.BackEnd.SwingComponent;
 import application.BackEnd.XMLResult;
 import application.FrontEnd.ImportController.CustomTreeCell;
 import javafx.fxml.FXML;
@@ -19,6 +20,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.SVGPath;
 import javafx.util.Callback;
@@ -31,16 +36,20 @@ public class OOMRcontroller {
     @FXML
     private Label MethodLabel;
     
+    @FXML
+    private GridPane pane;
+    
+    static OOMRCalculator rm; 
+    
     public void initialize(String FilePath,String filename) {
         File file = new File(FilePath);
-        OOMRCalculator rm = null;
+         rm = null;
 		try {
 			rm = OOMRCalculator.fetchOOMR(FilePath,filename );
 		} catch (FileNotFoundException | MalformedURLException | ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		XMLResult.OOMR_XML(rm);
 		MethodLabel.setText("Method Analysis Of "+file.getName());
         
         String overloadSvgPath="M10,2c-4.42,0-8,3.58-8,8s3.58,8,8,8s8-3.58,8-8S14.42,2,10,2z M9.88,15.62V14c-1.02-0.03-1.98-0.44-2.71-1.17 C6.42,12.07,6,11.07,6,10c0-0.7,0.18-1.38,0.52-1.98l0.74,0.74C7.09,9.15,7,9.57,7,10c0,0.8,0.31,1.55,0.88,2.12 c0.54,0.53,1.27,0.82,2,0.85v-1.59L12,13.5L9.88,15.62z M13.48,11.98l-0.74-0.74C12.91,10.85,13,10.43,13,10 c0-0.8-0.31-1.55-0.88-2.12c-0.54-0.54-1.24-0.85-2-0.88v1.62L8,6.5l2.12-2.12v1.66c1,0.03,1.98,0.41,2.71,1.13 C13.58,7.93,14,8.93,14,10C14,10.7,13.82,11.38,13.48,11.98z";
@@ -75,6 +84,23 @@ public class OOMRcontroller {
         setTreeViewStyle();
     }
 
+    
+    @FXML
+    public void initialize() {
+        // Add a listener to wait for the Scene to be available
+        pane.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+            	 KeyCombination ctrlS = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
+            	    newScene.getAccelerators().put(ctrlS, () -> {
+            	        System.out.println("Ctrl+S detected! Saving file...");
+            	        ArrayList<OOMRCalculator> list  = new ArrayList<OOMRCalculator>();
+            	        list.add(rm);
+            	        SaveFileController<OOMRCalculator> save = new SaveFileController<OOMRCalculator>("OOMR",list);
+            	        save.saveXML();
+            	    });
+            }
+        });
+    }
 
     
     
