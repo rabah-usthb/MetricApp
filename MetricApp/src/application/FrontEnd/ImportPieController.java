@@ -4,6 +4,8 @@ import java.io.File;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -13,9 +15,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Side;
+import javafx.scene.Node;
 import javafx.scene.chart.PieChart;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
 
 public class ImportPieController{
@@ -26,7 +33,7 @@ private PieChart ImportPie;
 @FXML
 private Label Description;
 
-	
+	@FXML
 	public void initialize() {
 		int TotalImportNumber = getTotalImportNumber();
 		System.out.println(TotalImportNumber);
@@ -34,28 +41,42 @@ private Label Description;
 		double NotUsedRatio = getImportNotUsedRatio(ImportController.ListImport,TotalImportNumber);
 		double ConflictRatio = getImportConflictRation(ImportController.ListImport,TotalImportNumber);
 		double DuplicateRatio = getImportDuplicateRation(ImportController.ListImport,TotalImportNumber);
-		ObservableList<PieChart.Data> ImportPieData = FXCollections.observableArrayList(
-		            new PieChart.Data("Used Imports ", UsedRatio),
-		            new PieChart.Data("NotUsed Imports ", NotUsedRatio),
-		            new PieChart.Data("Conflict Imports ", ConflictRatio),
-		            new PieChart.Data("Duplicate Imports ", DuplicateRatio)
-		        );	
+		
+		ObservableList<PieChart.Data> ImportPieData = FXCollections.observableArrayList();
+	     
+		if(UsedRatio>0) {
+			ImportPieData.add(new PieChart.Data("Used Imports ", UsedRatio));
+		}
+		
+		if(NotUsedRatio>0) {
+			ImportPieData.add(new PieChart.Data("NotUsed Imports ", NotUsedRatio));
+		}
+		
+		if(ConflictRatio>0) {
+			ImportPieData.add(new PieChart.Data("Conflict Imports ", ConflictRatio));
+		}
+		
+		if(DuplicateRatio>0) {
+			ImportPieData.add(new PieChart.Data("Duplicate Imports ", DuplicateRatio));
+		}
+
+		  for (PieChart.Data data : ImportPieData) {
+		        data.setName(data.getName() + data.getPieValue() + "%");
+		    }
+		  
+		  ImportPie.getData().addAll(ImportPieData);
+		  
+		  
 		
         ImportPie.setTitle("Import Usage Ratio");
          
+    	ImportPie.setLegendSide(Side.RIGHT);
+      
+    		
+    	
         
-        ObservableList<PieChart.Data> filteredData = FXCollections.observableArrayList(
-        		ImportPieData.stream().filter(data -> data.getPieValue() > 0).collect(Collectors.toList())
-        );
+      
         
-        filteredData.forEach(data ->
-                data.nameProperty().bind(Bindings.concat(
-                		data.getName(),data.getPieValue(),"%")
-                		)
-               
-        		);
-        
-        ImportPie.getData().addAll(filteredData);
         File file = new File(MetricController.FileSelectedPath);
         Description.setText("The File "+file.getName()+" Has In Total "+TotalImportNumber+" Imports , "+UsedRatio+"% are used , "+NotUsedRatio+"% are never used , "+DuplicateRatio+"% are Duplicate , and finally "+ConflictRatio+"% are in conflict.");
     }

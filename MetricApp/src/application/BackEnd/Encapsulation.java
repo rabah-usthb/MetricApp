@@ -14,6 +14,7 @@ public class Encapsulation {
 	int CompteurProtected;
 	double TauxEncapsulation;
 	
+	
 	public Encapsulation(int Total  ,int CompteurNone,int CompteurPublic , int CompteurPrivate,int CompteurProtected){
 		this.Total = Total;
 		this.CompteurNone =CompteurNone;

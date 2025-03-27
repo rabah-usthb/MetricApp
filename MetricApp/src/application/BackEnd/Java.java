@@ -18,7 +18,7 @@ public class Java {
 	public static void FetchPkgName(ArrayList<Package>ListPackage , String ParentPkgName,ArrayList<String>PkgNameList){
 		
 		 for (Package pack : ListPackage) {
- 	        System.out.println(pack.PackageName);
+ 	      //  System.out.println(pack.PackageName);
  	            String PkgName="";
  	            if(ParentPkgName.equals("")) {
  	             PkgName=pack.PackageName;
@@ -76,41 +76,18 @@ public class Java {
    
    
 }
-		
-	public static String ConcatSrc(String path) {
-		if(!(path.endsWith("src") || path.endsWith("src"+File.separator))) {
-	
-          	if(path.endsWith(File.separator) &&!path.contains("src")) {
-          		path+="src";
-          	}
-          	
-          	else if(!path.endsWith(File.separator) &&!path.contains("src")) {
-          		path+=File.separator+"src";
-          	}
-          	else if (path.contains("src")) {
-          		path = path.substring(0,path.lastIndexOf("src")+3);
-          		System.out.println(path);
-          }
-		}
-		
-		return path;
-	}
 	
 	//Method To Know If A Giving Path Is A Java Project
 	public static int IsJavaProject(String PathProject) {
-		if(!(new File (PathProject).exists())) {
+		File ProjectFile = new File(PathProject);
+		if(!(ProjectFile.exists())) {
 			System.out.println("Error Path Doesnt even Exist");
 			return -1;
 		}
-		PathProject=ConcatSrc(PathProject);
-		System.out.println(PathProject);
-		File SrcFile = new File(PathProject);
-		if(!SrcFile.exists()) {
-			System.out.println("Src Folder Doesn't Exist");
-		return -2;
-		}
+		
 		else {
-		File [] ListFile = SrcFile.listFiles();
+		
+		File [] ListFile =ProjectFile.listFiles();
 		if(ListFile.length == 0) {
 			System.out.println("Src Folder Is Empty");
         return 0;
@@ -121,24 +98,29 @@ public class Java {
 	}
 	}
 		//Recursive Method To Browse The Src/ Directory
-		static int RecursiveDir(File[] ListFile) {
-			for(File FILE : ListFile) {
-				if(FILE.isDirectory()) {
-			    File[] SubDir = FILE.listFiles();
-			    if(SubDir.length!=0) {
-			    return RecursiveDir(SubDir);
-			    }
-				}
-				else if(FILE.isFile()){
-					if(FILE.getName().endsWith(".java")) {
-						return 1;
-					}
-				}
-			}
-			
-			return 2;
-		}
+	static int RecursiveDir(File[] ListFile) {
+	    for (File FILE : ListFile) {
+	    //    System.out.println(FILE.getName());
 
+	        if (FILE.isDirectory()) {
+	            // Recursively check the subdirectory
+	            File[] SubDir = FILE.listFiles();
+	            if (SubDir.length != 0) {
+	                int result = RecursiveDir(SubDir); // Recursively check subdirectories
+	                if (result == 1) {
+	                    return 1; // .java file found in subdirectory, stop searching
+	                }
+	                // If no .java file found in subdirectory, continue searching other files/dirs
+	            }
+	        } else if (FILE.isFile() && FILE.getName().endsWith(".java")) {
+	            // .java file found, stop searching
+	            return 1;
+	        }
+	    }
+
+	    // No .java files found in this directory or its subdirectories
+	    return 2;
+	}
 	
 	
 	
@@ -178,16 +160,17 @@ public class Java {
 	//Fetch Java File From A Java Package 
 	static void FetchJavaFile(File PackageDir,ArrayList<Package>ListPackage) {
 		File[]FileList = PackageDir.listFiles();
-		if(FileList.length!=0) {
-		ArrayList<String> ListInfoFile=new ArrayList<String>();
+		if(FileList.length!=0 && RecursiveDir(FileList)==1 ) {
+		ArrayList<fileData> ListInfoFile=new ArrayList<>();
 		ArrayList<Package> SubPackages = new ArrayList<>(); // Store sub-packages
         //loop to fetch java file of package
 		for(File file : FileList) {
         	if( file.isFile() && file.getName().endsWith(".java")) {
-        		ListInfoFile.add(file.getName());
+        		ListInfoFile.add(new fileData(file.getName(),file.getPath()));
         	}
         	
         }
+		
         ListPackage.add(new Package(PackageDir.getName(),ListInfoFile));
         //loop to fetch SubPackages That Arent Empty
         for(File file : FileList) { 
@@ -202,10 +185,10 @@ public class Java {
  }
 	//Fetch Java File In Case Of Default Package
 	public static void FetchJavaFileNoPackage(File[]SrcFile,ArrayList<Package>ListPackage) {
-		ArrayList<String>ListInfoFile=new ArrayList<String>();
+		ArrayList<fileData>ListInfoFile=new ArrayList<fileData>();
 		for(File file : SrcFile) {
 			if(file.getName().endsWith(".java")) {
-				ListInfoFile.add(file.getName());
+				ListInfoFile.add(new fileData(file.getName(),file.getPath()));
 			}
 		}
 		ListPackage.add(new Package("Default Package",ListInfoFile));
@@ -214,16 +197,16 @@ public class Java {
 	
 	
 	public static void FetchJavaFilePkg(File[]PkgFile,ArrayList<Package>ListPackage) {
-        ArrayList<String>DirectPackage=new ArrayList<>();
+        ArrayList<fileData>DirectPackage=new ArrayList<>();
 		
 		for(File file : PkgFile) {
 			//System.out.println(file.getName());
 				if(file.isDirectory() && file.listFiles()!=null &&IsJavaPackageNotEmpty(file)) {
-					//System.out.println(file.getName());
+				 
 					FetchJavaFile(file,ListPackage);
 				}
 				else if(file.isFile() && file.getName().endsWith(".java")) {
-					DirectPackage.add(file.getName());
+					DirectPackage.add(new fileData(file.getName(),file.getPath()));
 				}
 			}
 			
@@ -238,16 +221,16 @@ public class Java {
 	//Fetch Java File From Src Folder
 	public static void FetchSrcJavaFile(File[]SrcFile,ArrayList<Package>ListPackage) {
 
-		ArrayList<String>DefaultPackage=new ArrayList<>();
+		ArrayList<fileData>DefaultPackage=new ArrayList<>();
 		
 		for(File file : SrcFile) {
 			//System.out.println(file.getName());
 				if(file.isDirectory() && file.listFiles()!=null &&IsJavaPackageNotEmpty(file)) {
-					//System.out.println(file.getName());
+				    System.out.println(file.getName());
 					FetchJavaFile(file,ListPackage);
 				}
 				else if(file.isFile() && file.getName().endsWith(".java")) {
-					DefaultPackage.add(file.getName());
+					DefaultPackage.add(new fileData(file.getName(),file.getPath()));
 				}
 			}
 			

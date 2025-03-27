@@ -114,7 +114,7 @@ public class TabedPaneController {
 
 	public void JAXPIELoad() {
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/AnalysisPie.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/jaxPie.fxml"));
         Parent root = null;
 		try {
 			root = fxmlLoader.load();
@@ -198,7 +198,7 @@ public class TabedPaneController {
 	
 	 public void ICPIELoad() {
 
-	        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/ImportPie.fxml"));
+	        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/impPie.fxml"));
 	        Parent root = null;
 			try {
 				root = fxmlLoader.load();

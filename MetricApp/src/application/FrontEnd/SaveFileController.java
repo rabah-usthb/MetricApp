@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import application.BackEnd.AnalyseAll;
 import application.BackEnd.Encapsulation;
 import application.BackEnd.ExceptionStatus;
 import application.BackEnd.ImportStatus;
@@ -24,17 +25,17 @@ ArrayList<T> metricOutputList = new ArrayList<>();
 	 this.metricOutputList = metricOutputList;
 	}
 	
-	public void saveXML() {
+	public void saveXML() throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Output Of "+ this.metricName +" Metric");
 
         // Set default file extension
         fileChooser.getExtensionFilters().add(
-            new FileChooser.ExtensionFilter("XML Files", "*.xml")
+            new FileChooser.ExtensionFilter("XML Files", "*.xlsx")
         );
 
         // Suggest a default file name
-        fileChooser.setInitialFileName(this.metricName+".xml");
+        fileChooser.setInitialFileName(this.metricName+".xlsx");
 
         File file = fileChooser.showSaveDialog(null);
         
@@ -49,7 +50,8 @@ ArrayList<T> metricOutputList = new ArrayList<>();
 
        switch (this.metricName) {
 	   case "IC":
-         XMLResult.IC_XML((ArrayList<ImportStatus>)(this.metricOutputList) , filePath);		
+		   System.out.println(filePath);
+        AnalyseAll.AnalyseExcel(filePath,(ArrayList<ImportStatus>) (this.metricOutputList)); 	
 		break;
 	   case "JEA" :
 		   XMLResult.JEA_XML((ArrayList<ExceptionStatus>)(this.metricOutputList) , filePath);

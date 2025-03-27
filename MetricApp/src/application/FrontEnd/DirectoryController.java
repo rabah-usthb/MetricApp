@@ -19,6 +19,8 @@ import application.BackEnd.Java;
 
 public class DirectoryController {
 
+	public static String path;
+	
     @FXML
     private TextField PathField;
 
@@ -32,15 +34,12 @@ public class DirectoryController {
         Window window = PathField.getScene().getWindow();
         File selectedDirectory = directoryChooser.showDialog(window);
         if (selectedDirectory != null) {
-        	String path = selectedDirectory.getAbsolutePath();
+        	path = selectedDirectory.getAbsolutePath();
             PathField.setText(path);
            
             //System.out.println(path);
             //System.out.println(Java.IsJavaProject(path));
             switch(Java.IsJavaProject(path)) {
-            case -2:
-                setErrorLabel("Src Folder Doesn't Exist", "red");
-                break;
             case -1:
                 setErrorLabel("Error Path Doesn't Exist", "red");
                 break;
@@ -49,7 +48,7 @@ public class DirectoryController {
                 break;
             case 1:
             	 setErrorLabel("Java Project", "green");
-            	path= Java.ConcatSrc(path);
+            	//path= Java.ConcatSrc(path);
                 openMetricScene(path);
                 break;
             case 2:
@@ -73,7 +72,7 @@ public class DirectoryController {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ressource/Fxml Folder/MetricJava.fxml"));
             Parent root = fxmlLoader.load();
             MetricController metricController = fxmlLoader.getController();
-             metricController.initialize(pathProject);
+            metricController.initialize(pathProject);
             Scene scene = new Scene(root);
             String css = this.getClass().getResource("/ressource/Css Folder/application.css").toExternalForm();
             scene.getStylesheets().add(css);

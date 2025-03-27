@@ -29,9 +29,10 @@ import javafx.scene.control.TextField;
 
 public class Package {
 	public String PackageName;
-	public ArrayList<String> FileNameList = new ArrayList<String>();
+	public ArrayList<fileData> FileNameList = new ArrayList<fileData>();
 	public ArrayList<Package> SubPackges = new ArrayList<Package>();
-	Package(String PackageName,ArrayList<String> FileNameList ){
+	
+	Package(String PackageName,ArrayList<fileData> FileNameList ){
 		this.PackageName = PackageName;
 		this.FileNameList=FileNameList;
 	}

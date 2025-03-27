@@ -3,6 +3,7 @@ package application.FrontEnd;
 import javafx.application.Platform;
 
 
+
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
@@ -26,11 +27,14 @@ import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import      javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -38,22 +42,27 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
-
+import application.BackEnd.AnalyseAll;
 import application.BackEnd.Java;
 import application.BackEnd.Package;
+import application.BackEnd.fileData;
 import javafx.util.Callback;
 
 public class MetricController {
 	public static String PathProject;
 	public static String FileSelectedPath;
 	static String SelectedItem;
-    @FXML
+	static ArrayList<Package> listPackage = new ArrayList<>();
+	@FXML
     private TreeView<TreeItemData> treeView;
-
-
+    @FXML
+    private GridPane pane;
+    
+    
     public void initialize(String pathProject) {
     	PathProject = pathProject;
-        ArrayList<Package> listPackage = new ArrayList<>();
+    	
+      
         File projectFile = new File(pathProject);
         File[] srcFile = projectFile.listFiles();
         Java.FetchSrcJavaFile(srcFile, listPackage);
@@ -147,6 +156,7 @@ public class MetricController {
     	return FileHierachy;
     }
 
+
     private String getFileHierarchy(TreeItem<TreeItemData> leafNode) {
         StringBuilder hierarchy = new StringBuilder(leafNode.getValue().GetLabel());
         TreeItem<TreeItemData> parent = leafNode.getParent();
@@ -165,10 +175,49 @@ public class MetricController {
             TreeItem<TreeItemData> subPackageItem = createTreeItem(subPackage);
             packageItem.getChildren().add(subPackageItem);
         }
-        for (String fileInfo : pkg.FileNameList) {
-            packageItem.getChildren().add(new TreeItem<>(new TreeItemData(fileInfo,"M 2 1.75 C 2 0.784 2.784 0 3.75 0 h 6.586 c 0.464 0 0.909 0.184 1.237 0.513 l 2.914 2.914 c 0.329 0.328 0.513 0.773 0.513 1.237 v 9.586 A 1.75 1.75 0 0 1 13.25 16 h -9.5 A 1.75 1.75 0 0 1 2 14.25 Z m 1.75 -0.25 a 0.25 0.25 0 0 0 -0.25 0.25 v 12.5 c 0 0.138 0.112 0.25 0.25 0.25 h 9.5 a 0.25 0.25 0 0 0 0.25 -0.25 V 6 h -2.75 A 1.75 1.75 0 0 1 9 4.25 V 1.5 Z m 6.75 0.062 V 4.25 c 0 0.138 0.112 0.25 0.25 0.25 h 2.688 l -0.011 -0.013 l -2.914 -2.914 l -0.013 -0.011 Z")));
+        for (fileData fileInfo : pkg.FileNameList) {
+            packageItem.getChildren().add(new TreeItem<>(new TreeItemData(fileInfo.fileName,"M 2 1.75 C 2 0.784 2.784 0 3.75 0 h 6.586 c 0.464 0 0.909 0.184 1.237 0.513 l 2.914 2.914 c 0.329 0.328 0.513 0.773 0.513 1.237 v 9.586 A 1.75 1.75 0 0 1 13.25 16 h -9.5 A 1.75 1.75 0 0 1 2 14.25 Z m 1.75 -0.25 a 0.25 0.25 0 0 0 -0.25 0.25 v 12.5 c 0 0.138 0.112 0.25 0.25 0.25 h 9.5 a 0.25 0.25 0 0 0 0.25 -0.25 V 6 h -2.75 A 1.75 1.75 0 0 1 9 4.25 V 1.5 Z m 6.75 0.062 V 4.25 c 0 0.138 0.112 0.25 0.25 0.25 h 2.688 l -0.011 -0.013 l -2.914 -2.914 l -0.013 -0.011 Z")));
         }
         return packageItem;
+    }
+    
+    
+    @FXML
+    public void initialize() {
+        // Add a listener to wait for the Scene to be available
+        pane.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+            	 KeyCombination ctrlS = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
+            	    newScene.getAccelerators().put(ctrlS, () -> {
+            	        System.out.println("Ctrl+S detected! Saving file...");
+            	        FileChooser fileChooser = new FileChooser();
+            	        fileChooser.setTitle("Save Output Of IC Metric");
+
+            	        // Set default file extension
+            	        fileChooser.getExtensionFilters().add(
+            	            new FileChooser.ExtensionFilter("XML Files", "*.xlsx")
+            	        );
+
+            	        // Suggest a default file name
+            	        fileChooser.setInitialFileName("IC.xlsx");
+
+            	        File file = fileChooser.showSaveDialog(null);
+            	        
+            	        if (file == null) {
+            	            return;
+            	        }
+            	        
+            	        String filePath = file.getAbsolutePath();
+            	        try {
+							AnalyseAll.AnalyseExcel(filePath, listPackage);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+            	      
+            	    });
+            }
+        });
     }
     
     

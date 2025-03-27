@@ -12,6 +12,7 @@ import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Side;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Label;
 
@@ -20,8 +21,10 @@ public class AnalysisPieController {
 	private PieChart AnalysisPie;
 	@FXML
 	private Label Description;
+	
+	@FXML
 	public void initialize() {
-		
+		System.out.println("hey");
 		File file = new File(MetricController.FileSelectedPath);
         Line line = new Line(file);
 		PerformanceMetric performanceMetric = new PerformanceMetric(Paths.get(file.getAbsolutePath()));
@@ -42,6 +45,10 @@ public class AnalysisPieController {
 	          );	
 
 		AnalysisPie.setTitle("Analysis Ratio");
+		
+		
+		AnalysisPie.setLegendSide(Side.RIGHT);
+
 		
 		ObservableList<PieChart.Data> filteredData = FXCollections.observableArrayList(
 			   AnalysisPieData.stream().filter(data -> data.getPieValue() > 0).collect(Collectors.toList())

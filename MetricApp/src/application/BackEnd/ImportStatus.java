@@ -37,6 +37,9 @@ public static Set<String> ClassNameList = new LinkedHashSet<>();
 public int LineNumber;
 public int DuplicatStatus=0;
 public Set<String>UsedClassList = new LinkedHashSet<>();
+public static String className;
+public static String longClassName;
+
 ImportStatus(String ImportName,int ImportStatus,int LineNumber){
 	this.ImportName=ImportName;
 	this.ImportStatus=ImportStatus;
@@ -60,54 +63,95 @@ static String FetchImportFromCode(String Line) {
 }
 
 static boolean IsPackageSrc(String AsterixImport) {
-	String FilePath = FetchSrcPackagePath(AsterixImport);
-	 Path path = Paths.get(FilePath);
-	 return Files.exists(path);
+	ArrayList<String> PossiblePathList = new ArrayList<>(); 
+	String FilePath = FetchSrcPackagePath(AsterixImport,"");
+	File srcFile = new File(MetricController.PathProject);
+	File [] listFile = srcFile.listFiles();
+	
+	PossiblePathList.add(FetchSrcPackagePath(AsterixImport, ""));
+	
+	for (File file : listFile) {
+		PossiblePathList.add(FetchSrcPackagePath(AsterixImport, file.getName()));
+	}
+
+	for (String pkg : PossiblePathList) {
+		Path path = Paths.get(pkg);
+		
+		if (Files.exists(path)) {
+			return true;
+		}
+		
+	}
+	return false;
 }
 
 static boolean IsImportSrc(String AsterixImport , String ClassName) {
-	String FilePath = FetchSrcPackagePath(AsterixImport);	
-	 FilePath = FilePath+"\\"+ClassName+".java";
-	 Path path = Paths.get(FilePath);
-	 return Files.exists(path);
+	ArrayList<String> PossiblePathList = new ArrayList<>();
+	
+	File srcFile = new File(MetricController.PathProject);
+	File [] listFile = srcFile.listFiles();
+	
+	PossiblePathList.add(FetchSrcPackagePath(AsterixImport, "")+ClassName+".java");
+	
+	for (File file : listFile) {
+		PossiblePathList.add(FetchSrcPackagePath(AsterixImport, file.getName())+ClassName+".java");
+	}
+
+	for (String file : PossiblePathList) {
+		Path path = Paths.get(file);
+		
+		if (Files.exists(path)) {
+			System.out.println("Path exist "+file);
+			return true;
+		}
+		
+	}
+	return false;
 }
 
 static boolean ClassLoad(String AsterixImport , String ClassName) {
-
+	
 	  if(IsImportSrc(AsterixImport,ClassName)) {
+		//  System.out.println("In Src");
           return true;
       } else {
+    	  System.out.println("asterixImport : "+AsterixImport+" className "+ClassName);
         return  ClassLoadingPackageJre(AsterixImport, ClassName);
       }
 }
 
 
 static boolean ClassLoadingPackageJre(String AsterixImport , String ClassName) {
+	String libPath = MetricController.PathProject.replace("//src", "//lib//*");
+	System.out.println("Lib Path "+libPath);
 	
-    try {
-    	 Class.forName(AsterixImport.replace("*","") + ClassName);
-        return true; 
-    } catch (ClassNotFoundException e) {
-    	 return false;
-        
-    }
+	try {
+		return LoadClass.LoadClass(AsterixImport.replace("*","") + ClassName,libPath);
+
+	
+	} catch (IOException | InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		return false;
+	}
+	
 }
 
 
-static String FetchSrcPackagePath(String AsterixImport) {
+static String FetchSrcPackagePath(String AsterixImport,String folder) {
 	String PackagePath="";
 	if(MetricController.PathProject.endsWith("\\")) {
-		PackagePath = MetricController.PathProject+AsterixImport.replace(".", "\\").replace("*",""); 
+		PackagePath = MetricController.PathProject+folder+"\\"+AsterixImport.replace(".", "\\").replace("*",""); 
 		}
 		else {
-			PackagePath = MetricController.PathProject+"\\"+AsterixImport.replace(".", "\\").replace("*","");
+			PackagePath = MetricController.PathProject+"\\"+folder+"\\"+AsterixImport.replace(".", "\\").replace("*","");
 		}
 	return PackagePath;
 }
 
 static Set<String> FetchSrcPackageFile(String AsterixImport){
 	Set<String>ListFile = new LinkedHashSet<>();
-	String PackagePath = FetchSrcPackagePath(AsterixImport);
+	String PackagePath = FetchSrcPackagePath(AsterixImport,"");
 	File file = new File(PackagePath);
     File[] FilePackage = file.listFiles();
     
@@ -151,19 +195,26 @@ static boolean IsDoubleWildCardConflictImport(String ImportPackageName1,String I
 static boolean IsClassImportConflict(String ImportPackageName1,String ImportPackageName2) {
 	String ImportClassName1 = FetchImportClassName(ImportPackageName1);
 	String ImportClassName2 = FetchImportClassName(ImportPackageName2);
+	
+	System.out.println("Imp1 "+ImportPackageName1+" Class1 "+ImportClassName1);
+	System.out.println("Imp2 "+ImportPackageName2+" Class2 "+ImportClassName2);
+	
 	if(!ImportClassName1.equals("*") && !ImportClassName2.equals("*")&&ImportClassName2.equals(ImportClassName1)) {
 		return true;
 	}
 	else if(ImportClassName1.equals("*") && !ImportClassName2.equals("*")&&ClassLoad(ImportPackageName1, ImportClassName2)) {
+		System.out.println("imp "+ImportPackageName1+" class "+ImportClassName2+" "+ClassLoad(ImportPackageName1, ImportClassName2));
 		return true;
 	}
 	else if(!ImportClassName1.equals("*") && ImportClassName2.equals("*")&&ClassLoad(ImportPackageName2, ImportClassName1)) {
+		System.out.println("imp "+ImportPackageName2+" class "+ImportClassName1+" "+ClassLoad(ImportPackageName2, ImportClassName1));
 		return true;
 	}
-	else if(ImportClassName1.equals("*") && ImportClassName2.equals("*")&&IsDoubleWildCardConflictImport(ImportPackageName1, ImportPackageName2)) {
+	/*else if(ImportClassName1.equals("*") && ImportClassName2.equals("*")&&IsDoubleWildCardConflictImport(ImportPackageName1, ImportPackageName2)) {
+		System.out.println("imp 1 "+ImportPackageName1+" imp 2"+ImportPackageName2);
 		return true;
 	}
-	
+	*/
 	return false;
 }
 
@@ -187,7 +238,7 @@ public static void UpdateConflictFlag(ArrayList<ImportStatus> ImportList) {
 				ImportList.get(j).ConflictStatus = 1;
 			
 		}
-					}
+	}
 	}
 }
 }
@@ -274,7 +325,19 @@ public static ArrayList<ImportStatus> update(File file , ArrayList<ImportStatus>
           }
 	
 	ClassNameList = ClassName;
-         	
+    
+	ArrayList<String> filteredClassName = new ArrayList<>();
+	
+	String sign = "(-|\\+)?";
+	String regexNumber = sign+"\\d+(\\.\\d+)?"; 
+	
+	for(String Class : ClassName) {
+		if(!Class.equals("int") && !Class.equals("float")&& !Class.equals("double") && !Class.equals("void") && !Class.matches(regexNumber)) {
+			filteredClassName.add(Class);
+		}
+	}
+	
+	System.out.println(filteredClassName);
 	//Set<String>UsedClassList = new LinkedHashSet<>();
 
 	for(ImportStatus Import : ImportList) {
@@ -282,7 +345,7 @@ public static ArrayList<ImportStatus> update(File file , ArrayList<ImportStatus>
 		//	UsedClassList.clear();
 		
 		
-          		for(String classname :  ClassName) {
+          		for(String classname :  filteredClassName) {
           			
           			if(!Import.ImportName.contains("*")) {
           			if((FetchImportClassName(Import.ImportName)).equals(classname)) {
@@ -316,6 +379,7 @@ public static ArrayList<ImportStatus> update(File file , ArrayList<ImportStatus>
 
 //Method To Fetch Import From File
 public static ArrayList<ImportStatus> ImportFetch(File file){
+	className = file.getName().replace(".java", "");
 	ArrayList<ImportStatus> ImportList = new ArrayList<ImportStatus>();
 	String Line;
 	int cmpt =1;
@@ -324,7 +388,7 @@ public static ArrayList<ImportStatus> ImportFetch(File file){
           	Line = Line.trim();
           	Line = Qoute.RemoveQoute(Line);
           	ArrayList<String> ListCode=new ArrayList<String>();
-          	if(!Line.isBlank() && !Line.isEmpty() && !Comment.IsCommentOnlyCompleted(Line) && ! RegularExpression.IsPackage(Line)) {
+          	if(!Line.isBlank() && !Line.isEmpty()) {
           		//System.out.println(Line);
           		if(Comment.ContainsComment(Line)) {
   	            	//System.out.println(line);
@@ -349,9 +413,11 @@ public static ArrayList<ImportStatus> ImportFetch(File file){
           	            		ImportList.add(new ImportStatus(FetchImportFromCode(code),0,cmpt));
           	            		
           	            	}
-          					else {
-          						break;
+          					
+          					else if (RegularExpression.IsPackage(Line)){
+          						longClassName = Line.replace("package", "").replace(" ","").replace(";", "");
           					}
+          					
           				}
           			}
           		}
@@ -360,9 +426,10 @@ public static ArrayList<ImportStatus> ImportFetch(File file){
   	            		ImportList.add(new ImportStatus(FetchImportFromCode(Line),0,cmpt));
   	            		
   	            	}
-          			else {
-          				break;
-          			}
+          			else if (RegularExpression.IsPackage(Line)){
+  						longClassName = Line.replace("package", "").replace(" ","").replace(";", "");
+  					}
+          			
           		}
           	}
           	++cmpt;
@@ -383,8 +450,7 @@ public static ArrayList<ImportStatus> ImportFetch(File file){
          }
      }
 	   
-	 
-	
+	longClassName = longClassName+"."+className;
 	return ImportList;
 }
 

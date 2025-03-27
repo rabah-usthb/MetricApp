@@ -3,18 +3,13 @@ package application.FrontEnd;
 import java.io.File;
 
 
+
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import application.BackEnd.JAX;
-import application.BackEnd.Line;
-import application.BackEnd.Package;
-import application.BackEnd.PerformanceMetric;
-import application.BackEnd.RegularExpression;
-import application.BackEnd.SoftwareSize;
-import application.BackEnd.XMLResult;
-import application.BackEnd.classType;
+import application.BackEnd.*;
+
 import application.FrontEnd.ImportController.CustomTreeCell;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;

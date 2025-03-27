@@ -66,7 +66,6 @@ public class ImportController {
 	        TreeItem<TreeItemData> DuplicateImport = new TreeItem<>(new TreeItemData("Duplicate Imports", DuplicateSvg));
 	        for (ImportStatus Import : ListImport) {
 	            //TreeItem<TreeItemData> ImportItem = createTreeItem(Import);
-	            if(Import.ConflictStatus!=1) {
 	            	
 	            if(Import.DuplicatStatus>=1) {
 	            	DuplicateImport.getChildren().add(new TreeItem<>(new TreeItemData(Import.ImportName,PackageSvg)));
@@ -87,8 +86,8 @@ public class ImportController {
 	            else {
 	            	NotUsedImportParent.getChildren().add(new TreeItem<>(new TreeItemData(Import.ImportName,PackageSvg)));
 	            }
-	            }
-	            else {
+	            
+	            if (Import.ConflictStatus == 1) {
 	            	ConflictImport.getChildren().add(new TreeItem<>(new TreeItemData(Import.ImportName,"M 3 3 v 8 h 8 V 3 H 3 Z m 6 6 H 5 V 5 h 4 v 4 Z m -6 4 v 8 h 8 v -8 H 3 Z m 6 6 H 5 v -4 h 4 v 4 Z m 4 -16 v 8 h 8 V 3 h -8 Z m 6 6 h -4 V 5 h 4 v 4 Z m -6 4 v 8 h 8 v -8 h -8 Z m 6 6 h -4 v -4 h 4 v 4 Z")));
 	            }
 	        }
@@ -160,8 +159,13 @@ public class ImportController {
 	            	 KeyCombination ctrlS = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
 	            	    newScene.getAccelerators().put(ctrlS, () -> {
 	            	        System.out.println("Ctrl+S detected! Saving file...");
-	            	        SaveFileController<ImportStatus> save = new SaveFileController<ImportStatus>("IC", ListImport);
-	            	        save.saveXML();
+	            	        SaveFileController save = new SaveFileController ("IC", ListImport);
+	            	        try {
+								save.saveXML();
+							} catch (IOException e) {
+								
+								e.printStackTrace();
+							}
 	            	    });
 	            }
 	        });
