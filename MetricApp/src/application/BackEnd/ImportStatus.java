@@ -248,6 +248,7 @@ static void IsAll(Set<String> ListImportFromFile , String line) {
 	
 	if(RegularExpression.IsClass(line)) {
 		ListImportFromFile.addAll(RegularExpression.FetchImplements(line));
+		ListImportFromFile.add(RegularExpression.FetchExtends(line));
 	}
 	
 	else if(RegularExpression.IsMethodPrototype(line)) {
@@ -322,12 +323,13 @@ public static ArrayList<ImportStatus> update(File file , ArrayList<ImportStatus>
           	}
           	
           	if(ListCode.size()==0) {
-          		if(line.endsWith(",") || line.endsWith("(") || line.endsWith(")")) {
+          		if(line.endsWith(",") || line.endsWith("(") || line.endsWith(")") || line.endsWith("+") || line.endsWith("-") ||line.endsWith("/")) {
           			previousLine = previousLine + line; 
           		}
           		else {
           		line = previousLine + line;
           		previousLine = "";
+          		System.out.println(line+" "+RegularExpression.IsThrow(line));
           		IsAll(ClassName,line);
           		}
           	}

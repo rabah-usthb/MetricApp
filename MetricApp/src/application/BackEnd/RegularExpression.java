@@ -471,7 +471,7 @@ public class RegularExpression {
 			}
 			//Method To Know If Line Is Throw
 	static boolean IsThrow(String line) {
-		String ThrowPattern="\\s*throw\\s+new\\s+\\w+\\s*\\(\\s*("+inside+")\\s*\\)\\s*;\\s*";
+		String ThrowPattern="\\s*throw\\s+new\\s+\\w+\\s*\\(\\s*("+inside+")?\\s*\\)\\s*;\\s*";
 			return line.matches(ThrowPattern);
 		}
 
