@@ -23,5 +23,6 @@
 	<classpathentry kind="lib" path="C:/Users/Administrator/Downloads/apache-log4j-2.24.3-bin/log4j-api-2.24.3.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Administrator/Downloads/apache-log4j-2.24.3-bin/log4j-core-2.24.3.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Administrator/Downloads/commons-compress-1.27.1-bin/commons-compress-1.27.1/commons-compress-1.27.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Administrator/Downloads/google-java-format-1.26.0-all-deps.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

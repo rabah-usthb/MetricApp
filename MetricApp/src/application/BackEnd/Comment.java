@@ -35,10 +35,45 @@ public class Comment {
 	}
 	
 	
+	//To Jump Comment And Fetch Code
+		static String JumpComment (String Line,ArrayList<String> List,String[] code,Integer[] index) {
+			String line = "";
+			int index_0 = index[0];
+			if(!OpeningMultiCommentOnly(Line)) {
+				System.out.println("Before "+Line);
+				List.add(CodeOpeningComment(Line));
+			}
+			//System.out.println(Line);
+		
+				for ( int i = index_0 ; i<code.length;i++) { 
+				Line = code[i].trim();
+				Line=Qoute.RemoveQoute(Line);
+				//System.out.println(Line);
+				if(Line.contains("*/")) {
+					line = Line;
+					Line = code[i+1];
+					index[0] = i+1;
+					break;
+				}
+				}
+			
+			
+			if(!ClosingMultiCommentOnly(line)) {
+				List.add(CodeClosingComment(line));
+				System.out.println("After "+line);
+			}
+			
+		   // System.out.println("finished "+Line);
+		    return Line;
+		}
+		
+	
 	
 	//To Jump Comment And Fetch Code
-	static void JumpComment (String Line,ArrayList<String> List,BufferedReader reader) {
+	static String JumpComment (String Line,ArrayList<String> List,BufferedReader reader) {
+		String line = "";
 		if(!OpeningMultiCommentOnly(Line)) {
+			System.out.println("Before "+Line);
 			List.add(CodeOpeningComment(Line));
 		}
 		//System.out.println(Line);
@@ -48,6 +83,8 @@ public class Comment {
 			Line=Qoute.RemoveQoute(Line);
 			//System.out.println(Line);
 			if(Line.contains("*/")) {
+				line = Line;
+				Line = reader.readLine();
 				break;
 			}
 			}
@@ -55,9 +92,13 @@ public class Comment {
 		catch(IOException e) {
 			
 		}
-		if(!ClosingMultiCommentOnly(Line)) {
-			List.add(CodeClosingComment(Line));
+		if(!ClosingMultiCommentOnly(line)) {
+			List.add(CodeClosingComment(line));
+			System.out.println("After "+line);
 		}
+		
+	   // System.out.println("finished "+Line);
+	    return Line;
 	}
 	
 	
@@ -105,7 +146,10 @@ public class Comment {
 	
 	//To Fetch Code From Comment*/ Code
 	static String CodeClosingComment(String Line) {
-		return Line.substring(Line.indexOf("*/")+2);
+		try{return Line.substring(Line.indexOf("*/")+2);}
+		catch (StringIndexOutOfBoundsException e){
+			return "";
+		}
 	}
  /**/
 	

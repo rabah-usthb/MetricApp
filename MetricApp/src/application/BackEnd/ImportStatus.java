@@ -24,6 +24,9 @@ import java.util.Set;
 import application.FrontEnd.ImportController;
 import application.FrontEnd.MetricController;
 import java.net.URL;
+import com.google.googlejavaformat.java.Formatter;
+import com.google.googlejavaformat.java.FormatterException;
+
 
 /*Import static Flag
 Used Not Used with class loading access of import static
@@ -288,32 +291,48 @@ static void IsAll(Set<String> ListImportFromFile , String line) {
 public static ArrayList<ImportStatus> update(File file , ArrayList<ImportStatus> ImportList){
 	  	 Set<String>ClassName = new LinkedHashSet<>();
 	  	 String previousLine = "";
-	try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-          String line;
-          while ((line = reader.readLine()) != null) {
-          line = line.trim();
-          line =  Qoute.RemoveQoute(line);
+	  	 String formattedCode = "";
+	  	 Integer[] index = new Integer[1];
+	  	 index[0] = 0;
+	  	  String Code;
+		try {
+			Code = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
+			 formattedCode = new Formatter().formatSource(Code);
+		} catch (IOException | FormatterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		String [] line = formattedCode.split("\n");
+          // Format the code
+       
+		
+          for(int i = 0 ; i<line.length;i++) {
+          line[i] = line[i].trim();
+          line[i] =  Qoute.RemoveQoute(line[i]);
              
               ArrayList<String> ListCode=new ArrayList<String>();
               
-              if(!line.isBlank() && !line.isEmpty() && !RegularExpression.IsBracket(line)&& !Comment.IsCommentOnlyCompleted(line) && !RegularExpression.IsImport(line) &&!RegularExpression.IsPackage(line)) {
+              if(!line[i].isBlank() && !line[i].isEmpty() && !RegularExpression.IsBracket(line[i])&& !Comment.IsCommentOnlyCompleted(line[i]) && !RegularExpression.IsImport(line[i]) &&!RegularExpression.IsPackage(line[i])) {
           	//System.out.println(line);
-              	if(Comment.ContainsComment(line)) {
+              	if(Comment.ContainsComment(line[i])) {
           	//	System.out.println(line);
-          		line = Comment.RemoveComment(line);
+          		line[i] = Comment.RemoveComment(line[i]);
           	}
           	else {
           		
-          		if(Comment.FinishedComment(line)) {
-          			if(!Comment.OpeningMultiCommentOnly(line)) {
-          				ListCode.add(Comment.CodeOpeningComment(line));
+          		if(Comment.FinishedComment(line[i])) {
+          			if(!Comment.OpeningMultiCommentOnly(line[i])) {
+          				ListCode.add(Comment.CodeOpeningComment(line[i]));
           			}
-          			if(!Comment.ClosingMultiCommentOnly(line)) {
-          				ListCode.add(Comment.CodeClosingComment(line));
+          			if(!Comment.ClosingMultiCommentOnly(line[i])) {
+          				ListCode.add(Comment.CodeClosingComment(line[i]));
           			}
           		}
-          		else if (Comment.NotFinishedComment(line)) {
-          			Comment.JumpComment(line,ListCode,reader);
+          		else if (Comment.NotFinishedComment(line[i])) {
+          		//System.out.println("not finised "+line);
+          		line[i] =	Comment.JumpComment(line[i],ListCode,line,index);
+          		
           		}
           		if(!ListCode.isEmpty()) {
           			for(String code : ListCode) {
@@ -323,21 +342,17 @@ public static ArrayList<ImportStatus> update(File file , ArrayList<ImportStatus>
           	}
           	
           	if(ListCode.size()==0) {
-          		if(line.endsWith(",") || line.endsWith("(") || line.endsWith(")") || line.endsWith("+") || line.endsWith("-") ||line.endsWith("/")) {
-          			previousLine = previousLine + line; 
+          		line[i] = line[i].trim();
+          		line[i] = Qoute.RemoveQoute(line[i]);
+          	 System.out.println(line[i]+" "+RegularExpression.IsMethodPrototype(line[i].trim()));
+          		IsAll(ClassName,line[i]);
           		}
-          		else {
-          		line = previousLine + line;
-          		previousLine = "";
-          		System.out.println(line+" "+RegularExpression.IsThrow(line));
-          		IsAll(ClassName,line);
-          		}
-          	}
+          	
               }
+              i = index[0];
+              ++index[0];
           }
-	}catch (IOException e) {
-              e.printStackTrace(); // Handle any IO exceptions
-          }
+	
 	
 	ClassNameList = ClassName;
     
