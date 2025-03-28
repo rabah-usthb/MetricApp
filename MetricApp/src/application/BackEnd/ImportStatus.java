@@ -112,7 +112,7 @@ static boolean IsImportSrc(String AsterixImport , String ClassName) {
 static boolean ClassLoad(String AsterixImport , String ClassName) {
 	
 	  if(IsImportSrc(AsterixImport,ClassName)) {
-		//  System.out.println("In Src");
+		  System.out.println("In Src");
           return true;
       } else {
     	  System.out.println("asterixImport : "+AsterixImport+" className "+ClassName);
@@ -123,7 +123,7 @@ static boolean ClassLoad(String AsterixImport , String ClassName) {
 
 static boolean ClassLoadingPackageJre(String AsterixImport , String ClassName) {
 	String libPath = MetricController.PathProject.replace("//src", "//lib//*");
-	System.out.println("Lib Path "+libPath);
+ 	System.out.println("Lib Path "+libPath);
 	
 	try {
 		return LoadClass.LoadClass(AsterixImport.replace("*","") + ClassName,libPath);
@@ -160,7 +160,7 @@ static Set<String> FetchSrcPackageFile(String AsterixImport){
     	ListFile.add(filepkg.getName().replace(".java", ""));
     }
     	}
-    System.out.println(ListFile);
+ //   System.out.println(ListFile);
     return ListFile;
 }
 
@@ -196,18 +196,18 @@ static boolean IsClassImportConflict(String ImportPackageName1,String ImportPack
 	String ImportClassName1 = FetchImportClassName(ImportPackageName1);
 	String ImportClassName2 = FetchImportClassName(ImportPackageName2);
 	
-	System.out.println("Imp1 "+ImportPackageName1+" Class1 "+ImportClassName1);
-	System.out.println("Imp2 "+ImportPackageName2+" Class2 "+ImportClassName2);
+	//System.out.println("Imp1 "+ImportPackageName1+" Class1 "+ImportClassName1);
+//	System.out.println("Imp2 "+ImportPackageName2+" Class2 "+ImportClassName2);
 	
 	if(!ImportClassName1.equals("*") && !ImportClassName2.equals("*")&&ImportClassName2.equals(ImportClassName1)) {
 		return true;
 	}
 	else if(ImportClassName1.equals("*") && !ImportClassName2.equals("*")&&ClassLoad(ImportPackageName1, ImportClassName2)) {
-		System.out.println("imp "+ImportPackageName1+" class "+ImportClassName2+" "+ClassLoad(ImportPackageName1, ImportClassName2));
+	//	System.out.println("imp "+ImportPackageName1+" class "+ImportClassName2+" "+ClassLoad(ImportPackageName1, ImportClassName2));
 		return true;
 	}
 	else if(!ImportClassName1.equals("*") && ImportClassName2.equals("*")&&ClassLoad(ImportPackageName2, ImportClassName1)) {
-		System.out.println("imp "+ImportPackageName2+" class "+ImportClassName1+" "+ClassLoad(ImportPackageName2, ImportClassName1));
+	//	System.out.println("imp "+ImportPackageName2+" class "+ImportClassName1+" "+ClassLoad(ImportPackageName2, ImportClassName1));
 		return true;
 	}
 	/*else if(ImportClassName1.equals("*") && ImportClassName2.equals("*")&&IsDoubleWildCardConflictImport(ImportPackageName1, ImportPackageName2)) {
@@ -245,7 +245,12 @@ public static void UpdateConflictFlag(ArrayList<ImportStatus> ImportList) {
 
 
 static void IsAll(Set<String> ListImportFromFile , String line) {
-	if(RegularExpression.IsMethodPrototype(line)) {
+	
+	if(RegularExpression.IsClass(line)) {
+		ListImportFromFile.addAll(RegularExpression.FetchImplements(line));
+	}
+	
+	else if(RegularExpression.IsMethodPrototype(line)) {
 		
 		ListImportFromFile.addAll(RegularExpression.extractClassNamesMethod(line));
 		 
@@ -281,6 +286,7 @@ static void IsAll(Set<String> ListImportFromFile , String line) {
 //Method To Update Flags Of ImportStatus(used , not used)
 public static ArrayList<ImportStatus> update(File file , ArrayList<ImportStatus> ImportList){
 	  	 Set<String>ClassName = new LinkedHashSet<>();
+	  	 String previousLine = "";
 	try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
           String line;
           while ((line = reader.readLine()) != null) {
@@ -316,7 +322,14 @@ public static ArrayList<ImportStatus> update(File file , ArrayList<ImportStatus>
           	}
           	
           	if(ListCode.size()==0) {
+          		if(line.endsWith(",") || line.endsWith("(") || line.endsWith(")")) {
+          			previousLine = previousLine + line; 
+          		}
+          		else {
+          		line = previousLine + line;
+          		previousLine = "";
           		IsAll(ClassName,line);
+          		}
           	}
               }
           }
@@ -337,7 +350,7 @@ public static ArrayList<ImportStatus> update(File file , ArrayList<ImportStatus>
 		}
 	}
 	
-	System.out.println(filteredClassName);
+//	System.out.println(filteredClassName);
 	//Set<String>UsedClassList = new LinkedHashSet<>();
 
 	for(ImportStatus Import : ImportList) {
@@ -449,8 +462,10 @@ public static ArrayList<ImportStatus> ImportFetch(File file){
              }
          }
      }
+	 
 	   
 	longClassName = longClassName+"."+className;
+	System.out.println(className +" "+ longClassName);
 	return ImportList;
 }
 
@@ -458,7 +473,7 @@ public static String FetchPackageName(String Import) {
 	//System.out.println(Import);
 	String PKG = Import.replace(" ", "").replace("import", "");
 	PKG =PKG.substring(0,PKG.lastIndexOf("."));
-//	System.out.println(PKG);
+    //System.out.println(PKG);
 	return PKG ;
 }
 
@@ -607,7 +622,7 @@ public static void ReplaceWildCardImport(String filePath, int lineIndex, String 
         lines.set(lineIndex, replacementContent);
         //System.out.println("Pkg Of Replacement "+Pkg);
        
-       System.out.println(lineIndex+"\n\n");
+      // System.out.println(lineIndex+"\n\n");
        
        
        Iterator<String> iterator = lines.listIterator();

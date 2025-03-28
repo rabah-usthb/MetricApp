@@ -8,26 +8,34 @@ import java.util.ArrayList;
 import org.apache.poi.ss.usermodel.*; 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook; 
 
+
+
 public class AnalyseAll {
+
+	public static int index = 1;
 	
-	public static void TraverseProject(Sheet importSheet,Sheet erSheet,int index,ArrayList<Package> packageList) {
+	public static void TraverseProject(Sheet importSheet,Sheet erSheet,ArrayList<Package> packageList) {
 		
 		for(Package pkg : packageList) {
+			System.out.println(pkg.PackageName+"\n");
 			for(fileData fileInfo : pkg.FileNameList) {
-				if(fileInfo.fileName.endsWith(".java")) {
 				   File file = new File(fileInfo.filePath);
 				   ArrayList<ImportStatus> ListImport = new ArrayList<ImportStatus>();
 				   ListImport = ImportStatus.update(file,(ImportStatus.ImportFetch(file))); 
 				   ImportStatus.UpdateConflictFlag(ListImport);
+				   System.out.println(fileInfo.filePath);
+			       System.out.println(ImportStatus.className);
+			       System.out.println(ImportStatus.longClassName);
+			       System.out.println(index);
 				   Encapsulation er = Encapsulation.EncapsulationFetch(file);
 				   writeRowImport(importSheet,ListImport,index);
 				   writeRowER(erSheet, er, index);
-				   index++;
-				}
-				
+				   index++;	
 			}
 			
-			TraverseProject(importSheet,erSheet, index, pkg.SubPackges);
+			if(!pkg.SubPackges.isEmpty()) {
+			TraverseProject(importSheet,erSheet, pkg.SubPackges);
+			}
 		}
 		
 	}
@@ -40,10 +48,10 @@ public class AnalyseAll {
         initColumnIC(importSheet);
         initColumnER(erSheet);
         
-        TraverseProject(importSheet,erSheet,1,Project);
+        TraverseProject(importSheet,erSheet,Project);
         
         expandAllICColumn(importSheet, 7);
-        expandAllERColumn(erSheet, 7);
+        expandAllERColumn(erSheet, 8);
      
         
         try (FileOutputStream out = new FileOutputStream(OutputFilePath)) {
