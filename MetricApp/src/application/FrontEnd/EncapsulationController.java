@@ -72,7 +72,7 @@ public class EncapsulationController {
             	        ArrayList<Encapsulation> list  = new ArrayList<Encapsulation>();
             	        list.add(encapsulation);
             	        SaveFileController<Encapsulation> save = new SaveFileController<Encapsulation>("ER",list);
-            	        save.saveXML();
+            	      
             	    });
             }
         });

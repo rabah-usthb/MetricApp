@@ -48,7 +48,7 @@ public class ExceptionController {
 	        ExceptionLabel.setText("Exceptions Of "+file.getName());
 	        
 	       try {
-			ListException = ExceptionStatus.FetchThrowable(file, FilePath.substring(0,FilePath.indexOf("\\src\\")+4));
+			ListException = ExceptionStatus.FetchThrowable(file);
 		System.out.println(ListException);
 	       } catch (ClassNotFoundException | IOException e) {
 			// TODO Auto-generated catch block

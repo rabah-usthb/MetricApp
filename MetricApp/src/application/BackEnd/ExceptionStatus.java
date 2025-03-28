@@ -3,12 +3,15 @@ package application.BackEnd;
 import java.io.BufferedReader;
 
 
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -17,6 +20,9 @@ import java.util.TreeSet;
 import java.util.jar.JarInputStream;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
+
+import com.google.googlejavaformat.java.Formatter;
+import com.google.googlejavaformat.java.FormatterException;
 
 import application.FrontEnd.MetricController;
 
@@ -229,8 +235,8 @@ public class ExceptionStatus {
 	        } else {
 	        	// Load using custom class loader for project classes
 	        	//System.out.println(ExceptionPath);
-	        	ExceptionPath = ExceptionPath.replace("\\src\\", "\\bin\\");
-	        	String fileName = ExceptionPath.substring(ExceptionPath.indexOf("\\bin\\")+5).replace(".java", "").replace("\\", ".");
+	        //	ExceptionPath = ExceptionPath.replace("\\src\\", "\\bin\\");
+	        	String fileName = ExceptionPath.substring(ExceptionPath.indexOf("\\src\\")+5).replace(".java", "").replace("\\", ".");
 	        	ExceptionPath = ExceptionPath.replace("\\"+ExceptionName+".java","");
 	        	//System.out.println(ExceptionPath);
 	 
@@ -310,31 +316,45 @@ public class ExceptionStatus {
  }
  
  
-  public static ArrayList<ExceptionStatus> FetchThrowable(File file,String ProjectPath) throws ClassNotFoundException, IOException{
+  public static ArrayList<ExceptionStatus> FetchThrowable(File file) throws ClassNotFoundException, IOException{
 	  Set<String> ThrowableList = new LinkedHashSet<>();
-		String Line;
-		 try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-	            while ((Line = reader.readLine() )!= null) {
-	            	Line = Line.trim();
-	            	Line = Qoute.RemoveQoute(Line);
+
+		String formattedCode = "";
+	  	 Integer[] index = new Integer[1];
+	  	 index[0] = 0;
+	  	  String Code;
+		try {
+			Code = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
+			 formattedCode = new Formatter().formatSource(Code);
+		} catch (IOException | FormatterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		String [] Line = formattedCode.split("\n");
+          // Format the code
+       
+			for(int i = 0 ; i<Line.length;i++) {
+	            	Line[i] = Line[i].trim();
+	            	Line[i] = Qoute.RemoveQoute(Line[i]);
 	            	ArrayList<String> ListCode=new ArrayList<>();
-	            	if(!Line.isBlank() && !Line.isEmpty() && !Comment.IsCommentOnlyCompleted(Line) && !RegularExpression.IsPackage(Line) && !RegularExpression.IsImport(Line)) {
+	            	if(!Line[i].isBlank() && !Line[i].isEmpty() && !Comment.IsCommentOnlyCompleted(Line[i]) && !RegularExpression.IsPackage(Line[i]) && !RegularExpression.IsImport(Line[i])) {
 	            		//System.out.println(Line);
-	            		if(Comment.ContainsComment(Line)) {
+	            		if(Comment.ContainsComment(Line[i])) {
 	    	            	//System.out.println(line);
-	    	            		Line = Comment.RemoveComment(Line);
+	    	            		Line[i] = Comment.RemoveComment(Line[i]);
 	    	            	}
 	            		else {
-	            			if(Comment.FinishedComment(Line)) {
-		            			if(!Comment.OpeningMultiCommentOnly(Line)) {
-		            				ListCode.add(Comment.CodeOpeningComment(Line));
+	            			if(Comment.FinishedComment(Line[i])) {
+		            			if(!Comment.OpeningMultiCommentOnly(Line[i])) {
+		            				ListCode.add(Comment.CodeOpeningComment(Line[i]));
 		            			}
-		            			if(!Comment.ClosingMultiCommentOnly(Line)) {
-		            				ListCode.add(Comment.CodeClosingComment(Line));
+		            			if(!Comment.ClosingMultiCommentOnly(Line[i])) {
+		            				ListCode.add(Comment.CodeClosingComment(Line[i]));
 		            			}
 		            		}
-	            			else if (Comment.NotFinishedComment(Line)) {
-		            			Comment.JumpComment(Line,ListCode,reader);
+	            			else if (Comment.NotFinishedComment(Line[i])) {
+	            				Line[i] =	Comment.JumpComment(Line[i],ListCode,Line,index);
 		            		}
 
 	            			if(!ListCode.isEmpty()) {
@@ -344,15 +364,15 @@ public class ExceptionStatus {
 	            			}
 	            		}
 	            		if(ListCode.isEmpty()) {
-	            			IsThrowable(ThrowableList,Line);
+	            			IsThrowable(ThrowableList,Line[i]);
       	            	}
 	            			
 	            		}
+	            	 i = index[0];
+	                 ++index[0];
 	            	}
-	            }
-	         catch (IOException e) {
-	            e.printStackTrace();
-	        }
+	         
+	        
 		//System.out.println(ThrowableList);
 	ArrayList<ExceptionStatus> ListException = new ArrayList<>();
 	File FileSrc = new File(MetricController.PathProject);

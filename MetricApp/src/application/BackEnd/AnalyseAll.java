@@ -14,7 +14,7 @@ public class AnalyseAll {
 
 	public static int index = 1;
 	
-	public static void TraverseProject(Sheet importSheet,Sheet erSheet,ArrayList<Package> packageList) {
+	public static void TraverseProject(Sheet importSheet,Sheet expSheet,Sheet erSheet,ArrayList<Package> packageList) {
 		
 		for(Package pkg : packageList) {
 			System.out.println(pkg.PackageName+"\n");
@@ -27,6 +27,15 @@ public class AnalyseAll {
 			       System.out.println(ImportStatus.className);
 			       System.out.println(ImportStatus.longClassName);
 			       System.out.println(index);
+			       ArrayList<ExceptionStatus> ListException = new ArrayList<ExceptionStatus>();
+			       try {
+						ListException = ExceptionStatus.FetchThrowable(file);
+					System.out.println(ListException);
+				       } catch (ClassNotFoundException | IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+			       writeRowExp(erSheet, ListException, index);
 				   Encapsulation er = Encapsulation.EncapsulationFetch(file);
 				   writeRowImport(importSheet,ListImport,index);
 				   writeRowER(erSheet, er, index);
@@ -34,7 +43,7 @@ public class AnalyseAll {
 			}
 			
 			if(!pkg.SubPackges.isEmpty()) {
-			TraverseProject(importSheet,erSheet, pkg.SubPackges);
+			TraverseProject(importSheet,expSheet,erSheet, pkg.SubPackges);
 			}
 		}
 		
@@ -43,15 +52,18 @@ public class AnalyseAll {
     public static void AnalyseExcel(String OutputFilePath,ArrayList<Package> Project) throws IOException {
         Workbook workbook = new XSSFWorkbook();
         Sheet importSheet = workbook.createSheet("Import Conflict Metric");
+        Sheet expSheet =  workbook.createSheet("Exception Metric");
         Sheet erSheet = workbook.createSheet("Encapsulation Rate Metric");
 
         initColumnIC(importSheet);
         initColumnER(erSheet);
+        initColumnEX(expSheet);
         
-        TraverseProject(importSheet,erSheet,Project);
+        TraverseProject(importSheet,expSheet,erSheet,Project);
         
-        expandAllICColumn(importSheet, 7);
-        expandAllERColumn(erSheet, 8);
+        expandAllColumn(importSheet, 7);
+        expandAllColumn(expSheet, 7);
+        expandAllColumn(erSheet, 8);
      
         
         try (FileOutputStream out = new FileOutputStream(OutputFilePath)) {
@@ -60,6 +72,20 @@ public class AnalyseAll {
         workbook.close();
     }
     
+   
+    
+    public static void initColumnEX(Sheet sheet) {
+ 	   Row header = sheet.createRow(0); 
+        
+        header.createCell(0).setCellValue("Class Name");
+        header.createCell(1).setCellValue("Long Class Name");
+        header.createCell(2).setCellValue("Total");
+        header.createCell(3).setCellValue("User");
+        header.createCell(4).setCellValue("Default");
+        header.createCell(5).setCellValue("RunTime");
+        header.createCell(6).setCellValue("CompileTime");
+    }
+   
     
    public static void initColumnER(Sheet sheet) {
 	   Row header = sheet.createRow(0); 
@@ -101,15 +127,24 @@ public class AnalyseAll {
    
    }
     
-   public static void expandAllERColumn(Sheet sheet , int lastCol ) {
+   public static void expandAllColumn(Sheet sheet , int lastCol ) {
 		  for (int i = 0 ; i<lastCol ; i++)
 			  sheet.autoSizeColumn(i);
 }
    
-  public static void expandAllICColumn(Sheet sheet , int lastCol ) {
-	  for (int i = 0 ; i<lastCol ; i++)
-		  sheet.autoSizeColumn(i);
-  }
+   public static void writeRowExp(Sheet sheet,ArrayList<ExceptionStatus> list,int index) {
+	
+	   Row row  = sheet.createRow(index);
+	   
+	   row.createCell(0).setCellValue(ImportStatus.className);
+       row.createCell(1).setCellValue(ImportStatus.longClassName);
+       row.createCell(2).setCellValue(list.size());
+       row.createCell(3).setCellValue(ExceptionStatus.getTotalNumberDefaultException(list));
+       row.createCell(4).setCellValue(ExceptionStatus.getTotalNumberNotDefaultException(list));
+       row.createCell(5).setCellValue(ExceptionStatus.getTotalNumberRunTimeException(list));
+       row.createCell(6).setCellValue(ExceptionStatus.getTotalNumberCompileTimeException(list));
+   
+   }
    
    public static void writeRowImport(Sheet sheet,ArrayList<ImportStatus> list,int index) {
 	   RowDataImport data = new RowDataImport(list);

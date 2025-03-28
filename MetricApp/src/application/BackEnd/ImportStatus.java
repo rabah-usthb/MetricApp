@@ -290,7 +290,6 @@ static void IsAll(Set<String> ListImportFromFile , String line) {
 //Method To Update Flags Of ImportStatus(used , not used)
 public static ArrayList<ImportStatus> update(File file , ArrayList<ImportStatus> ImportList){
 	  	 Set<String>ClassName = new LinkedHashSet<>();
-	  	 String previousLine = "";
 	  	 String formattedCode = "";
 	  	 Integer[] index = new Integer[1];
 	  	 index[0] = 0;
