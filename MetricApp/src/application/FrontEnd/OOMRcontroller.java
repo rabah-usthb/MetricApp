@@ -45,7 +45,7 @@ public class OOMRcontroller {
         File file = new File(FilePath);
          rm = null;
 		try {
-			rm = OOMRCalculator.fetchOOMR(FilePath,filename );
+			rm = OOMRCalculator.fetchOOMR(FilePath);
 		} catch (FileNotFoundException | MalformedURLException | ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -85,24 +85,7 @@ public class OOMRcontroller {
     }
 
     
-    @FXML
-    public void initialize() {
-        // Add a listener to wait for the Scene to be available
-        pane.sceneProperty().addListener((obs, oldScene, newScene) -> {
-            if (newScene != null) {
-            	 KeyCombination ctrlS = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
-            	    newScene.getAccelerators().put(ctrlS, () -> {
-            	        System.out.println("Ctrl+S detected! Saving file...");
-            	        ArrayList<OOMRCalculator> list  = new ArrayList<OOMRCalculator>();
-            	        list.add(rm);
-            	        SaveFileController<OOMRCalculator> save = new SaveFileController<OOMRCalculator>("OOMR",list);
-            	        save.saveXML();
-            	    });
-            }
-        });
-    }
 
-    
     
 
     private void setTreeViewStyle() {

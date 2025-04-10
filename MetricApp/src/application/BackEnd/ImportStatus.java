@@ -409,6 +409,7 @@ public static ArrayList<ImportStatus> update(File file , ArrayList<ImportStatus>
 //Method To Fetch Import From File
 public static ArrayList<ImportStatus> ImportFetch(File file){
 	className = file.getName().replace(".java", "");
+	longClassName = "";
 	ArrayList<ImportStatus> ImportList = new ArrayList<ImportStatus>();
 	String Line;
 	int cmpt =1;
@@ -416,6 +417,7 @@ public static ArrayList<ImportStatus> ImportFetch(File file){
           while ((Line = reader.readLine() )!= null) {
           	Line = Line.trim();
           	Line = Qoute.RemoveQoute(Line);
+          	System.out.println("lineeeeeee "+Line);
           	ArrayList<String> ListCode=new ArrayList<String>();
           	if(!Line.isBlank() && !Line.isEmpty()) {
           		//System.out.println(Line);
@@ -433,11 +435,12 @@ public static ArrayList<ImportStatus> ImportFetch(File file){
 	            			}
 	            		}
           			else if (Comment.NotFinishedComment(Line)) {
-	            			Comment.JumpComment(Line,ListCode,reader);
+	            			Line = Comment.JumpComment(Line,ListCode,reader);
 	            		}
 
           			if(!ListCode.isEmpty()) {
           				for(String code : ListCode) {
+          					System.out.println("Codeeeeeeeee "+code);
           					if(RegularExpression.IsImport(code)) {
           	            		ImportList.add(new ImportStatus(FetchImportFromCode(code),0,cmpt));
           	            		
@@ -451,6 +454,7 @@ public static ArrayList<ImportStatus> ImportFetch(File file){
           			}
           		}
           		if(ListCode.isEmpty()) {
+          			System.out.println("EMPTTTTTTTTTY "+Line);
           			if(RegularExpression.IsImport(Line)) {
   	            		ImportList.add(new ImportStatus(FetchImportFromCode(Line),0,cmpt));
   	            		
@@ -481,7 +485,7 @@ public static ArrayList<ImportStatus> ImportFetch(File file){
 	 
 	   
 	longClassName = longClassName+"."+className;
-	System.out.println(className +" "+ longClassName);
+	System.out.println("className "+className +" longclassName "+ longClassName);
 	return ImportList;
 }
 

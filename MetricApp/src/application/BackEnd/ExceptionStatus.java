@@ -108,6 +108,9 @@ public class ExceptionStatus {
 		
 		 List.addAll(RegularExpression.FetchMethodThrowable(line));
 	 }
+	 else if(line.matches("("+RegularExpression.ThrowsPattern+")"+"("+ RegularExpression.CurlyBraces+")")){
+		 List.addAll(RegularExpression.FetchMethodThrowable(line));
+	 }
 	 else if(RegularExpression.IsCatch(line)) {
 		
 		 List.addAll(RegularExpression.CatchException(line));
@@ -127,11 +130,14 @@ public class ExceptionStatus {
 	 
 	 for(File Files : Srcfile) {
 		 if( Files.isFile() && Files.getName().endsWith(".java")&& Files.getName().replace(".java", "").equals(ExceptionName)) {
-		
+		     
 			 return Files.getAbsolutePath();
 		 }
 		 else if(Files.isDirectory() && Files.listFiles()!=null) {
-			 return IsSrcFile(ExceptionName,Files.listFiles());
+			 String output = IsSrcFile(ExceptionName,Files.listFiles());
+			 if(output != null) {
+				 return output;
+			 }
 			 
 		 }
 	 }
@@ -140,11 +146,17 @@ public class ExceptionStatus {
  
  static boolean IsClassException(String PathSrcFile) throws IOException, ClassNotFoundException {
 	 String PathBinFile = PathSrcFile.replace(".java", ".class");
-	 PathBinFile = PathBinFile.replace("/src/","/bin/");
+	 if(PathSrcFile.contains("/src/main/java/") || PathSrcFile.contains("/src/java/")) {
+		 PathSrcFile = PathSrcFile.replaceAll("/src/main/java/", "/target/classes/");
+	 }
+	 else if(PathSrcFile.contains("/src/test/")) {
+		 PathSrcFile = PathSrcFile.replaceAll("/src/test/", "/target/test-classes/");
+	 }
+	 PathBinFile = PathSrcFile;
      // Create a custom class loader
      URLClassLoader classLoader;
 	try {
-		classLoader = new URLClassLoader(new URL[]{new File(PathBinFile.substring(0,PathBinFile.indexOf("/bin")+4)).toURI().toURL()});
+		classLoader = new URLClassLoader(new URL[]{new File(PathBinFile.substring(0,PathBinFile.indexOf("/target/")+8)).toURI().toURL()});
 	     Class<?> loadedClass = classLoader.loadClass(PathBinFile);
 
 	     // Now you have the loaded class and can work with it
@@ -207,7 +219,8 @@ public class ExceptionStatus {
 		 
 	        if (FlagDefault == 0) { // Load using system class loader for JRE classes
 	            try {
-	                Class<?> loadedClass = Class.forName(ExceptionPath);
+	            	
+	             Class<?> loadedClass = Class.forName(ExceptionPath);
 	             //System.out.println(loadedClass.getName());
 	                
 	                    // Check the superclass of the loaded class
@@ -233,16 +246,26 @@ public class ExceptionStatus {
 	                // Class not found by the system class loader
 	            }
 	        } else {
-	        	// Load using custom class loader for project classes
-	        	//System.out.println(ExceptionPath);
-	        //	ExceptionPath = ExceptionPath.replace("\\src\\", "\\bin\\");
-	        	String fileName = ExceptionPath.substring(ExceptionPath.indexOf("\\src\\")+5).replace(".java", "").replace("\\", ".");
-	        	ExceptionPath = ExceptionPath.replace("\\"+ExceptionName+".java","");
-	        	//System.out.println(ExceptionPath);
-	 
-	           // System.out.println(ExceptionPath);
-	            URLClassLoader classLoader = new URLClassLoader(new URL[]{new File(ExceptionPath).toURI().toURL()});
-	            Class<?> loadedClass = classLoader.loadClass(fileName);
+	        	String idk= "\\target\\classes\\";
+	       	 if(ExceptionPath.contains("\\src\\main\\java\\")) {
+	       		ExceptionPath = ExceptionPath.replace("\\src\\main\\java\\", "\\target\\classes\\");
+	       	 } else if (ExceptionPath.contains("\\src\\java\\")) {
+	       		ExceptionPath = ExceptionPath.replace("\\src\\java\\", "\\target\\classes\\");
+	       	 }
+	       	 else if(ExceptionPath.contains("\\src\\test\\")) {
+	       		ExceptionPath = ExceptionPath.replace("\\src\\test\\", "\\target\\test-classes\\");
+	       		idk = "\\target\\test-classes\\";
+	       	 }
+	       	String PathBinFile = ExceptionPath.replace(".java", ".class");
+	       	 System.out.println("BIN "+PathBinFile.substring(0,PathBinFile.indexOf(idk)+idk.length()));
+	            // Create a custom class loader
+	            URLClassLoader classLoader;
+	            String longClassName =PathBinFile.substring(PathBinFile.indexOf(idk)+idk.length()).replace("\\", ".").replace(".class", ""); 
+	       	    System.out.println("LONG "+longClassName);
+	            
+	       		classLoader = new URLClassLoader(new URL[]{new File(PathBinFile.substring(0,PathBinFile.indexOf(idk)+idk.length())).toURI().toURL()});
+	       	     Class<?> loadedClass = classLoader.loadClass(longClassName);
+
 	            
 	           // System.out.println(ExceptionPath);
 	          //  System.out.println(loadedClass.getName());
@@ -265,16 +288,15 @@ public class ExceptionStatus {
 	                        superClass = superClass.getSuperclass();
 	                    
 	                }
-	            
-	        }
-	    } catch (ClassNotFoundException | MalformedURLException e) {
-	        // Handle exceptions
-	        e.printStackTrace();
-	    }
+		            
+		        }
+		    } catch (ClassNotFoundException | MalformedURLException e) {
+		        // Handle exceptions
+		        e.printStackTrace();
+		    }
 
-	    return -2; // Default
-	}
-
+		    return -2; // Default
+		}
  
  public static ArrayList<ExceptionStatus> SetFlagException(Set<String> ThrowableList,File FileSrc, File file) {
 	ArrayList<ExceptionStatus> ExceptionList = new ArrayList<>();
@@ -283,6 +305,7 @@ public class ExceptionStatus {
 	for(String ThrowAble : ThrowableList) {
 		//System.out.println(ThrowAble); 
 		String ThrowAblePath = IsSrcFile(ThrowAble, FileSrc.listFiles());
+		System.out.println("EXP : "+ThrowAble + " ISSRC "+ThrowAblePath);
 	 if(ThrowAblePath!=null) {
 		 flagDefault= 1;
 		 
@@ -335,8 +358,11 @@ public class ExceptionStatus {
           // Format the code
        
 			for(int i = 0 ; i<Line.length;i++) {
+				
 	            	Line[i] = Line[i].trim();
 	            	Line[i] = Qoute.RemoveQoute(Line[i]);
+	            	System.out.println("Line "+Line[i]);
+	            	System.out.println("list" +ThrowableList);
 	            	ArrayList<String> ListCode=new ArrayList<>();
 	            	if(!Line[i].isBlank() && !Line[i].isEmpty() && !Comment.IsCommentOnlyCompleted(Line[i]) && !RegularExpression.IsPackage(Line[i]) && !RegularExpression.IsImport(Line[i])) {
 	            		//System.out.println(Line);
@@ -373,7 +399,8 @@ public class ExceptionStatus {
 	            	}
 	         
 	        
-		//System.out.println(ThrowableList);
+	System.out.println("When Finished "+ThrowableList);
+	
 	ArrayList<ExceptionStatus> ListException = new ArrayList<>();
 	File FileSrc = new File(MetricController.PathProject);
 	ListException  = SetFlagException(ThrowableList, FileSrc, file);

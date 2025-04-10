@@ -3,6 +3,7 @@ package application.BackEnd;
 import java.io.File;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -23,32 +24,49 @@ public class OOMRCalculator {
 	public double RatioMethodsSur = 0;
 	public  double RatioMethodsRedef = 0;
 	public double oomr = 0;
-    public static OOMRCalculator fetchOOMR(String path,String filename) throws FileNotFoundException, MalformedURLException, ClassNotFoundException  {
+    public static OOMRCalculator fetchOOMR(String path) throws FileNotFoundException, MalformedURLException, ClassNotFoundException  {
     	OOMRCalculator t = new OOMRCalculator();
-    	/*String fileName;
-    	OOMRCalculator t = new OOMRCalculator();
-    	path = path.replace("\\src\\", "\\bin\\");
-    	fileName = path.substring(path.indexOf("\\bin\\")+5).replace(".java", "").replace("\\", ".");
-    	path = path.replace("\\"+filename,"");
-    	   //added
-        path = path.substring(0,path.indexOf("\\bin\\")+5);
-      
-    	System.out.println("Path "+path);
-        System.out.println("ClassName "+fileName);
-       URLClassLoader classLoader = new URLClassLoader(new URL[]{new File(path).toURI().toURL()}); //ou vous allez tout simplement remplacer MyClass par le nom de la classe dont vous avez cree le fichier 
-        //ou une classe que vous possedez deja dans votre projet
-        */
-        Class<?> loadedClass = LoadClass.Loading(filename.replace(".java", ""),path);
-         t.totalMethods = countTotalMethods(loadedClass);
-         t.overloadedMethods = countOverloadedMethods(loadedClass);
-         t.overrideMethods = countOverrideMethods(loadedClass);
-         DecimalFormat df = new DecimalFormat("#.##");
-         t.RatioMethodsSur = (double) (t.overloadedMethods) / t.totalMethods;
-       t.RatioMethodsSur= Double.parseDouble(df.format(t.RatioMethodsSur))*100;
-         t.RatioMethodsRedef = (double) (t.overrideMethods) / t.totalMethods;
-         t.RatioMethodsRedef= Double.parseDouble(df.format(t.RatioMethodsRedef))*100;
-         t.oomr = t.RatioMethodsRedef+t.RatioMethodsSur;
-        
+    	
+    	
+      	String idk= "\\target\\classes\\";
+      	 if(path.contains("\\src\\main\\java\\")) {
+      		path = path.replace("\\src\\main\\java\\", "\\target\\classes\\");
+      	 } else if (path.contains("\\src\\java\\")) {
+      		path = path.replace("\\src\\java\\", "\\target\\classes\\");
+      	 }
+      	 else if(path.contains("\\src\\test\\")) {
+      		path = path.replace("\\src\\test\\", "\\target\\test-classes\\");
+      		idk = "\\target\\test-classes\\";
+      	 }
+      	String PathBinFile = path.replace(".java", ".class");
+      	 System.out.println("BIN "+PathBinFile.substring(0,PathBinFile.indexOf(idk)+idk.length()));
+           // Create a custom class loader
+           URLClassLoader classLoader;
+           String longClassName =PathBinFile.substring(PathBinFile.indexOf(idk)+idk.length()).replace("\\", ".").replace(".class", ""); 
+      	    System.out.println("LONG "+longClassName);
+           
+      		classLoader = new URLClassLoader(new URL[]{new File(PathBinFile.substring(0,PathBinFile.indexOf(idk)+idk.length())).toURI().toURL()});
+    
+      		
+      		Class<?> loadedClass = classLoader.loadClass(longClassName);
+      	    
+      		try {
+    			classLoader.close();
+    		} catch (IOException e) {
+    			//TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+    	
+        //t.totalMethods = countTotalMethods(loadedClass);
+        // t.overloadedMethods = countOverloadedMethods(loadedClass);
+        // t.overrideMethods = countOverrideMethods(loadedClass);
+        // DecimalFormat df = new DecimalFormat("#.##");
+        // t.RatioMethodsSur = (double) (t.overloadedMethods) / t.totalMethods;
+       //t.RatioMethodsSur= Double.parseDouble(df.format(t.RatioMethodsSur))*100;
+        // t.RatioMethodsRedef = (double) (t.overrideMethods) / t.totalMethods;
+         //t.RatioMethodsRedef= Double.parseDouble(df.format(t.RatioMethodsRedef))*100;
+         //t.oomr = t.RatioMethodsRedef+t.RatioMethodsSur;
+    
 		return t;
       }
 

@@ -1,8 +1,12 @@
 package application.BackEnd;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 
 import org.apache.poi.ss.usermodel.*; 
@@ -13,8 +17,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class AnalyseAll {
 
 	public static int index = 1;
+	public static int expIndex= 1;
 	
-	public static void TraverseProject(Sheet importSheet,Sheet expSheet,Sheet erSheet,ArrayList<Package> packageList) {
+	public static void TraverseProject(Sheet importSheet,Sheet expSheet,Sheet erSheet,Sheet oomrSheet,ArrayList<Package> packageList) {
 		
 		for(Package pkg : packageList) {
 			System.out.println(pkg.PackageName+"\n");
@@ -27,6 +32,37 @@ public class AnalyseAll {
 			       System.out.println(ImportStatus.className);
 			       System.out.println(ImportStatus.longClassName);
 			       System.out.println(index);
+			       if(file.getAbsolutePath().contains("\\src\\main\\java\\")|| file.getAbsolutePath().contains("\\src\\java\\") || file.getAbsolutePath().contains("\\src\\test\\") ) {
+			    /*   
+			    	try {
+						OOMRCalculator oomr = OOMRCalculator.fetchOOMR(file.getAbsolutePath());
+					writeRowOOMR(oomrSheet, oomr, expIndex);
+					} catch (FileNotFoundException | MalformedURLException | NoClassDefFoundError |ClassNotFoundException e) {
+					
+						
+						
+							System.out.println("Exception Found : "+file.getAbsolutePath());
+						String path = file.getAbsolutePath();
+						String idk= "\\target\\classes\\";
+				      	 if(path.contains("\\src\\main\\java\\")) {
+				      		path = path.replace("\\src\\main\\java\\", "\\target\\classes\\");
+				      	 } else if (path.contains("\\src\\java\\")) {
+				      		path = path.replace("\\src\\java\\", "\\target\\classes\\");
+				      	 }
+				      	 else if(path.contains("\\src\\test\\")) {
+				      		path = path.replace("\\src\\test\\", "\\target\\test-classes\\");
+				      		idk = "\\target\\test-classes\\";
+				      	 }
+				      	String PathBinFile = path.replace(".java", ".class");
+				      	 System.out.println("Excpetion BIN "+PathBinFile.substring(0,PathBinFile.indexOf(idk)+idk.length()));
+				           // Create a custom class loader
+				           URLClassLoader classLoader;
+				           String longClassName =PathBinFile.substring(PathBinFile.indexOf(idk)+idk.length()).replace("\\", ".").replace(".class", ""); 
+				      	    System.out.println("Exception LONG "+longClassName);
+				          e.printStackTrace();
+				      	  System.exit(0);
+					}
+			    	*/   
 			       ArrayList<ExceptionStatus> ListException = new ArrayList<ExceptionStatus>();
 			       try {
 						ListException = ExceptionStatus.FetchThrowable(file);
@@ -35,7 +71,9 @@ public class AnalyseAll {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-			       writeRowExp(erSheet, ListException, index);
+			       writeRowExp(expSheet, ListException, expIndex);
+			       ++expIndex;
+			       }
 				   Encapsulation er = Encapsulation.EncapsulationFetch(file);
 				   writeRowImport(importSheet,ListImport,index);
 				   writeRowER(erSheet, er, index);
@@ -43,7 +81,7 @@ public class AnalyseAll {
 			}
 			
 			if(!pkg.SubPackges.isEmpty()) {
-			TraverseProject(importSheet,expSheet,erSheet, pkg.SubPackges);
+			TraverseProject(importSheet,expSheet,erSheet, oomrSheet,pkg.SubPackges);
 			}
 		}
 		
@@ -54,12 +92,14 @@ public class AnalyseAll {
         Sheet importSheet = workbook.createSheet("Import Conflict Metric");
         Sheet expSheet =  workbook.createSheet("Exception Metric");
         Sheet erSheet = workbook.createSheet("Encapsulation Rate Metric");
+        Sheet oomrSheet = workbook.createSheet("OOMR Metric");
 
         initColumnIC(importSheet);
         initColumnER(erSheet);
         initColumnEX(expSheet);
+        initColumnOOMR(oomrSheet);
         
-        TraverseProject(importSheet,expSheet,erSheet,Project);
+        TraverseProject(importSheet,expSheet,erSheet,oomrSheet,Project);
         
         expandAllColumn(importSheet, 7);
         expandAllColumn(expSheet, 7);
@@ -73,6 +113,33 @@ public class AnalyseAll {
     }
     
    
+    public static void initColumnOOMR(Sheet sheet) {
+  	   Row header = sheet.createRow(0); 
+         
+         header.createCell(0).setCellValue("Class Name");
+         header.createCell(1).setCellValue("Long Class Name");
+         header.createCell(2).setCellValue("Total");
+         header.createCell(3).setCellValue("Number Overload");
+         header.createCell(4).setCellValue("Number Override");
+         header.createCell(5).setCellValue("Ratio Overload");
+         header.createCell(6).setCellValue("Ratio Ovveride");
+         header.createCell(7).setCellValue("OOMR");
+     }
+    
+    public static void writeRowOOMR(Sheet sheet,OOMRCalculator oomr,int index) {
+ 	   Row row  = sheet.createRow(index);
+ 	   
+ 	   row.createCell(0).setCellValue(ImportStatus.className);
+        row.createCell(1).setCellValue(ImportStatus.longClassName);
+        row.createCell(2).setCellValue(oomr.totalMethods);
+        row.createCell(3).setCellValue(oomr.overloadedMethods);
+        row.createCell(4).setCellValue(oomr.overrideMethods);
+        row.createCell(5).setCellValue(oomr.RatioMethodsSur);
+        row.createCell(6).setCellValue(oomr.RatioMethodsRedef);
+        row.createCell(7).setCellValue(oomr.oomr);
+    
+    }
+     
     
     public static void initColumnEX(Sheet sheet) {
  	   Row header = sheet.createRow(0); 
@@ -160,4 +227,6 @@ public class AnalyseAll {
    
    }
     
+   
+  
 }

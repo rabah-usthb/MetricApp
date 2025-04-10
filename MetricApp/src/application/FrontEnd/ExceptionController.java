@@ -102,20 +102,7 @@ public class ExceptionController {
 	    }
 
 
-	    @FXML
-	    public void initialize() {
-	        // Add a listener to wait for the Scene to be available
-	        pane.sceneProperty().addListener((obs, oldScene, newScene) -> {
-	            if (newScene != null) {
-	            	 KeyCombination ctrlS = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
-	            	    newScene.getAccelerators().put(ctrlS, () -> {
-	            	        System.out.println("Ctrl+S detected! Saving file...");
-	            	        SaveFileController<ExceptionStatus> save = new SaveFileController<ExceptionStatus>("JEA", ListException);
-	            	        save.saveXML();
-	            	    });
-	            }
-	        });
-	    }
+	  
 	    
 	    
 	    
