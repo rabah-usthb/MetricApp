@@ -1,6 +1,7 @@
 package application.BackEnd;
 
 import java.io.File;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -138,7 +139,10 @@ public class Java {
 		}
 		for(File file : FileDirList) {
 			 if (file.isDirectory() && file.listFiles()!=null) {
-				return IsJavaPackageNotEmpty(file);
+				if(IsJavaPackageNotEmpty(file)) {
+					return true;
+				}
+	
 			}
 		}
 		return false;
@@ -224,7 +228,7 @@ public class Java {
 		ArrayList<fileData>DefaultPackage=new ArrayList<>();
 		
 		for(File file : SrcFile) {
-			//System.out.println(file.getName());
+			System.out.println("FILE "+file.getName());
 				if(file.isDirectory() && file.listFiles()!=null &&IsJavaPackageNotEmpty(file)) {
 				    System.out.println(file.getName());
 					FetchJavaFile(file,ListPackage);
