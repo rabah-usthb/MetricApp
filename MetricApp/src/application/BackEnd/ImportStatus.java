@@ -309,6 +309,8 @@ public static ArrayList<ImportStatus> update(File file , ArrayList<ImportStatus>
           for(int i = 0 ; i<line.length;i++) {
           line[i] = line[i].trim();
           line[i] =  Qoute.RemoveQoute(line[i]);
+          
+          
              
               ArrayList<String> ListCode=new ArrayList<String>();
               
@@ -335,6 +337,11 @@ public static ArrayList<ImportStatus> update(File file , ArrayList<ImportStatus>
           		}
           		if(!ListCode.isEmpty()) {
           			for(String code : ListCode) {
+          				if(i!=line.length-1 && line[i+1].contains("implements ")) {
+          					code = code +" "+ line[i+1];
+          					 System.out.println("APPEND "+code);
+          					++index[0];
+          				}
           				IsAll(ClassName,code);
           			}
           		}
@@ -343,7 +350,12 @@ public static ArrayList<ImportStatus> update(File file , ArrayList<ImportStatus>
           	if(ListCode.size()==0) {
           		line[i] = line[i].trim();
           		line[i] = Qoute.RemoveQoute(line[i]);
-          	 System.out.println(line[i]+" "+RegularExpression.IsMethodPrototype(line[i].trim()));
+          		if(i!=line.length-1 && line[i+1].contains("implements ")) {
+  					line[i] = line[i] +" "+ line[i+1];
+  					 System.out.println("APPEND "+line[i]);
+  					++index[0];
+  				}
+          	 System.out.println(line[i]+" "+RegularExpression.IsClass(line[i].trim()));
           		IsAll(ClassName,line[i]);
           		}
           	

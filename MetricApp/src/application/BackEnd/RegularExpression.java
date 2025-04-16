@@ -62,7 +62,8 @@ public class RegularExpression {
   static String NonAcessModifierClass = "(static\\s+|abstract\\s+|final\\s+)?";
   static String ModifierClass = "("+PatternAcessModifiers+")("+NonAcessModifierClass+")|("+NonAcessModifierClass+")("+PatternAcessModifiers+")";
   static String ExtendsPattern = "(\\s+extends\\s+\\w+(\\s*<\\s*\\w+\\s*>\\s*)?)?";
-  static String ImplementsPattern = "(\\s+implements\\s+\\w+\\s*(\\s*,\\s*\\w+\\s*)*)?";
+  public static String subimp = "(\\w+|\\w+\\<\\w+\\>)";
+  static String ImplementsPattern = "(\\s+implements\\s+("+subimp+")\\s*(\\s*,\\s*("+subimp+")\\s*)*)?";
 	
   static String MultipleBoundPattern = "(\\s+extends\\s+\\w+(\\s*<\\s*\\w+\\s*>\\s*)?(\\s+&\\s+\\w+(\\s*<\\s*\\w+\\s*>)?)*\\s*)?";
   static String TypeParameterGen = "(\\s*<\\s*\\w+("+MultipleBoundPattern+")\\s*(,\\s*\\w+("+MultipleBoundPattern+")\\s*)*\\s*>\\s*)?";
@@ -349,7 +350,7 @@ public class RegularExpression {
 	
 	
 	public static boolean IsClass(String Line) {
-	 String ClassPattern = "\\s*("+ModifierClass+")class\\s+\\w+("+TypeParameterGen+")("+ExtendsPattern+")("+ImplementsPattern+")\\s*(\\{)?\\s*";
+	 String ClassPattern = "\\s*("+ModifierClass+")class\\s+\\w+("+TypeParameterGen+")("+ExtendsPattern+")\\s*("+ImplementsPattern+")\\s*(\\{)?\\s*";
 		return Line.matches(ClassPattern);
 	}
 	
