@@ -19,7 +19,7 @@ public class AnalyseAll {
 	public static int index = 1;
 	public static int expIndex= 1;
 	
-	public static void TraverseProject(Sheet importSheet,Sheet expSheet,Sheet erSheet,Sheet oomrSheet,ArrayList<Package> packageList) {
+	public static void TraverseProject(Sheet sheet,ArrayList<Package> packageList) {
 		
 		for(Package pkg : packageList) {
 			System.out.println(pkg.PackageName+"\n");
@@ -28,6 +28,7 @@ public class AnalyseAll {
 				   ArrayList<ImportStatus> ListImport = new ArrayList<ImportStatus>();
 				   ListImport = ImportStatus.update(file,(ImportStatus.ImportFetch(file))); 
 				   ImportStatus.UpdateConflictFlag(ListImport);
+				   writeRowImport(sheet,ListImport,index);
 				   System.out.println(fileInfo.filePath);
 			       System.out.println(ImportStatus.className);
 			       System.out.println(ImportStatus.longClassName);
@@ -71,17 +72,16 @@ public class AnalyseAll {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-			       writeRowExp(expSheet, ListException, expIndex);
-			       ++expIndex;
+			       writeRowExp(sheet, ListException, index);
+			    
 			       }
 				   Encapsulation er = Encapsulation.EncapsulationFetch(file);
-				   writeRowImport(importSheet,ListImport,index);
-				   writeRowER(erSheet, er, index);
+				   writeRowER(sheet, er, index);
 				   index++;	
 			}
 			
 			if(!pkg.SubPackges.isEmpty()) {
-			TraverseProject(importSheet,expSheet,erSheet, oomrSheet,pkg.SubPackges);
+			TraverseProject(sheet,pkg.SubPackges);
 			}
 		}
 		
@@ -89,21 +89,14 @@ public class AnalyseAll {
 	
     public static void AnalyseExcel(String OutputFilePath,ArrayList<Package> Project) throws IOException {
         Workbook workbook = new XSSFWorkbook();
-        Sheet importSheet = workbook.createSheet("Import Conflict Metric");
-        Sheet expSheet =  workbook.createSheet("Exception Metric");
-        Sheet erSheet = workbook.createSheet("Encapsulation Rate Metric");
-        Sheet oomrSheet = workbook.createSheet("OOMR Metric");
-
-        initColumnIC(importSheet);
-        initColumnER(erSheet);
-        initColumnEX(expSheet);
-        initColumnOOMR(oomrSheet);
+        Sheet sheet = workbook.createSheet("JAVA Metrics");
+       
+        initColumn(sheet);
         
-        TraverseProject(importSheet,expSheet,erSheet,oomrSheet,Project);
+        TraverseProject(sheet,Project);
         
-        expandAllColumn(importSheet, 7);
-        expandAllColumn(expSheet, 7);
-        expandAllColumn(erSheet, 8);
+        expandAllColumn(sheet, 17);
+        
      
         
         try (FileOutputStream out = new FileOutputStream(OutputFilePath)) {
@@ -113,103 +106,65 @@ public class AnalyseAll {
     }
     
    
-    public static void initColumnOOMR(Sheet sheet) {
-  	   Row header = sheet.createRow(0); 
-         
-         header.createCell(0).setCellValue("Class Name");
-         header.createCell(1).setCellValue("Long Class Name");
-         header.createCell(2).setCellValue("Total");
-         header.createCell(3).setCellValue("Number Overload");
-         header.createCell(4).setCellValue("Number Override");
-         header.createCell(5).setCellValue("Ratio Overload");
-         header.createCell(6).setCellValue("Ratio Ovveride");
-         header.createCell(7).setCellValue("OOMR");
-     }
-    
-    public static void writeRowOOMR(Sheet sheet,OOMRCalculator oomr,int index) {
- 	   Row row  = sheet.createRow(index);
- 	   
- 	   row.createCell(0).setCellValue(ImportStatus.className);
-        row.createCell(1).setCellValue(ImportStatus.longClassName);
-        row.createCell(2).setCellValue(oomr.totalMethods);
-        row.createCell(3).setCellValue(oomr.overloadedMethods);
-        row.createCell(4).setCellValue(oomr.overrideMethods);
-        row.createCell(5).setCellValue(oomr.RatioMethodsSur);
-        row.createCell(6).setCellValue(oomr.RatioMethodsRedef);
-        row.createCell(7).setCellValue(oomr.oomr);
-    
-    }
-     
-    
-    public static void initColumnEX(Sheet sheet) {
- 	   Row header = sheet.createRow(0); 
-        
-        header.createCell(0).setCellValue("Class Name");
-        header.createCell(1).setCellValue("Long Class Name");
-        header.createCell(2).setCellValue("Total");
-        header.createCell(3).setCellValue("User");
-        header.createCell(4).setCellValue("Default");
-        header.createCell(5).setCellValue("RunTime");
-        header.createCell(6).setCellValue("CompileTime");
-    }
    
     
-   public static void initColumnER(Sheet sheet) {
-	   Row header = sheet.createRow(0); 
-       
-       header.createCell(0).setCellValue("Class Name");
-       header.createCell(1).setCellValue("Long Class Name");
-       header.createCell(2).setCellValue("Total");
-       header.createCell(3).setCellValue("Public");
-       header.createCell(4).setCellValue("None");
-       header.createCell(5).setCellValue("Protected");
-       header.createCell(6).setCellValue("Private");
-       header.createCell(7).setCellValue("ER");
-   }
+   
     
-   public static void initColumnIC(Sheet sheet) {
+    
+   public static void initColumn(Sheet sheet) {
 	   Row header = sheet.createRow(0); 
        
        header.createCell(0).setCellValue("Class Name");
        header.createCell(1).setCellValue("Long Class Name");
-       header.createCell(2).setCellValue("Total");
+       
+       header.createCell(2).setCellValue("Total Imports");
        header.createCell(3).setCellValue("Used Imports");
-       header.createCell(4).setCellValue("NotUsed");
+       header.createCell(4).setCellValue("NotUsed Imports");
        header.createCell(5).setCellValue("Duplicate Imports");
        header.createCell(6).setCellValue("Conflict Imports");
+       
+       header.createCell(7).setCellValue("Total Elements");
+       header.createCell(8).setCellValue("Public Elements");
+       header.createCell(9).setCellValue("None Elements");
+       header.createCell(10).setCellValue("Protected Elements");
+       header.createCell(11).setCellValue("Private Elements");
+       header.createCell(12).setCellValue("ER Elements");
+       
+       header.createCell(13).setCellValue("Total Exceptions");
+       header.createCell(14).setCellValue("User Exceptions");
+       header.createCell(15).setCellValue("Default Exceptions");
+       header.createCell(16).setCellValue("RunTime Exceptions");
+       header.createCell(17).setCellValue("CompileTime Exceptions");
+       
    }
    
    public static void writeRowER(Sheet sheet,Encapsulation data,int index) {
 	
-	   Row row  = sheet.createRow(index);
+	   Row row  = sheet.getRow(index);
 	   
-	   row.createCell(0).setCellValue(ImportStatus.className);
-       row.createCell(1).setCellValue(ImportStatus.longClassName);
-       row.createCell(2).setCellValue(data.Total);
-       row.createCell(3).setCellValue(data.CompteurPublic);
-       row.createCell(4).setCellValue(data.CompteurNone);
-       row.createCell(5).setCellValue(data.CompteurProtected);
-       row.createCell(6).setCellValue(data.CompteurPrivate);
-       row.createCell(7).setCellValue(data.TauxEncapsulation);
+       row.createCell(7).setCellValue(data.Total);
+       row.createCell(8).setCellValue(data.CompteurPublic);
+       row.createCell(9).setCellValue(data.CompteurNone);
+       row.createCell(10).setCellValue(data.CompteurProtected);
+       row.createCell(11).setCellValue(data.CompteurPrivate);
+       row.createCell(12).setCellValue(data.TauxEncapsulation);
    
    }
     
    public static void expandAllColumn(Sheet sheet , int lastCol ) {
-		  for (int i = 0 ; i<lastCol ; i++)
+		  for (int i = 0 ; i<=lastCol ; i++)
 			  sheet.autoSizeColumn(i);
 }
    
    public static void writeRowExp(Sheet sheet,ArrayList<ExceptionStatus> list,int index) {
 	
-	   Row row  = sheet.createRow(index);
+	   Row row  = sheet.getRow(index);
 	   
-	   row.createCell(0).setCellValue(ImportStatus.className);
-       row.createCell(1).setCellValue(ImportStatus.longClassName);
-       row.createCell(2).setCellValue(list.size());
-       row.createCell(3).setCellValue(ExceptionStatus.getTotalNumberDefaultException(list));
-       row.createCell(4).setCellValue(ExceptionStatus.getTotalNumberNotDefaultException(list));
-       row.createCell(5).setCellValue(ExceptionStatus.getTotalNumberRunTimeException(list));
-       row.createCell(6).setCellValue(ExceptionStatus.getTotalNumberCompileTimeException(list));
+       row.createCell(13).setCellValue(list.size());
+       row.createCell(14).setCellValue(ExceptionStatus.getTotalNumberDefaultException(list));
+       row.createCell(15).setCellValue(ExceptionStatus.getTotalNumberNotDefaultException(list));
+       row.createCell(16).setCellValue(ExceptionStatus.getTotalNumberRunTimeException(list));
+       row.createCell(17).setCellValue(ExceptionStatus.getTotalNumberCompileTimeException(list));
    
    }
    
