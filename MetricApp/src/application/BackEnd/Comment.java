@@ -63,7 +63,7 @@ public class Comment {
 				System.out.println("After "+line);
 			}
 			
-		   // System.out.println("finished "+Line);
+		   System.out.println("finished "+Line);
 		    return Line;
 		}
 		

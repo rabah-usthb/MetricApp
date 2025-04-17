@@ -11,13 +11,13 @@ import java.util.regex.Pattern;
 
 public class RegularExpression {
   
-   static String CurlyBraces="\\s*(\\{|\\{\\s*\\})?\\s*";
+   public static String CurlyBraces="\\s*(\\{|\\{\\s*\\})?\\s*";
    static String PatternAcessModifiers="(private\\s+|protected\\s+|public\\s+)?";
    static String NonAcessModifierSimple = "(static\\s+|final\\s+|abstract\\s+)?";
    static String ModifierSimple = "("+PatternAcessModifiers+")("+NonAcessModifierSimple+")|("+NonAcessModifierSimple+")("+PatternAcessModifiers+")";
    static String ModifierComplex = "("+PatternAcessModifiers+")final\\s+static\\s+|("+PatternAcessModifiers+")static\\s+final\\s+|final\\s+("+PatternAcessModifiers+")static\\s+|static\\s+("+PatternAcessModifiers+")final\\s+|static\\s+final\\s+("+PatternAcessModifiers+")|final\\s+static\\s+("+PatternAcessModifiers+")";
-   static String MethodModifierPattern = "("+ModifierSimple+")|("+ModifierComplex+")";
-   static String ThrowsPattern = "(\\s*throws\\s+\\w+\\s*(\\s*\\,\\s*\\w+\\s*)*)?"; // Making the throws clause optional
+   public static String MethodModifierPattern = "("+ModifierSimple+")|("+ModifierComplex+")";
+   public static String ThrowsPattern = "(\\s*throws\\s+\\w+\\s*(\\s*\\,\\s*\\w+\\s*)*)?"; // Making the throws clause optional
    static String Bracket = "(\\[\\s*\\]){1,2}";
    static String ArrayDeclarationPattern = "\\w+\\s+\\w+\\s*(" + Bracket + ")|\\w+\\s*(" + Bracket + ")\\s*\\w+\\s*";
    static String ArrayTypePattern="\\w+\\s*(" + Bracket + ")\\s*";
@@ -34,7 +34,7 @@ public class RegularExpression {
   static String SetListPattern ="\\w+\\s*<\\s*("+InsideCollection+")\\s*>\\s*";
   static String MapPattern="\\w+\\s*<\\s*("+InsideCollection+")\\s*,\\s*("+InsideCollection+")\\s*>\\s*";
   static String CollectionPattern ="("+MapPattern+")|("+SetListPattern+")";
-  static String ReturnType = "(\\s*\\w+\\s+)|("+CollectionPattern+")|("+ArrayTypePattern+")";
+  public static String ReturnType = "(\\s*\\w+\\s+)|("+CollectionPattern+")|("+ArrayTypePattern+")|(\\s*\\w+\\s*\\<[^\n]+\\>)";
   static String Paramter="\\s*"+NormalPattern+"\\s*|\\s*("+ArrayDeclarationPattern+")\\s*|\\s*("+CollectionPattern+")\\w+\\s*|\\s*("+MapPattern+")\\w+\\s*";
   static String Arg = "\\s*\\(\\s*(("+Paramter+")"+"(,\\s*("+Paramter+"))*)?\\s*\\)\\s*";
   static String StaticModifier="(static\\s+)?";
@@ -66,7 +66,7 @@ public class RegularExpression {
   static String ImplementsPattern = "(\\s+implements\\s+("+subimp+")\\s*(\\s*,\\s*("+subimp+")\\s*)*)?";
 	
   static String MultipleBoundPattern = "(\\s+extends\\s+\\w+(\\s*<\\s*\\w+\\s*>\\s*)?(\\s+&\\s+\\w+(\\s*<\\s*\\w+\\s*>)?)*\\s*)?";
-  static String TypeParameterGen = "(\\s*<\\s*\\w+("+MultipleBoundPattern+")\\s*(,\\s*\\w+("+MultipleBoundPattern+")\\s*)*\\s*>\\s*)?";
+  public static String TypeParameterGen = "(\\s*<\\s*\\w+("+MultipleBoundPattern+")\\s*(,\\s*\\w+("+MultipleBoundPattern+")\\s*)*\\s*>\\s*)?";
   static String ClassCall = "(\\w+\\.)+\\w+";
   static String ClassVariable = "\\w+\\.\\w+";
   static String SimpleArgMethodCall = "("+ClassVariable+")|("+NumberPattern+")|\\w+";
@@ -322,6 +322,39 @@ public class RegularExpression {
 	}
 	
 	
+	public static ArrayList<String> fetchGenMethod(String Line) {
+		Pattern pattern = Pattern.compile("(?<=\\<)(\\w+)");	
+	    Matcher matcher = pattern.matcher(Line);
+	    
+	    ArrayList<String> genList = new ArrayList<>();
+	    
+	    while (matcher.find()) {
+	 	   
+		     
+	        String className = matcher.group(1);
+	        genList.add(className);
+	    }
+	    return genList;
+	}
+	
+	public static ArrayList<String> fetchExtends(String Line) {
+		Pattern pattern = Pattern.compile("(?<=extends\\s+)(\\w+)");	
+	    Matcher matcher = pattern.matcher(Line);
+	    
+	    ArrayList<String> genList = new ArrayList<>();
+	    
+	    while (matcher.find()) {
+	 	   
+		     
+	        String className = matcher.group(1);
+	        genList.add(className);
+	    }
+	    return genList;
+	}
+	
+	
+	
+	
 	public static ArrayList<String> FetchImplements(String Line){
 		ArrayList<String> ImplementName = new ArrayList<>();
 		Pattern pattern = Pattern.compile("implements\\s+(\\w+)|(?:\\s*\\,\\s*(\\w+)\\s*)");	
@@ -427,8 +460,8 @@ public class RegularExpression {
 }
 		
 	 static boolean IsMethod(String line) {
-			String MethodPattern = "("+MethodModifierPattern+")("+TypeParameterGen+")("+ReturnType+")\\w+\\s*("+Arg+")\\s*("+ThrowsPattern+")(("+CurlyBraces+")|\\s*;\\s*)";
-		    return line.matches(MethodPattern); 
+		 String MethodPattern = "("+RegularExpression.MethodModifierPattern+")("+RegularExpression.TypeParameterGen+")("+RegularExpression.ReturnType+")\\s*\\w+\\s*\\([^\n]*\\)\\s*("+RegularExpression.ThrowsPattern+")(("+RegularExpression.CurlyBraces+")|\\s*;\\s*)";
+		 return line.matches(MethodPattern); 
 		}
 	
 //Method to know If Line Is A Method Prototype	
@@ -488,10 +521,13 @@ public class RegularExpression {
 		 static ArrayList<String> extractClassNamesMethod(String line) { 
 			 ArrayList<String> classNames = new ArrayList<>();
 			 classNames.addAll(FetchMethodArgumentType(line));
+			 System.out.println("METHODDDDDD "+line+" THROW "+FetchMethodThrowable(line));
 			 classNames.addAll(FetchMethodThrowable(line));
 			 if(FetchMethodReturnType(line)!=null) {
 			 classNames.add(FetchMethodReturnType(line));
 			 }
+			 classNames.addAll(fetchGenMethod(line));
+			 classNames.addAll(fetchExtends(line));
 			 return classNames;
 			 }
 

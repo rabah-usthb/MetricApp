@@ -380,7 +380,9 @@ public class ExceptionStatus {
 		            			}
 		            		}
 	            			else if (Comment.NotFinishedComment(Line[i])) {
-	            				Line[i] =	Comment.JumpComment(Line[i],ListCode,Line,index);
+	            				String temp = Comment.JumpComment(Line[i],ListCode,Line,index);
+	                     		 i = index[0];
+	                     		 Line[i] = temp;
 		            		}
 
 	            			if(!ListCode.isEmpty()) {
@@ -389,16 +391,28 @@ public class ExceptionStatus {
 	            				}
 	            			}
 	            		}
-	            		if(ListCode.isEmpty()) {
+	            		
+	            		Line[i] = Line[i].trim();
+	              		Line[i] = Qoute.RemoveQoute(Line[i]);
+	              	//	for(int j = i; j<line.length;j++) {
+	              		if(i!=Line.length-1 &&!Line[i+1].trim().startsWith("*") && !Line[i+1].trim().startsWith("/*") ){
+	              			System.out.println("Current "+Line[i]+" NEXT "+Line[i+1] +" ISTHROWS "+Line[i+1].trim().startsWith("throws "));
+	              		if((Line[i+1].trim().startsWith("throws ") ||Line[i+1].trim().startsWith("implements ") ) ) {
+	      					Line[i] = Line[i] +" "+ Line[i+1];
+	      					 
+	      					++index[0];
+	      				}
+	              		
+	              		System.out.println("TRAITED "+Line[i]);
 	            			IsThrowable(ThrowableList,Line[i]);
-      	            	}
+      	            	
 	            			
 	            		}
 	            	 i = index[0];
 	                 ++index[0];
 	            	}
 	         
-	        
+			}        
 	System.out.println("When Finished "+ThrowableList);
 	
 	ArrayList<ExceptionStatus> ListException = new ArrayList<>();
@@ -408,5 +422,6 @@ public class ExceptionStatus {
      
 	return ListException;
 	  
-  }
+  
+}
 }

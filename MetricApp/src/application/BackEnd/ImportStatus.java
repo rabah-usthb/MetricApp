@@ -332,38 +332,51 @@ public static ArrayList<ImportStatus> update(File file , ArrayList<ImportStatus>
           		}
           		else if (Comment.NotFinishedComment(line[i])) {
           		//System.out.println("not finised "+line);
-          		line[i] =	Comment.JumpComment(line[i],ListCode,line,index);
+          			System.out.println(" Before " +line[i]);
+          		String temp = Comment.JumpComment(line[i],ListCode,line,index);
+          		 i = index[0];
+          		 line[i] = temp;
+          		System.out.println("LIST CODE "+ListCode+" current" +line[i]);
           		
           		}
           		if(!ListCode.isEmpty()) {
           			for(String code : ListCode) {
-          				if(i!=line.length-1 && line[i+1].contains("implements ")) {
-          					code = code +" "+ line[i+1];
-          					 System.out.println("APPEND "+code);
-          					++index[0];
-          				}
+          				
           				IsAll(ClassName,code);
-          			}
+          			
           		}
           	}
           	
-          	if(ListCode.size()==0) {
+          	}
           		line[i] = line[i].trim();
           		line[i] = Qoute.RemoveQoute(line[i]);
-          		if(i!=line.length-1 && line[i+1].contains("implements ")) {
+          	//	for(int j = i; j<line.length;j++) {
+          		if(i!=line.length-1 &&!line[i+1].trim().startsWith("*") && !line[i+1].trim().startsWith("/*") ){
+          			System.out.println("Current "+line[i]+" NEXT "+line[i+1] +" ISTHROWS "+line[i+1].trim().startsWith("throws "));
+          		if((line[i+1].trim().startsWith("throws ") ||line[i+1].trim().startsWith("implements ") ) ) {
   					line[i] = line[i] +" "+ line[i+1];
-  					 System.out.println("APPEND "+line[i]);
+  					 
   					++index[0];
   				}
-          	 System.out.println(line[i]+" "+RegularExpression.IsClass(line[i].trim()));
-          		IsAll(ClassName,line[i]);
+          //		else {
+         
+          	//		break;
+          	//	}
+          	//	}
           		}
+          	//	System.out.println("APPEND "+line[i]);
+         // 	 System.out.println(line[i]+" "+RegularExpression.IsClass(line[i].trim()));
+          		System.out.println("TRAITED "+line[i]);
+          		IsAll(ClassName,line[i]);
+          		
           	
               }
-              i = index[0];
+             
+              i =index[0];
               ++index[0];
+              
+          
           }
-	
 	
 	ClassNameList = ClassName;
     
@@ -411,7 +424,7 @@ public static ArrayList<ImportStatus> update(File file , ArrayList<ImportStatus>
           			*/
           		}
           	}
-                            
+                          
               
       
 	 return ImportList;
