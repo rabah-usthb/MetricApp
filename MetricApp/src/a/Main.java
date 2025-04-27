@@ -1,12 +1,18 @@
 package a;
 
+import application.BackEnd.Comment;
 import application.BackEnd.RegularExpression;
 
 public class Main {
 
 	public static void main(String[] args) {
 		String MethodPattern = "("+RegularExpression.MethodModifierPattern+")("+RegularExpression.TypeParameterGen+")("+RegularExpression.ReturnType+")\\s*\\w+\\s*\\([^\n]*\\)\\s*("+RegularExpression.ThrowsPattern+")(("+RegularExpression.CurlyBraces+")|\\s*;\\s*)";
-		   
+		
+		System.out.println(RegularExpression.IsThrow("throw new MissingRequiredPropertyException(key);"));
+		
+		System.out.println(Comment.NotFinishedComment("/**"));
+	
+		
 		// String subimp = "(\\w+|\\w+(<\\w+>)?)";
 		String s ="public double taylor(final double ... delta) throws MathArithmeticException {";
 		String re = "(\\w+|\\w+\\s*\\<[^\n]+\\>)";

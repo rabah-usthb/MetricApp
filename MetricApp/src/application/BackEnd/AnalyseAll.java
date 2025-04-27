@@ -7,10 +7,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import org.apache.poi.ss.usermodel.*; 
-import org.apache.poi.xssf.usermodel.XSSFWorkbook; 
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import application.FrontEnd.MetricController; 
 
 
 
@@ -18,7 +22,7 @@ public class AnalyseAll {
 
 	public static int index = 1;
 	public static int expIndex= 1;
-	
+	public static final String IDK = Files.exists(Paths.get(MetricController.PathProject, "test", "java"))? "\\src\\test\\java": "\\src\\test\\";		
 	public static void TraverseProject(Sheet sheet,ArrayList<Package> packageList) {
 		
 		for(Package pkg : packageList) {
@@ -33,7 +37,7 @@ public class AnalyseAll {
 			       System.out.println(ImportStatus.className);
 			       System.out.println(ImportStatus.longClassName);
 			       System.out.println(index);
-			       if(file.getAbsolutePath().contains("\\src\\main\\java\\")|| file.getAbsolutePath().contains("\\src\\java\\") || file.getAbsolutePath().contains("\\src\\test\\") ) {
+			       if(file.getAbsolutePath().contains("\\src\\main\\java\\")|| file.getAbsolutePath().contains("\\src\\java\\") || file.getAbsolutePath().contains(IDK) ) {
 			    /*   
 			    	try {
 						OOMRCalculator oomr = OOMRCalculator.fetchOOMR(file.getAbsolutePath());
@@ -63,10 +67,11 @@ public class AnalyseAll {
 				          e.printStackTrace();
 				      	  System.exit(0);
 					}
-			    	*/   
+			    	*/
+			       CleanData clean = new CleanData(file, 0);
 			       ArrayList<ExceptionStatus> ListException = new ArrayList<ExceptionStatus>();
 			       try {
-						ListException = ExceptionStatus.FetchThrowable(file);
+						ListException = ExceptionStatus.FetchFromCleanCode(clean);
 					System.out.println(ListException);
 				       } catch (ClassNotFoundException | IOException e) {
 						// TODO Auto-generated catch block
@@ -75,7 +80,8 @@ public class AnalyseAll {
 			       writeRowExp(sheet, ListException, index);
 			    
 			       }
-				   Encapsulation er = Encapsulation.EncapsulationFetch(file);
+			       CleanData clean = new CleanData(file,1);
+				   Encapsulation er = Encapsulation.EncapsulationFetchClean(clean);
 				   writeRowER(sheet, er, index);
 				   index++;	
 			}

@@ -3,6 +3,7 @@ package application.FrontEnd;
 import java.io.File;
 import java.util.ArrayList;
 
+import application.BackEnd.CleanData;
 import application.BackEnd.Encapsulation;
 import application.BackEnd.ImportStatus;
 import application.BackEnd.SwingComponent;
@@ -36,8 +37,9 @@ public class EncapsulationController {
 
     public void initialize(String FilePath) {
         File file = new File(FilePath);
+        CleanData clean  = new CleanData(file,1);
         EncapsulationLabel.setText("Encapsulation of "+file.getName());
-        encapsulation =   Encapsulation.EncapsulationFetch(file);
+        encapsulation =   Encapsulation.EncapsulationFetchClean(clean);
         String TotalSvgPath="M 18 4 H 6 v 2 l 6.5 6 L 6 18 v 2 h 12 v -3 h -7 l 5 -5 l -5 -5 h 7 Z";
         TreeItemData rootItemData = new TreeItemData("Total Elements : "+encapsulation.GetTotal(),TotalSvgPath);
         TreeItem<TreeItemData> rootItem = new TreeItem<>(rootItemData);

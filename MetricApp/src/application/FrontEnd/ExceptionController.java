@@ -28,6 +28,7 @@ import javafx.scene.layout.HBox;
 	import java.io.IOException;
 	import java.util.ArrayList;
 
+import application.BackEnd.CleanData;
 import application.BackEnd.ExceptionStatus;
 import application.BackEnd.ImportStatus;
 import application.BackEnd.Package;
@@ -45,11 +46,13 @@ public class ExceptionController {
 	    
 	    public void initialize(String FilePath) {
 	        File file = new File(FilePath);
+	        CleanData clean = new CleanData(file, 0);
 	        ExceptionLabel.setText("Exceptions Of "+file.getName());
 	        
 	       try {
-			ListException = ExceptionStatus.FetchThrowable(file);
-		System.out.println(ListException);
+			//ListException = ExceptionStatus.FetchThrowable(file);
+	    	ListException = ExceptionStatus.FetchFromCleanCode(clean);
+	//	System.out.println(ListException);
 	       } catch (ClassNotFoundException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -63,27 +66,27 @@ public class ExceptionController {
 	        String CheckedSvgPath="M 9 16.17 L 4.83 12 l -1.42 1.41 L 9 19 L 21 7 l -1.41 -1.41 Z";
 	        String UncheckedSvgPath="M 19 6.41 L 17.59 5 L 12 10.59 L 6.41 5 L 5 6.41 L 10.59 12 L 5 17.59 L 6.41 19 L 12 13.41 L 17.59 19 L 19 17.59 L 13.41 12 Z";
 	        for (ExceptionStatus exception : ListException) {
-	        	System.out.println("cddc");
+	        	//System.out.println("cddc");
 	        	//TreeItem<TreeItemData> ImportItem = createTreeItem(Import);
 	            //System.out.println(exception.ExceptionName);
 	        	if(exception.DefaultStatus == 0) {
 	            	if(exception.CheckedStatus == 0) {
-	            		System.out.println("cddc");
-	            		System.out.println(exception.ExceptionName);
+	            	//	System.out.println("cddc");
+	            		//System.out.println(exception.ExceptionName);
 	            		DefaultException.getChildren().add(new TreeItem<>(new TreeItemData(exception.ExceptionName,CheckedSvgPath)));
 	            	}
 	            	else {
-	            		System.out.println(exception.ExceptionName);
+	            		//System.out.println(exception.ExceptionName);
 	            		DefaultException.getChildren().add(new TreeItem<>(new TreeItemData(exception.ExceptionName,UncheckedSvgPath)));
 	            	}
 	            	}
 	            else {
 	            	if(exception.CheckedStatus == 0) {
-	            		System.out.println(exception.ExceptionName);
+	            		//System.out.println(exception.ExceptionName);
 		            	NotDefaultException.getChildren().add(new TreeItem<>(new TreeItemData(exception.ExceptionName,CheckedSvgPath)));
 		            	}
 		            	else {
-		            		System.out.println(exception.ExceptionName);
+		            	//	System.out.println(exception.ExceptionName);
 		            		NotDefaultException.getChildren().add(new TreeItem<>(new TreeItemData(exception.ExceptionName,UncheckedSvgPath)));
 		            	}
 	            }

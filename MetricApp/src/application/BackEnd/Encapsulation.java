@@ -76,11 +76,10 @@ public class Encapsulation {
 	}
 	
 	public static Encapsulation EncapsulationFetch(File file){
-		System.out.println("heyy \n\n\n");
+	//	System.out.println("heyy \n\n\n");
 		Encapsulation encapsulation = new Encapsulation(0,0,0,0,0);
 		String formattedCode = "";
-	  	 Integer[] index = new Integer[1];
-	  	 index[0] = 0;
+	  
 	  	  String Code;
 		try {
 			Code = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
@@ -91,35 +90,40 @@ public class Encapsulation {
 		}
 
 		String [] Line = formattedCode.split("\n");
+		Index index = new Index();
 		
-		for(int i = 0 ; i<Line.length;i++) {
-	          	Line[i] = Line[i].trim();
-	          	Line[i] = Qoute.RemoveQoute(Line[i]);
+		for( index.val =index.val; index.val<Line.length;index.val++) {
+			 //System.out.println("index.val "+index.val+" "+Line[index.val]);
+			 
+	          	Line[index.val] = Line[index.val].trim();
+	          	Line[index.val] = Qoute.RemoveQoute(Line[index.val]);
 	          	ArrayList<String> ListCode=new ArrayList<String>();
-	          	if(!Line[i].isBlank() && !Line[i].isEmpty() && !Comment.IsCommentOnlyCompleted(Line[i]) && ! RegularExpression.IsPackage(Line[i])) {
+	          	if(!Line[index.val].isBlank() && !Line[index.val].isEmpty() && !Comment.IsCommentOnlyCompleted(Line[index.val]) && ! RegularExpression.IsPackage(Line[index.val])) {
 	          		//System.out.println(Line);
-	          		if(Comment.ContainsComment(Line[i])) {
+	          		if(Comment.ContainsComment(Line[index.val])) {
 	  	            	//System.out.println(line);
-	  	            		Line[i] = Comment.RemoveComment(Line[i]);
+	  	            		Line[index.val] = Comment.RemoveComment(Line[index.val]);
 	  	            	}
 	          		else {
-	          			if(Comment.FinishedComment(Line[i])) {
-		            			if(!Comment.OpeningMultiCommentOnly(Line[i])) {
-		            				ListCode.add(Comment.CodeOpeningComment(Line[i]));
+	          			if(Comment.FinishedComment(Line[index.val])) {
+		            			if(!Comment.OpeningMultiCommentOnly(Line[index.val])) {
+		            				ListCode.add(Comment.CodeOpeningComment(Line[index.val]));
 		            			}
-		            			if(!Comment.ClosingMultiCommentOnly(Line[i])) {
-		            				ListCode.add(Comment.CodeClosingComment(Line[i]));
+		            			if(!Comment.ClosingMultiCommentOnly(Line[index.val])) {
+		            				ListCode.add(Comment.CodeClosingComment(Line[index.val]));
 		            			}
 		            		}
-	          			else if (Comment.NotFinishedComment(Line[i])) {
-	          				Line[i] = Comment.JumpComment(Line[i],ListCode,Line,index).trim();
-	          				Line[i] = Qoute.RemoveQoute(Line[i]);
-		            		}
+	          			else if (Comment.NotFinishedComment(Line[index.val])) {
+	          				  Comment.JumpComment(Line[index.val],ListCode,Line,index);
+                     	//	 System.out.println("index.val "+index.val+" "+Line[index.val]);
+	            		}
 
 	          			if(!ListCode.isEmpty()) {
 	          				for(String code : ListCode) {
+	          				//	 System.out.println("index.val "+index.val+" "+code);
 	          					if(RegularExpression.IsVariable(code) || RegularExpression.IsMethodPrototype(code)) {
-	          	            		System.out.println(code);
+	          	            	//	System.out.println(code);
+	          					//	System.out.println("MEMBER : "+index.val + "  "+code);
 	          						UpdateEncapsulationFlag(encapsulation, code);
 	          	            	}
 	          					
@@ -129,29 +133,73 @@ public class Encapsulation {
 	          				}
 	          			}
 	          		}
-	          		if(ListCode.isEmpty()) {
-	          			System.out.println(Line[i] +" "+RegularExpression.IsVariable(Line[i])+" "+RegularExpression.IsMethodPrototype(Line[i]) );
-	          			if(RegularExpression.IsVariable(Line[i]) || RegularExpression.IsMethodPrototype(Line[i])) {
-	          				UpdateEncapsulationFlag(encapsulation, Line[i]);
+	          		
+	          //		System.out.println("Text "+Line[index.val]);
+	          		if(index.val!=Line.length-1 &&!Line[index.val+1].trim().startsWith("*") && !Line[index.val+1].trim().startsWith("/*") ){
+              		//	System.out.println("Current "+Line[index.val]+" NEXT "+Line[index.val+1] +" ISTHROWS "+Line[index.val+1].trim().startsWith("throws "));
+              		while((Line[index.val+1].trim().startsWith("throws ")) ||(Line[index.val+1].trim().endsWith(","))  ) {
+      					Line[index.val] = Line[index.val] +" "+ Line[index.val+1];
+      					 
+      					++index.val;
+      				}
+	          		}
+              		
+	          		
+	          		///	System.out.println(Line[index.val] +" "+RegularExpression.IsVariable(Line[index.val])+" "+RegularExpression.IsMethodPrototype(Line[index.val]) );
+	          			if(RegularExpression.IsVariable(Line[index.val]) || RegularExpression.IsMethodPrototype(Line[index.val])) {
+	          			//	System.out.println("MEMBER : "+index.val + "  "+Line[index.val]);
+	          				UpdateEncapsulationFlag(encapsulation, Line[index.val]);
 	  	            	}
-	          			if(RegularExpression.IsMethodPrototype(Line[i])) {
-	          				 System.out.println("before : "+index[0]);
-	          				 RegularExpression.JumpMethodContent(Line[i],index,Line);
-	          				 System.out.println("After : "+index[0]);
+	          			if(RegularExpression.IsMethodPrototype(Line[index.val])) {
+	          				 
+	          				 RegularExpression.JumpMethodContent(Line[index.val],index,Line);
+	          				// System.out.println("After : "+index[0] + " text "+Line[index[0]]);
 	          			}
 	          			
-	          		}
+	          		
+	          	
+	          
 	          	}
-	          	 i = index[0];
-                 ++index[0];
-	          }
+		}
 	     
 		CalculTauxEncapsulation(encapsulation);
 		return encapsulation;
 	}
 
 	
+	
+	public static Encapsulation EncapsulationFetchClean(CleanData clean){
+		//	System.out.println("heyy \n\n\n");
+			Encapsulation encapsulation = new Encapsulation(0,0,0,0,0);
+			 File file = clean.tmpFile;
+			
+			  	  
+			  	  
+			  	 try (BufferedReader reader = new BufferedReader(new FileReader(file.getAbsolutePath()))) {
+			            String Line;
+			            while ((Line = reader.readLine()) != null) {
+			            	if(!Line.isBlank() && !Line.isEmpty() && !RegularExpression.IsPackage(Line) && !RegularExpression.IsImport(Line)) {
+			            		if(RegularExpression.IsVariable(Line) || RegularExpression.IsMethodPrototype(Line)) {
+		          						UpdateEncapsulationFlag(encapsulation, Line);
+		          	            	}
+								 
+					
+				          }
+			            }
+			        } catch (IOException e) {
+			            e.printStackTrace();
+			        }
+			  	  
+				
+			
+			
+		     
+			CalculTauxEncapsulation(encapsulation);
+			return encapsulation;
+		}
+
 
     
+
 }
         

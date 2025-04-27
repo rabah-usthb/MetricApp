@@ -194,13 +194,69 @@ public class RegularExpression {
         		}
         	}
 		
-        	System.out.println("Line "+Line+" { "+listopening.size()+" } "+listclosing.size());
+      // 	System.out.println("Line "+Line+" { "+listopening.size()+" } "+listclosing.size());
         	++i;
     		++index[0];
 			}
 	
 	     return Line;
 		}
+  
+  
+  static void JumpMethodContent(String Line,Index index,String[] Code) {
+		LinkedList<String>listopening = new LinkedList<>();
+		LinkedList<String>listclosing = new LinkedList<>();
+		AddCurlyBraces(Line, listopening,listclosing);
+	  	   ++index.val;
+			while ( (listclosing.size()==0&&listopening.size()==0||listclosing.size()!=listopening.size()) && index.val<Code.length) { 
+	    	Line = Code[index.val].trim();
+			Line = Qoute.RemoveQoute(Line);
+			ArrayList<String> ListCode=new ArrayList<String>();
+      	if(!Line.isBlank() && !Line.isEmpty() && !Comment.IsCommentOnlyCompleted(Line)) {
+      		if(Comment.ContainsComment(Line)) {
+	              Line = Comment.RemoveComment(Line);
+	            	}
+      		else {
+      			if(Comment.FinishedComment(Line)) {
+	            			if(!Comment.OpeningMultiCommentOnly(Line)) {
+	            				ListCode.add(Comment.CodeOpeningComment(Line));
+	            			}
+	            			if(!Comment.ClosingMultiCommentOnly(Line)) {
+	            				ListCode.add(Comment.CodeClosingComment(Line));
+	            			}
+	            		}
+      			else if (Comment.NotFinishedComment(Line)) {
+      				Comment.JumpComment(Line,ListCode,Code,index);
+	            		}
+
+      			if(!ListCode.isEmpty()) {
+      				for(String code : ListCode) {
+      					AddCurlyBraces(code, listopening,listclosing);
+      				      					
+      				}
+      			}
+      		}
+      		if(ListCode.isEmpty()) {
+      			
+      			AddCurlyBraces(Line, listopening,listclosing);
+      		   
+      		}
+      	}
+		
+    // 	System.out.println("Line "+Line+" { "+listopening.size()+" } "+listclosing.size());
+      	
+  		++index.val;
+			}
+			
+			
+			if(index.val == Code.length) {
+				--index.val;
+			}
+			
+	      
+		}
+
+  
   
   static LinkedList<Henderson> fetchClassesDataHenderson(String Line,BufferedReader reader) {
 	  LinkedList<Henderson> listHenderson = new LinkedList<>();
@@ -554,7 +610,7 @@ public class RegularExpression {
 				return classNames;
 			}
 			//Method To Know If Line Is Throw
-	static boolean IsThrow(String line) {
+	public static boolean IsThrow(String line) {
 		String ThrowPattern="\\s*throw\\s+new\\s+\\w+\\s*\\(\\s*("+inside+")?\\s*\\)\\s*;\\s*";
 			return line.matches(ThrowPattern);
 		}
@@ -579,7 +635,12 @@ public class RegularExpression {
 		    return line.matches(VariablePattern);
 		}
 		
-		
+	   static boolean IsInterface(String line) {	    
+		    return line.contains("interface ");
+		}
+	   
+	 
+	   
 		//Fetch Class Name From Var Line
 		static ArrayList<String> ExtractVarClassNames(String VarLine) {
 			ArrayList<String> classNames = new ArrayList<>();

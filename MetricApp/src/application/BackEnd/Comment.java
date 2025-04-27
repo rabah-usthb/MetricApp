@@ -40,7 +40,7 @@ public class Comment {
 			String line = "";
 			int index_0 = index[0];
 			if(!OpeningMultiCommentOnly(Line)) {
-				System.out.println("Before "+Line);
+			//	System.out.println("Before "+Line);
 				List.add(CodeOpeningComment(Line));
 			}
 			//System.out.println(Line);
@@ -60,15 +60,47 @@ public class Comment {
 			
 			if(!ClosingMultiCommentOnly(line)) {
 				List.add(CodeClosingComment(line));
-				System.out.println("After "+line);
+			//	System.out.println("After "+line);
 			}
 			
-		   System.out.println("finished "+Line);
+		 //  System.out.println("finished "+Line);
 		    return Line;
 		}
 		
 	
 	
+		static void JumpComment (String Line,ArrayList<String> List,String[] code,Index index) {
+			String line = "";
+			if(!OpeningMultiCommentOnly(Line)) {
+			//	System.out.println("Before "+Line);
+				List.add(CodeOpeningComment(Line));
+			}
+			//System.out.println(Line);
+		
+				for ( index.val = index.val; index.val<code.length;index.val++) { 
+				Line = code[index.val].trim();
+				Line=Qoute.RemoveQoute(Line);
+				//System.out.println(Line);
+				if(Line.contains("*/")) {
+					line = Line;
+					++index.val;
+					Line = code[index.val];
+					break;
+				}
+				}
+			
+			
+			if(!ClosingMultiCommentOnly(line)) {
+				List.add(CodeClosingComment(line));
+			//	System.out.println("After "+line);
+			}
+			
+		 //  System.out.println("finished "+Line);
+		    
+		}
+		
+		
+		
 	//To Jump Comment And Fetch Code
 	static String JumpComment (String Line,ArrayList<String> List,BufferedReader reader) {
 		String line = "";
@@ -123,7 +155,7 @@ public class Comment {
 	 }
 	 
 	 //To Know If Line is Code /*comment
-	static boolean NotFinishedComment(String Line) {
+	public static boolean NotFinishedComment(String Line) {
 		Line = Line.trim();
 		return Line.contains("/*") && !Line.contains("*/") ;
 	}
