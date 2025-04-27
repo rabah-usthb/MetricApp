@@ -167,8 +167,8 @@ public class AnalyseAll {
 	   Row row  = sheet.getRow(index);
 	   
        row.createCell(13).setCellValue(list.size());
-       row.createCell(15).setCellValue(ExceptionStatus.getTotalNumberDefaultException(list));
        row.createCell(14).setCellValue(ExceptionStatus.getTotalNumberNotDefaultException(list));
+       row.createCell(15).setCellValue(ExceptionStatus.getTotalNumberDefaultException(list));
        row.createCell(16).setCellValue(ExceptionStatus.getTotalNumberRunTimeException(list));
        row.createCell(17).setCellValue(ExceptionStatus.getTotalNumberCompileTimeException(list));
    

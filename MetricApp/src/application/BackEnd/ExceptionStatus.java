@@ -124,8 +124,8 @@ public class ExceptionStatus {
 	 //FilePath = FilePath.substring(0,FilePath.indexOf("/src")+4);
 	 
 	 for(File Files : filesTarget) {
-		 if( Files.isFile() && Files.getName().endsWith(".class")&& (Files.getName().contains(ExceptionName+".") || Files.getName().contains("$"+ExceptionName+".") ||Files.getName().contains(ExceptionName+"$")||Files.getName().matches(".*\\$\\d+" + ExceptionName + "\\..*") ) ) {
-		     
+		 if( Files.isFile() && Files.getName().endsWith(".class")&& (Files.getName().startsWith(ExceptionName+".") || Files.getName().contains("$"+ExceptionName+".") ||Files.getName().contains(ExceptionName+"$")||Files.getName().matches(".*\\$\\d+" + ExceptionName + "\\..*") ) ) {
+		  //   System.out.println("ExceptionName "+ExceptionName+" "+(Files.getName().co(ExceptionName+".")) +" "+Files.getName().contains("$"+ExceptionName+".")+" "+(Files.getName().matches(".*\\$\\d+" + ExceptionName + "\\..*")));
 			 return Files.getAbsolutePath();
 		 }
 		 else if(Files.isDirectory() && Files.listFiles()!=null) {
