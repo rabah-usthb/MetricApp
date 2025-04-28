@@ -22,7 +22,7 @@ public class AnalyseAll {
 
 	public static int index = 1;
 	public static int expIndex= 1;
-	public static final String IDK = Files.exists(Paths.get(MetricController.PathProject, "test", "java"))? "\\src\\test\\java": "\\src\\test\\";		
+	//public static final String IDK = Files.exists(Paths.get(MetricController.PathProject, "test", "java"))? "\\src\\test\\java": "\\src\\test\\";		
 	public static void TraverseProject(Sheet sheet,ArrayList<Package> packageList) {
 		
 		for(Package pkg : packageList) {
@@ -37,7 +37,7 @@ public class AnalyseAll {
 			       System.out.println(ImportStatus.className);
 			       System.out.println(ImportStatus.longClassName);
 			       System.out.println(index);
-			       if(file.getAbsolutePath().contains("\\src\\main\\java\\")|| file.getAbsolutePath().contains("\\src\\java\\") || file.getAbsolutePath().contains(IDK) ) {
+			//       if(file.getAbsolutePath().contains("\\src\\main\\java\\")|| file.getAbsolutePath().contains("\\src\\java\\") || file.getAbsolutePath().contains(IDK) ) {
 			    /*   
 			    	try {
 						OOMRCalculator oomr = OOMRCalculator.fetchOOMR(file.getAbsolutePath());
@@ -79,8 +79,8 @@ public class AnalyseAll {
 					}
 			       writeRowExp(sheet, ListException, index);
 			    
-			       }
-			       CleanData clean = new CleanData(file,1);
+			      // }
+			       clean = new CleanData(file,1);
 				   Encapsulation er = Encapsulation.EncapsulationFetchClean(clean);
 				   writeRowER(sheet, er, index);
 				   index++;	

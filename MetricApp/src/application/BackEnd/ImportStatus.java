@@ -356,7 +356,7 @@ public static ArrayList<ImportStatus> update(File file , ArrayList<ImportStatus>
           		line[i] = Qoute.RemoveQoute(line[i]);
           	//	for(int j = i; j<line.length;j++) {
           		if(i!=line.length-1 &&!line[i+1].trim().startsWith("*") && !line[i+1].trim().startsWith("/*") ){
-          			System.out.println("Current "+line[i]+" NEXT "+line[i+1] +" ISTHROWS "+line[i+1].trim().startsWith("throws "));
+          	//		System.out.println("Current "+line[i]+" NEXT "+line[i+1] +" ISTHROWS "+line[i+1].trim().startsWith("throws "));
           		if((line[i+1].trim().startsWith("throws ") ||line[i+1].trim().startsWith("implements ") ) ) {
   					line[i] = line[i] +" "+ line[i+1];
   					 
@@ -370,7 +370,7 @@ public static ArrayList<ImportStatus> update(File file , ArrayList<ImportStatus>
           		}
           	//	System.out.println("APPEND "+line[i]);
          // 	 System.out.println(line[i]+" "+RegularExpression.IsClass(line[i].trim()));
-          		System.out.println("TRAITED "+line[i]);
+          	//	System.out.println("TRAITED "+line[i]);
           		IsAll(ClassName,line[i]);
           		
           	

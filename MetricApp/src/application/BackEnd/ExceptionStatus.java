@@ -51,6 +51,7 @@ public class ExceptionStatus {
  public String ExceptionName;
  public int CheckedStatus;
  public int DefaultStatus;
+ public static String idk = "";
  ExceptionStatus(String ExceptionName,int CheckedStatus,int DefaultStatus){
 	 this.ExceptionName = ExceptionName;
 	 this.CheckedStatus = CheckedStatus;
@@ -145,16 +146,21 @@ public class ExceptionStatus {
 	 // File file = new File(ProjectPath);
 	 //FilePath = FilePath.substring(0,FilePath.indexOf("/src")+4);
 	 
-	 System.out.println("ENTER ISUSERDEFINED PATH "+fileTarget);
-	 System.out.println("TEST PATH "+fileTarget+"test-classes\\");
-	 System.out.println("MAIN PATH "+fileTarget+"classes\\");
+	File[] classFolderFile = new File(fileTarget).listFiles();
+ 	
+	String output = null;
+ 	
+ 	for(File folder : classFolderFile) {
+ 		if(output!=null) {break;}
+ 		if(folder.isDirectory() && folder.listFiles()!=null) {
+ 			output = IsInsideFolder(ExceptionName, folder.listFiles());
+ 			idk = folder.getName();
+ 		}
+ 	}
 	 
-	String output =IsInsideFolder(ExceptionName, new File(fileTarget+"test-classes\\").listFiles());
+ 	
 	
 	
-	if(output == null) {
-		output = IsInsideFolder(ExceptionName, new File(fileTarget+"classes\\").listFiles());
-	}
 		
 	return output;
 	
@@ -285,17 +291,21 @@ public class ExceptionStatus {
 	                // Class not found by the system class loader
 	            }
 	        } else {
-	        	String idk= "\\target\\classes\\";
+	        	System.out.println("PAATH :"+ExceptionPath);
+	        	
 	       
-	        	if(ExceptionPath.contains("\\target\\test-classes\\")) {idk = "\\target\\test-classes\\"; }
-	       	 
-	       	String PathBinFile = ExceptionPath;
+	       	    String PathBinFile = ExceptionPath;
 
 	            URLClassLoader classLoader;
-	            String longClassName =PathBinFile.substring(PathBinFile.indexOf(idk)+idk.length()).replace("\\", ".").replace(".class", ""); 
-	     //  	    System.out.println("LONG "+longClassName);
+	          //  String longClassName =PathBinFile.substring(PathBinFile.indexOf(idk)+idk.length()).replace("\\", ".").replace(".class", ""); 
+	     //  	
+	        //    System.out.println("PAAAAAAAAATH "+MetricController.PathProject.replace("\\src\\", "\\build\\")+idk+"\\");
+	            String longClassName = ExceptionPath.replace((MetricController.PathProject.replace("\\src", "\\build\\")+idk+"\\"), "").replace("\\", ".").replace(".class", "");
 	            
-	       		classLoader = new URLClassLoader(new URL[]{new File(PathBinFile.substring(0,PathBinFile.indexOf(idk)+idk.length())).toURI().toURL()});
+	            System.out.println("LONG "+longClassName);
+	            
+	       	//	classLoader = new URLClassLoader(new URL[]{new File(PathBinFile.substring(0,PathBinFile.indexOf(idk)+idk.length())).toURI().toURL()});
+	            classLoader = new URLClassLoader(new URL[]{new File(PathBinFile.replace(longClassName.replace(".", "\\"),"").replace(".class","")).toURI().toURL()});
 	       	     Class<?> loadedClass = classLoader.loadClass(longClassName);
 
 	            
@@ -320,9 +330,10 @@ public class ExceptionStatus {
 	                        superClass = superClass.getSuperclass();
 	                    
 	                }
-		            
-		        }
-		    } catch (ClassNotFoundException | MalformedURLException e) {
+		           
+		        
+		    } 
+	        }catch (ClassNotFoundException | MalformedURLException e) {
 		        // Handle exceptions
 		        e.printStackTrace();
 		    }
@@ -537,7 +548,7 @@ public class ExceptionStatus {
 	System.out.println("When Finished "+ThrowableList);
 	
 	ArrayList<ExceptionStatus> ListException = new ArrayList<>();
-	String FileTarget =  MetricController.PathProject.replace("\\src", "\\target\\");
+	String FileTarget =  MetricController.PathProject.replace("\\src", "\\build\\");
 	System.out.println("before call "+FileTarget);
 	ListException  = SetFlagException(ThrowableList, FileTarget, file);
 	
