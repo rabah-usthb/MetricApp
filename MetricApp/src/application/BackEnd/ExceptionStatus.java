@@ -46,7 +46,6 @@ import java.util.zip.ZipEntry;
 
 
 
-
 public class ExceptionStatus {
  public String ExceptionName;
  public int CheckedStatus;
@@ -301,6 +300,10 @@ public class ExceptionStatus {
 	     //  	
 	        //    System.out.println("PAAAAAAAAATH "+MetricController.PathProject.replace("\\src\\", "\\build\\")+idk+"\\");
 	            String longClassName = ExceptionPath.replace((MetricController.PathProject.replace("\\src", "\\build\\")+idk+"\\"), "").replace("\\", ".").replace(".class", "");
+	            
+	            if(longClassName.startsWith("java.")) {
+	            	longClassName = longClassName.replace("java.", "");
+	            }
 	            
 	            System.out.println("LONG "+longClassName);
 	            

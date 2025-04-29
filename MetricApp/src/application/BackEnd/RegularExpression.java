@@ -10,14 +10,16 @@ import java.util.regex.Pattern;
 
 
 public class RegularExpression {
-  
+   
+   public static String objectName="\\w+(?:\\.\\w+)*";
+   public static String objectNameVar="("+objectName+")(?:\\s*,\\s*("+objectName+"))*";
    public static String CurlyBraces="\\s*(\\{|\\{\\s*\\})?\\s*";
    static String PatternAcessModifiers="(private\\s+|protected\\s+|public\\s+)?";
    static String NonAcessModifierSimple = "(static\\s+|final\\s+|abstract\\s+)?";
    static String ModifierSimple = "("+PatternAcessModifiers+")("+NonAcessModifierSimple+")|("+NonAcessModifierSimple+")("+PatternAcessModifiers+")";
    static String ModifierComplex = "("+PatternAcessModifiers+")final\\s+static\\s+|("+PatternAcessModifiers+")static\\s+final\\s+|final\\s+("+PatternAcessModifiers+")static\\s+|static\\s+("+PatternAcessModifiers+")final\\s+|static\\s+final\\s+("+PatternAcessModifiers+")|final\\s+static\\s+("+PatternAcessModifiers+")";
    public static String MethodModifierPattern = "("+ModifierSimple+")|("+ModifierComplex+")";
-   public static String ThrowsPattern = "(\\s*throws\\s+\\w+\\s*(\\s*\\,\\s*\\w+\\s*)*)?"; // Making the throws clause optional
+   public static String ThrowsPattern = "(\\s*throws\\s+("+objectName+")\\s*(\\s*\\,\\s*("+objectName+")\\s*)*)?"; // Making the throws clause optional
    static String Bracket = "(\\[\\s*\\]){1,2}";
    static String ArrayDeclarationPattern = "\\w+\\s+\\w+\\s*(" + Bracket + ")|\\w+\\s*(" + Bracket + ")\\s*\\w+\\s*";
    static String ArrayTypePattern="\\w+\\s*(" + Bracket + ")\\s*";
@@ -49,8 +51,8 @@ public class RegularExpression {
  
   static String VarName="\\s*\\w+\\s*";
   
-  static String SingleCatch="\\s*\\w+\\s+\\w+\\s*";
-  static String MultipleCatch="\\s*\\w+\\s*(\\s*\\|\\s*\\w+\\s*)*\\s*\\|\\s*\\w+\\s+\\w+\\s*";
+  public static String SingleCatch="\\s*("+objectName+")\\s+\\w+\\s*";
+  public static String MultipleCatch="\\s*("+objectName+")\\s*(\\s*\\|\\s*("+objectName+")\\s*)*\\s*\\|\\s*("+objectName+")\\s+\\w+\\s*";
   static String InsideCatch=SingleCatch+"|"+MultipleCatch;
   static String OptionalClosingCurlyBraces="(\\s*\\}\\s*)?";
     
@@ -521,7 +523,7 @@ public class RegularExpression {
 		}
 	
 //Method to know If Line Is A Method Prototype	
-	 static boolean IsMethodPrototype(String Line) {
+	 public static boolean IsMethodPrototype(String Line) {
 		    return IsConstructor(Line) || IsMethod(Line);
 	 }
 	 
@@ -531,13 +533,18 @@ public class RegularExpression {
 			line = line.substring(line.lastIndexOf(")")+1);
 			
 			ArrayList<String> classNames = new ArrayList<String>();
-			Pattern ThrowsPattern = Pattern.compile( "\\s*throws\\s+(\\w+)\\s*|(?:\\s*\\,\\s*(\\w+)\\s*)");
+			Pattern ThrowsPattern = Pattern.compile( "\\s*throws\\s+("+objectName+")\\s*|(?:\\s*\\,\\s*("+objectName+")\\s*)");
 		    Matcher matcher = ThrowsPattern.matcher(line);
 	        while (matcher.find()) {
 	        	
 	        	String className = matcher.group(1);
 		        if (className == null) { // If the first capturing group didn't match
 		            className = matcher.group(2); // Use the second capturing group
+		        }
+		        
+		        if(className.contains(".")) {
+		        	int index = className.lastIndexOf(".");
+		        	className = className.substring(index+1);
 		        }
 		        classNames.add(className);	            
 	           
@@ -588,21 +595,25 @@ public class RegularExpression {
 			 }
 
 			//Method To Know If Line Is Catch
-			static boolean IsCatch(String line) {
+			public static boolean IsCatch(String line) {
 				String CatchPattern = "\\s*"+OptionalClosingCurlyBraces+"catch\\s*\\(("+InsideCatch+")\\)\\s*("+RegularExpression.CurlyBraces+")\\s*";
 				   
 				return line.matches(CatchPattern);
 			}
 
 			//Method To Fetch Exception From Catch
-			static ArrayList<String> CatchException(String line) {
+			public static ArrayList<String> CatchException(String line) {
 			    ArrayList<String>classNames = new ArrayList<String>();
-				Pattern pattern = Pattern.compile("\\(\\s*(\\w+)|\\|\\s*(\\w+)");
+				Pattern pattern = Pattern.compile("\\(\\s*("+objectName+")|\\|\\s*("+objectName+")");
 			    Matcher matcher = pattern.matcher(line);
 			    while (matcher.find()) {
 			        String className = matcher.group(1);
 			        if (className == null) { // If the first capturing group didn't match
 			            className = matcher.group(2); // Use the second capturing group
+			        }
+			        if(className.contains(".")) {
+			        	int index = className.lastIndexOf(".");
+			        	className = className.substring(index+1);
 			        }
 			        classNames.add(className);
 			    }
@@ -611,27 +622,33 @@ public class RegularExpression {
 			}
 			//Method To Know If Line Is Throw
 	public static boolean IsThrow(String line) {
-		String ThrowPattern="\\s*throw\\s+new\\s+\\w+\\s*\\(\\s*([^\n]*)?\\s*\\)\\s*;\\s*";
+		String ThrowPattern="\\s*throw\\s+new\\s+("+objectName+")\\s*\\(\\s*([^\n]*)?\\s*\\)\\s*;\\s*";
 			return line.matches(ThrowPattern);
 		}
 
 	//Method To Fetch Exception From Throw	
 	static ArrayList<String>ThrowException(String line){
 		ArrayList<String> classNames = new ArrayList<String>();
-		Pattern ThrowsPattern = Pattern.compile("(?:\\s*|\\s+)new\\s+(\\w+)\\s*\\(");
+		Pattern ThrowsPattern = Pattern.compile("(?:\\s*|\\s+)new\\s+("+objectName+")\\s*\\(");
 	    Matcher matcher = ThrowsPattern.matcher(line);
         while (matcher.find()) {
         	
+       
         	String className = matcher.group(1);
-	        
+        	
+        	if(className.contains(".")) {
+	        	int index = className.lastIndexOf(".");
+	        	className = className.substring(index+1);
+	        }
+        	
 	        classNames.add(className);	            
             
         }    
         return classNames;	
 	}
 	//Detect If Line Is Variable
-	   static boolean IsVariable(String line) {	    
-		    String VariablePattern = "\\s*("+VarModifer+")((?!return\\s+)\\w+\\s+\\w+|("+ArrayDeclarationPattern+")|("+CollectionPattern+")\\w+)\\s*(=\\s*.+)?\\s*;\\s*";
+	   public static boolean IsVariable(String line) {	    
+		    String VariablePattern = "\\s*("+VarModifer+")((?!return\\s+)("+objectName+")\\s+("+objectNameVar+")|("+ArrayDeclarationPattern+")|("+CollectionPattern+")\\w+)\\s*(=\\s*.+)?\\s*;\\s*";
 		    return line.matches(VariablePattern);
 		}
 		
