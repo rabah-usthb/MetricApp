@@ -51,7 +51,10 @@ public class Comment {
 				//System.out.println(Line);
 				if(Line.contains("*/")) {
 					line = Line;
+					if(i+1 == code.length) {return null;}
+					else {
 					Line = code[i+1];
+					}
 					index[0] = i+1;
 					break;
 				}
@@ -84,7 +87,8 @@ public class Comment {
 				if(Line.contains("*/")) {
 					line = Line;
 					++index.val;
-					Line = code[index.val];
+					if(index.val == code.length) {return;}
+					else{Line = code[index.val];}
 					break;
 				}
 				}

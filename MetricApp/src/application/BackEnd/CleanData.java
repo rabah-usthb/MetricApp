@@ -194,6 +194,9 @@ public class CleanData {
 		          			else if (Comment.NotFinishedComment(Line[index.val])) {
 		          		//		System.out.println("NOT FINISHED "+Line[index.val]);
 		          				  Comment.JumpComment(Line[index.val],ListCode,Line,index);
+		          				if(index.val==Line.length) {
+		          					break;
+		          				}
 		          			//	System.out.println("FINISHED "+Line[index.val]);
 	                     	
 		            		}
@@ -276,7 +279,10 @@ public class CleanData {
 			            		}
 		          			else if (Comment.NotFinishedComment(Line[index.val])) {
 		          				System.out.println("NOT FINISHED "+Line[index.val]);
-		          				  Comment.JumpComment(Line[index.val],ListCode,Line,index);
+		          				Comment.JumpComment(Line[index.val],ListCode,Line,index); 
+		          				if(index.val==Line.length) {
+		          					break;
+		          				}
 		          				System.out.println("FINISHED "+Line[index.val]);
 	                     	
 		            		}

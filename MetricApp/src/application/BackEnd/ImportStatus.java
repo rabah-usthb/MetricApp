@@ -338,6 +338,7 @@ public static ArrayList<ImportStatus> update(File file , ArrayList<ImportStatus>
           		//System.out.println("not finised "+line);
           			System.out.println(" Before " +line[i]);
           		String temp = Comment.JumpComment(line[i],ListCode,line,index);
+          		if(temp == null) {break;}
           		 i = index[0];
           		 line[i] = temp;
           		System.out.println("LIST CODE "+ListCode+" current" +line[i]);
@@ -442,11 +443,12 @@ public static ArrayList<ImportStatus> ImportFetch(File file){
 	ArrayList<ImportStatus> ImportList = new ArrayList<ImportStatus>();
 	String Line;
 	int cmpt =1;
+	 System.out.println("FILE PATH "+file.getPath());
 	 try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
           while ((Line = reader.readLine() )!= null) {
           	Line = Line.trim();
           	Line = Qoute.RemoveQoute(Line);
-        //  	System.out.println("lineeeeeee "+Line);
+        System.out.println("lineeeeeee "+Line);
           	ArrayList<String> ListCode=new ArrayList<String>();
           	if(!Line.isBlank() && !Line.isEmpty()) {
           		//System.out.println(Line);
@@ -465,6 +467,9 @@ public static ArrayList<ImportStatus> ImportFetch(File file){
 	            		}
           			else if (Comment.NotFinishedComment(Line)) {
 	            			Line = Comment.JumpComment(Line,ListCode,reader);
+	            			if(Line==null) {
+	            				break;
+	            			}
 	            		}
 
           			if(!ListCode.isEmpty()) {

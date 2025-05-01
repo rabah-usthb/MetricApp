@@ -6,7 +6,7 @@ import application.BackEnd.RegularExpression;
 public class Main {
 
 	public static void main(String[] args) {
-		
+		System.out.println("CJEJOFUEMBGOTHOGDVJSFHFFRMFMUTBJSEJFOTOSMIGEJOFJDNSRMPMFTTNEIGNUFTVPFPBTOJFVDGDUPV".length());
 		   StringBuilder sb = new StringBuilder();
 		 sb.append("public static int SUMMARY_LENGTH = 200;").append("\n");
 	        sb.append("StringBuffer title = new StringBuffer(SUMMARY_LENGTH);").append("\n");
